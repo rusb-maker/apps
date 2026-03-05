@@ -1,13 +1,13 @@
 //
-//  s3_mountUITests.swift
-//  s3_mountUITests
+//  simple_storage_browserUITests.swift
+//  simple_storage_browserUITests
 //
 //  Created by Ruslan on 2026-03-05.
 //
 
 import XCTest
 
-final class s3_mountUITests: XCTestCase {
+final class simple_storage_browserUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

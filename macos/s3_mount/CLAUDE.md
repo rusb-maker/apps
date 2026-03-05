@@ -4,11 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build & Run
 
-Open `s3_mount.xcodeproj` in Xcode and build/run from there (`Cmd+R`). There is no CLI build command set up.
+Open `simple_storage_browser.xcodeproj` in Xcode and build/run from there (`Cmd+R`). There is no CLI build command set up.
 
 Run tests via Xcode (`Cmd+U`) or:
 ```
-xcodebuild test -project s3_mount.xcodeproj -scheme s3_mount -destination 'platform=macOS'
+xcodebuild test -project simple_storage_browser.xcodeproj -scheme simple_storage_browser -destination 'platform=macOS'
 ```
 
 ## Architecture

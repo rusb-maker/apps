@@ -1,13 +1,13 @@
 //
-//  s3_mountUITestsLaunchTests.swift
-//  s3_mountUITests
+//  simple_storage_browserUITestsLaunchTests.swift
+//  simple_storage_browserUITests
 //
 //  Created by Ruslan on 2026-03-05.
 //
 
 import XCTest
 
-final class s3_mountUITestsLaunchTests: XCTestCase {
+final class simple_storage_browserUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

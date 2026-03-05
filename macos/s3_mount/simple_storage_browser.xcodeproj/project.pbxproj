@@ -12,37 +12,37 @@
 			containerPortal = FB46B9C92F598EAC006BBF42 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = FB46B9D02F598EAC006BBF42;
-			remoteInfo = s3_mount;
+			remoteInfo = simple_storage_browser;
 		};
 		FB46B9E92F598EAD006BBF42 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FB46B9C92F598EAC006BBF42 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = FB46B9D02F598EAC006BBF42;
-			remoteInfo = s3_mount;
+			remoteInfo = simple_storage_browser;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		FB46B9D12F598EAC006BBF42 /* s3_mount.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = s3_mount.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		FB46B9DE2F598EAD006BBF42 /* s3_mountTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = s3_mountTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		FB46B9E82F598EAD006BBF42 /* s3_mountUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = s3_mountUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB46B9D12F598EAC006BBF42 /* Simple ​Storage ​Browser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Simple ​Storage ​Browser.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB46B9DE2F598EAD006BBF42 /* simple_storage_browserTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = simple_storage_browserTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB46B9E82F598EAD006BBF42 /* simple_storage_browserUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = simple_storage_browserUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		FB46B9D32F598EAC006BBF42 /* s3_mount */ = {
+		FB46B9D32F598EAC006BBF42 /* simple_storage_browser */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = s3_mount;
+			path = simple_storage_browser;
 			sourceTree = "<group>";
 		};
-		FB46B9E12F598EAD006BBF42 /* s3_mountTests */ = {
+		FB46B9E12F598EAD006BBF42 /* simple_storage_browserTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = s3_mountTests;
+			path = simple_storage_browserTests;
 			sourceTree = "<group>";
 		};
-		FB46B9EB2F598EAD006BBF42 /* s3_mountUITests */ = {
+		FB46B9EB2F598EAD006BBF42 /* simple_storage_browserUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = s3_mountUITests;
+			path = simple_storage_browserUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,9 +75,9 @@
 		FB46B9C82F598EAC006BBF42 = {
 			isa = PBXGroup;
 			children = (
-				FB46B9D32F598EAC006BBF42 /* s3_mount */,
-				FB46B9E12F598EAD006BBF42 /* s3_mountTests */,
-				FB46B9EB2F598EAD006BBF42 /* s3_mountUITests */,
+				FB46B9D32F598EAC006BBF42 /* simple_storage_browser */,
+				FB46B9E12F598EAD006BBF42 /* simple_storage_browserTests */,
+				FB46B9EB2F598EAD006BBF42 /* simple_storage_browserUITests */,
 				FB46B9D22F598EAC006BBF42 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -85,9 +85,9 @@
 		FB46B9D22F598EAC006BBF42 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				FB46B9D12F598EAC006BBF42 /* s3_mount.app */,
-				FB46B9DE2F598EAD006BBF42 /* s3_mountTests.xctest */,
-				FB46B9E82F598EAD006BBF42 /* s3_mountUITests.xctest */,
+				FB46B9D12F598EAC006BBF42 /* Simple ​Storage ​Browser.app */,
+				FB46B9DE2F598EAD006BBF42 /* simple_storage_browserTests.xctest */,
+				FB46B9E82F598EAD006BBF42 /* simple_storage_browserUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +95,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		FB46B9D02F598EAC006BBF42 /* s3_mount */ = {
+		FB46B9D02F598EAC006BBF42 /* simple_storage_browser */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FB46B9F22F598EAD006BBF42 /* Build configuration list for PBXNativeTarget "s3_mount" */;
+			buildConfigurationList = FB46B9F22F598EAD006BBF42 /* Build configuration list for PBXNativeTarget "simple_storage_browser" */;
 			buildPhases = (
 				FB46B9CD2F598EAC006BBF42 /* Sources */,
 				FB46B9CE2F598EAC006BBF42 /* Frameworks */,
@@ -108,18 +108,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				FB46B9D32F598EAC006BBF42 /* s3_mount */,
+				FB46B9D32F598EAC006BBF42 /* simple_storage_browser */,
 			);
-			name = s3_mount;
+			name = simple_storage_browser;
 			packageProductDependencies = (
 			);
-			productName = s3_mount;
-			productReference = FB46B9D12F598EAC006BBF42 /* s3_mount.app */;
+			productName = simple_storage_browser;
+			productReference = FB46B9D12F598EAC006BBF42 /* Simple ​Storage ​Browser.app */;
 			productType = "com.apple.product-type.application";
 		};
-		FB46B9DD2F598EAD006BBF42 /* s3_mountTests */ = {
+		FB46B9DD2F598EAD006BBF42 /* simple_storage_browserTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FB46B9F52F598EAD006BBF42 /* Build configuration list for PBXNativeTarget "s3_mountTests" */;
+			buildConfigurationList = FB46B9F52F598EAD006BBF42 /* Build configuration list for PBXNativeTarget "simple_storage_browserTests" */;
 			buildPhases = (
 				FB46B9DA2F598EAD006BBF42 /* Sources */,
 				FB46B9DB2F598EAD006BBF42 /* Frameworks */,
@@ -131,18 +131,18 @@
 				FB46B9E02F598EAD006BBF42 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				FB46B9E12F598EAD006BBF42 /* s3_mountTests */,
+				FB46B9E12F598EAD006BBF42 /* simple_storage_browserTests */,
 			);
-			name = s3_mountTests;
+			name = simple_storage_browserTests;
 			packageProductDependencies = (
 			);
-			productName = s3_mountTests;
-			productReference = FB46B9DE2F598EAD006BBF42 /* s3_mountTests.xctest */;
+			productName = simple_storage_browserTests;
+			productReference = FB46B9DE2F598EAD006BBF42 /* simple_storage_browserTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		FB46B9E72F598EAD006BBF42 /* s3_mountUITests */ = {
+		FB46B9E72F598EAD006BBF42 /* simple_storage_browserUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FB46B9F82F598EAD006BBF42 /* Build configuration list for PBXNativeTarget "s3_mountUITests" */;
+			buildConfigurationList = FB46B9F82F598EAD006BBF42 /* Build configuration list for PBXNativeTarget "simple_storage_browserUITests" */;
 			buildPhases = (
 				FB46B9E42F598EAD006BBF42 /* Sources */,
 				FB46B9E52F598EAD006BBF42 /* Frameworks */,
@@ -154,13 +154,13 @@
 				FB46B9EA2F598EAD006BBF42 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				FB46B9EB2F598EAD006BBF42 /* s3_mountUITests */,
+				FB46B9EB2F598EAD006BBF42 /* simple_storage_browserUITests */,
 			);
-			name = s3_mountUITests;
+			name = simple_storage_browserUITests;
 			packageProductDependencies = (
 			);
-			productName = s3_mountUITests;
-			productReference = FB46B9E82F598EAD006BBF42 /* s3_mountUITests.xctest */;
+			productName = simple_storage_browserUITests;
+			productReference = FB46B9E82F598EAD006BBF42 /* simple_storage_browserUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -186,7 +186,7 @@
 					};
 				};
 			};
-			buildConfigurationList = FB46B9CC2F598EAC006BBF42 /* Build configuration list for PBXProject "s3_mount" */;
+			buildConfigurationList = FB46B9CC2F598EAC006BBF42 /* Build configuration list for PBXProject "simple_storage_browser" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -200,9 +200,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				FB46B9D02F598EAC006BBF42 /* s3_mount */,
-				FB46B9DD2F598EAD006BBF42 /* s3_mountTests */,
-				FB46B9E72F598EAD006BBF42 /* s3_mountUITests */,
+				FB46B9D02F598EAC006BBF42 /* simple_storage_browser */,
+				FB46B9DD2F598EAD006BBF42 /* simple_storage_browserTests */,
+				FB46B9E72F598EAD006BBF42 /* simple_storage_browserUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -258,12 +258,12 @@
 /* Begin PBXTargetDependency section */
 		FB46B9E02F598EAD006BBF42 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = FB46B9D02F598EAC006BBF42 /* s3_mount */;
+			target = FB46B9D02F598EAC006BBF42 /* simple_storage_browser */;
 			targetProxy = FB46B9DF2F598EAD006BBF42 /* PBXContainerItemProxy */;
 		};
 		FB46B9EA2F598EAD006BBF42 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = FB46B9D02F598EAC006BBF42 /* s3_mount */;
+			target = FB46B9D02F598EAC006BBF42 /* simple_storage_browser */;
 			targetProxy = FB46B9E92F598EAD006BBF42 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -394,7 +394,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = s3_mount/s3_mount.entitlements;
+				CODE_SIGN_ENTITLEMENTS = simple_storage_browser/simple_storage_browser.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -402,6 +402,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Simple ​Storage ​Browser";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -409,7 +410,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.test-rb.s3-mount";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Simple ​Storage ​Browser";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -425,7 +426,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = s3_mount/s3_mount.entitlements;
+				CODE_SIGN_ENTITLEMENTS = simple_storage_browser/simple_storage_browser.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -433,6 +434,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Simple ​Storage ​Browser";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -440,7 +442,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.test-rb.s3-mount";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Simple ​Storage ​Browser";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -468,7 +470,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/s3_mount.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/s3_mount";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/simple_storage_browser.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/simple_storage_browser";
 			};
 			name = Debug;
 		};
@@ -489,7 +491,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/s3_mount.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/s3_mount";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/simple_storage_browser.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/simple_storage_browser";
 			};
 			name = Release;
 		};
@@ -508,7 +510,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = s3_mount;
+				TEST_TARGET_NAME = simple_storage_browser;
 			};
 			name = Debug;
 		};
@@ -527,14 +529,14 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = s3_mount;
+				TEST_TARGET_NAME = simple_storage_browser;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		FB46B9CC2F598EAC006BBF42 /* Build configuration list for PBXProject "s3_mount" */ = {
+		FB46B9CC2F598EAC006BBF42 /* Build configuration list for PBXProject "simple_storage_browser" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FB46B9F02F598EAD006BBF42 /* Debug */,
@@ -543,7 +545,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FB46B9F22F598EAD006BBF42 /* Build configuration list for PBXNativeTarget "s3_mount" */ = {
+		FB46B9F22F598EAD006BBF42 /* Build configuration list for PBXNativeTarget "simple_storage_browser" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FB46B9F32F598EAD006BBF42 /* Debug */,
@@ -552,7 +554,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FB46B9F52F598EAD006BBF42 /* Build configuration list for PBXNativeTarget "s3_mountTests" */ = {
+		FB46B9F52F598EAD006BBF42 /* Build configuration list for PBXNativeTarget "simple_storage_browserTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FB46B9F62F598EAD006BBF42 /* Debug */,
@@ -561,7 +563,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FB46B9F82F598EAD006BBF42 /* Build configuration list for PBXNativeTarget "s3_mountUITests" */ = {
+		FB46B9F82F598EAD006BBF42 /* Build configuration list for PBXNativeTarget "simple_storage_browserUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FB46B9F92F598EAD006BBF42 /* Debug */,

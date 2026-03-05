@@ -203,6 +203,9 @@ struct ContentView: View {
     // In-pane picking state
     @State private var activePaneIndex: Int? = nil
     @State private var showingSystemPhotoPicker: Bool = false
+    // Per-pane transform state (scale + offset), persisted for export
+    @State private var paneScales: [CGFloat] = [1, 1, 1, 1, 1, 1]
+    @State private var paneOffsets: [CGSize] = Array(repeating: .zero, count: 6)
     // Unified border
     @State private var borderGap: CGFloat = 4
     @State private var borderColor: Color = .black
@@ -296,7 +299,11 @@ struct ContentView: View {
                         default: break
                         }
                     }
-                    if let idx = activePaneIndex { setPane(index: idx, media: picked) }
+                    if let idx = activePaneIndex {
+                        setPane(index: idx, media: picked)
+                        paneScales[idx - 1] = 1
+                        paneOffsets[idx - 1] = .zero
+                    }
                     activePaneIndex = nil
                 }
             }
@@ -466,8 +473,10 @@ struct ContentView: View {
                 activePaneIndex = index
                 showingSystemPhotoPicker = true
             },
+            scales: $paneScales,
+            offsets: $paneOffsets,
             spacingOverride: borderGap,
-            cornerRadiusOverride: nil,
+            cornerRadiusOverride: max(0, borderRadius - borderGap),
             hidePaneFrame: hidePaneFrame
         )
         .background(borderStyle == .separators ? borderColor : Color(UIColor.systemBackground))
@@ -567,8 +576,10 @@ struct ContentView: View {
                                  player1: .constant(nil), player2: .constant(nil), player3: .constant(nil), player4: .constant(nil), player5: .constant(nil), player6: .constant(nil),
                                  backgroundColor: (borderStyle == .separators ? borderColor : Color(UIColor.systemBackground)),
                                  onPickForPane: { _ in },
+                                 scales: .constant(paneScales),
+                                 offsets: .constant(paneOffsets),
                                  spacingOverride: borderGap,
-                                 cornerRadiusOverride: nil,
+                                 cornerRadiusOverride: max(0, borderRadius - borderGap),
                                  hidePaneFrame: hidePaneFrame)
             .frame(width: innerW, height: innerH, alignment: .center)
             .background(borderStyle == .separators ? borderColor : Color(UIColor.systemBackground))
@@ -595,6 +606,8 @@ struct ContentView: View {
         item1 = nil; item2 = nil; item3 = nil; item4 = nil
         renderedImage = nil
         activePaneIndex = nil
+        paneScales = [1, 1, 1, 1, 1, 1]
+        paneOffsets = Array(repeating: .zero, count: 6)
     }
 
     // MARK: - Helpers to reduce body complexity
@@ -709,8 +722,19 @@ struct ContentView: View {
     }
 
     /// Draws cgImage aspect-fill into destRect with optional rounded clip in ctx.
-    private func drawImageInPane(_ cgImage: CGImage, into destRect: CGRect, cornerRadius: CGFloat, ctx: CGContext) {
-        let fillRect = aspectFillRect(imageSize: CGSize(width: cgImage.width, height: cgImage.height), in: destRect)
+    private func drawImageInPane(_ cgImage: CGImage, into destRect: CGRect, cornerRadius: CGFloat, ctx: CGContext,
+                                 userScale: CGFloat = 1, userOffset: CGSize = .zero) {
+        var fillRect = aspectFillRect(imageSize: CGSize(width: cgImage.width, height: cgImage.height), in: destRect)
+        // Apply user scale (around pane center) and offset
+        if userScale != 1 || userOffset != .zero {
+            let cx = destRect.midX
+            let cy = destRect.midY
+            let newW = fillRect.width * userScale
+            let newH = fillRect.height * userScale
+            fillRect = CGRect(x: cx - newW / 2 + userOffset.width,
+                              y: cy - newH / 2 + userOffset.height,
+                              width: newW, height: newH)
+        }
         // Always clip to destRect so aspect-fill doesn't bleed into adjacent panes.
         ctx.saveGState()
         if cornerRadius > 0 {
@@ -731,7 +755,8 @@ struct ContentView: View {
         rects: [Int: CGRect],
         canvasSize: CGSize,
         bgCGColor: CGColor,
-        pool: CVPixelBufferPool
+        pool: CVPixelBufferPool,
+        transforms: [Int: (scale: CGFloat, offset: CGSize)] = [:]
     ) -> CVPixelBuffer? {
         var pb: CVPixelBuffer?
         guard CVPixelBufferPoolCreatePixelBuffer(nil, pool, &pb) == kCVReturnSuccess, let pb else { return nil }
@@ -754,17 +779,23 @@ struct ContentView: View {
         ctx.fill(canvasRect)
         // Static images (cornerRadius=0; clipping is always applied in drawImageInPane)
         for (idx, cg) in staticImages {
-            if let rect = rects[idx] { drawImageInPane(cg, into: rect, cornerRadius: 0, ctx: ctx) }
+            if let rect = rects[idx] {
+                let t = transforms[idx]
+                drawImageInPane(cg, into: rect, cornerRadius: 0, ctx: ctx,
+                                userScale: t?.scale ?? 1, userOffset: t?.offset ?? .zero)
+            }
         }
         // Video frames — AVAssetImageGenerator returns CGImages in CGContext native orientation
         // (row 0 = visual bottom), opposite to UIImage.cgImage (row 0 = visual top).
         // Apply a local Y-flip around each pane rect to counteract the global Y-flip.
         for (idx, cg) in videoFrames {
             if let rect = rects[idx] {
+                let t = transforms[idx]
                 ctx.saveGState()
                 ctx.translateBy(x: 0, y: rect.minY + rect.maxY)
                 ctx.scaleBy(x: 1, y: -1)
-                drawImageInPane(cg, into: rect, cornerRadius: 0, ctx: ctx)
+                drawImageInPane(cg, into: rect, cornerRadius: 0, ctx: ctx,
+                                userScale: t?.scale ?? 1, userOffset: t?.offset ?? .zero)
                 ctx.restoreGState()
             }
         }
@@ -842,6 +873,12 @@ struct ContentView: View {
         let bgCGColor = UIColor(borderStyle == .separators ? borderColor : Color(UIColor.systemBackground)).cgColor
         // Outer border is the background color filling the margin area — no separate stroke needed.
         let rects = paneRects(for: selectedTemplate, canvasSize: canvasSize, spacing: spacing, margin: spacing)
+        // Capture transforms on MainActor before background processing
+        let capturedScales = paneScales
+        let capturedOffsets = paneOffsets
+        let exportTransforms: [Int: (scale: CGFloat, offset: CGSize)] = Dictionary(
+            uniqueKeysWithValues: (1...6).map { i in (i, (capturedScales[i-1], capturedOffsets[i-1])) }
+        )
 
         await MainActor.run { isExportingVideo = true; exportProgress = 0; cancelExport = false }
 
@@ -916,7 +953,8 @@ struct ContentView: View {
                                   rects: rects,
                                   canvasSize: canvasSize,
                                   bgCGColor: bgCGColor,
-                                  pool: pool
+                                  pool: pool,
+                                  transforms: exportTransforms
                               ) else { frameCount += 1; return }
                         adaptor.append(pb, withPresentationTime: CMTimeMultiply(frameDuration, multiplier: Int32(frameCount)))
                         frameCount += 1
@@ -1046,11 +1084,6 @@ struct TemplatePickerView: View {
                         } label: {
                             VStack(spacing: 8) {
                                 TemplatePreview(template: t)
-                                Text(t.displayName)
-                                    .font(.caption2.weight(.medium))
-                                    .foregroundStyle(isSelected ? .primary : .secondary)
-                                    .lineLimit(2)
-                                    .multilineTextAlignment(.center)
                             }
                             .frame(maxWidth: .infinity)
                             .padding(12)
@@ -1102,6 +1135,8 @@ struct CollageCanvas: View {
     @Binding var player6: AVPlayer?
     var backgroundColor: Color
     var onPickForPane: (Int) -> Void
+    @Binding var scales: [CGFloat]
+    @Binding var offsets: [CGSize]
     var spacingOverride: CGFloat? = nil
     var cornerRadiusOverride: CGFloat? = nil
     var hidePaneFrame: Bool = false
@@ -1122,32 +1157,39 @@ struct CollageCanvas: View {
         case .twoHorizontal:
             HStack(spacing: spacing) {
                 CollagePane(image: $image1, player: player1, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                            scale: $scales[0], offset: $offsets[0],
                             onTapEmpty: { onPickForPane(1) },
                             onLongPressReplace: { onPickForPane(1) })
                 CollagePane(image: $image2, player: player2, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                            scale: $scales[1], offset: $offsets[1],
                             onTapEmpty: { onPickForPane(2) },
                             onLongPressReplace: { onPickForPane(2) })
             }
         case .twoVertical:
             VStack(spacing: spacing) {
                 CollagePane(image: $image1, player: player1, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                            scale: $scales[0], offset: $offsets[0],
                             onTapEmpty: { onPickForPane(1) },
                             onLongPressReplace: { onPickForPane(1) })
                 CollagePane(image: $image2, player: player2, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                            scale: $scales[1], offset: $offsets[1],
                             onTapEmpty: { onPickForPane(2) },
                             onLongPressReplace: { onPickForPane(2) })
             }
         case .threeOneTopTwoBottom:
             VStack(spacing: spacing) {
                 CollagePane(image: $image1, player: player1, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                            scale: $scales[0], offset: $offsets[0],
                             onTapEmpty: { onPickForPane(1) },
                             onLongPressReplace: { onPickForPane(1) })
                     .frame(height: (size.height - spacing) * 0.5)
                 HStack(spacing: spacing) {
                     CollagePane(image: $image2, player: player2, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[1], offset: $offsets[1],
                                 onTapEmpty: { onPickForPane(2) },
                                 onLongPressReplace: { onPickForPane(2) })
                     CollagePane(image: $image3, player: player3, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[2], offset: $offsets[2],
                                 onTapEmpty: { onPickForPane(3) },
                                 onLongPressReplace: { onPickForPane(3) })
                 }
@@ -1156,13 +1198,16 @@ struct CollageCanvas: View {
             VStack(spacing: spacing) {
                 HStack(spacing: spacing) {
                     CollagePane(image: $image1, player: player1, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[0], offset: $offsets[0],
                                 onTapEmpty: { onPickForPane(1) },
                                 onLongPressReplace: { onPickForPane(1) })
                     CollagePane(image: $image2, player: player2, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[1], offset: $offsets[1],
                                 onTapEmpty: { onPickForPane(2) },
                                 onLongPressReplace: { onPickForPane(2) })
                 }
                 CollagePane(image: $image3, player: player3, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                            scale: $scales[2], offset: $offsets[2],
                             onTapEmpty: { onPickForPane(3) },
                             onLongPressReplace: { onPickForPane(3) })
                     .frame(height: (size.height - spacing) * 0.5)
@@ -1170,14 +1215,17 @@ struct CollageCanvas: View {
         case .threeOneLeftTwoRight:
             HStack(spacing: spacing) {
                 CollagePane(image: $image1, player: player1, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                            scale: $scales[0], offset: $offsets[0],
                             onTapEmpty: { onPickForPane(1) },
                             onLongPressReplace: { onPickForPane(1) })
                     .frame(width: (size.width - spacing) * 0.5)
                 VStack(spacing: spacing) {
                     CollagePane(image: $image2, player: player2, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[1], offset: $offsets[1],
                                 onTapEmpty: { onPickForPane(2) },
                                 onLongPressReplace: { onPickForPane(2) })
                     CollagePane(image: $image3, player: player3, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[2], offset: $offsets[2],
                                 onTapEmpty: { onPickForPane(3) },
                                 onLongPressReplace: { onPickForPane(3) })
                 }
@@ -1186,14 +1234,17 @@ struct CollageCanvas: View {
             HStack(spacing: spacing) {
                 VStack(spacing: spacing) {
                     CollagePane(image: $image1, player: player1, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[0], offset: $offsets[0],
                                 onTapEmpty: { onPickForPane(1) },
                                 onLongPressReplace: { onPickForPane(1) })
                     CollagePane(image: $image2, player: player2, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[1], offset: $offsets[1],
                                 onTapEmpty: { onPickForPane(2) },
                                 onLongPressReplace: { onPickForPane(2) })
                 }
                 .frame(width: (size.width - spacing) * 0.5)
                 CollagePane(image: $image3, player: player3, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                            scale: $scales[2], offset: $offsets[2],
                             onTapEmpty: { onPickForPane(3) },
                             onLongPressReplace: { onPickForPane(3) })
             }
@@ -1201,17 +1252,21 @@ struct CollageCanvas: View {
             VStack(spacing: spacing) {
                 HStack(spacing: spacing) {
                     CollagePane(image: $image1, player: player1, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[0], offset: $offsets[0],
                                 onTapEmpty: { onPickForPane(1) },
                                 onLongPressReplace: { onPickForPane(1) })
                     CollagePane(image: $image2, player: player2, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[1], offset: $offsets[1],
                                 onTapEmpty: { onPickForPane(2) },
                                 onLongPressReplace: { onPickForPane(2) })
                 }
                 HStack(spacing: spacing) {
                     CollagePane(image: $image3, player: player3, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[2], offset: $offsets[2],
                                 onTapEmpty: { onPickForPane(3) },
                                 onLongPressReplace: { onPickForPane(3) })
                     CollagePane(image: $image4, player: player4, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[3], offset: $offsets[3],
                                 onTapEmpty: { onPickForPane(4) },
                                 onLongPressReplace: { onPickForPane(4) })
                 }
@@ -1220,21 +1275,26 @@ struct CollageCanvas: View {
             VStack(spacing: spacing) {
                 HStack(spacing: spacing) {
                     CollagePane(image: $image1, player: player1, radius: radius, border: border,
+                                scale: $scales[0], offset: $offsets[0],
                                 onTapEmpty: { onPickForPane(1) },
                                 onLongPressReplace: { onPickForPane(1) })
                     CollagePane(image: $image2, player: player2, radius: radius, border: border,
+                                scale: $scales[1], offset: $offsets[1],
                                 onTapEmpty: { onPickForPane(2) },
                                 onLongPressReplace: { onPickForPane(2) })
                 }
                 HStack(spacing: spacing) {
                     CollagePane(image: $image3, player: player3, radius: radius, border: border,
+                                scale: $scales[2], offset: $offsets[2],
                                 onTapEmpty: { onPickForPane(3) },
                                 onLongPressReplace: { onPickForPane(3) })
                     CollagePane(image: $image4, player: player4, radius: radius, border: border,
+                                scale: $scales[3], offset: $offsets[3],
                                 onTapEmpty: { onPickForPane(4) },
                                 onLongPressReplace: { onPickForPane(4) })
                 }
                 CollagePane(image: $image5, player: player5, radius: radius, border: border,
+                            scale: $scales[4], offset: $offsets[4],
                             onTapEmpty: { onPickForPane(5) },
                             onLongPressReplace: { onPickForPane(5) })
                     .frame(height: (size.height - spacing*2) * 0.5)
@@ -1243,23 +1303,29 @@ struct CollageCanvas: View {
             VStack(spacing: spacing) {
                 HStack(spacing: spacing) {
                     CollagePane(image: $image1, player: player1, radius: radius, border: border,
+                                scale: $scales[0], offset: $offsets[0],
                                 onTapEmpty: { onPickForPane(1) },
                                 onLongPressReplace: { onPickForPane(1) })
                     CollagePane(image: $image2, player: player2, radius: radius, border: border,
+                                scale: $scales[1], offset: $offsets[1],
                                 onTapEmpty: { onPickForPane(2) },
                                 onLongPressReplace: { onPickForPane(2) })
                     CollagePane(image: $image3, player: player3, radius: radius, border: border,
+                                scale: $scales[2], offset: $offsets[2],
                                 onTapEmpty: { onPickForPane(3) },
                                 onLongPressReplace: { onPickForPane(3) })
                 }
                 HStack(spacing: spacing) {
                     CollagePane(image: $image4, player: player4, radius: radius, border: border,
+                                scale: $scales[3], offset: $offsets[3],
                                 onTapEmpty: { onPickForPane(4) },
                                 onLongPressReplace: { onPickForPane(4) })
                     CollagePane(image: $image5, player: player5, radius: radius, border: border,
+                                scale: $scales[4], offset: $offsets[4],
                                 onTapEmpty: { onPickForPane(5) },
                                 onLongPressReplace: { onPickForPane(5) })
                     CollagePane(image: $image6, player: player6, radius: radius, border: border,
+                                scale: $scales[5], offset: $offsets[5],
                                 onTapEmpty: { onPickForPane(6) },
                                 onLongPressReplace: { onPickForPane(6) })
                 }
@@ -1268,25 +1334,31 @@ struct CollageCanvas: View {
             VStack(spacing: spacing) {
                 HStack(spacing: spacing) {
                     CollagePane(image: $image1, player: player1, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[0], offset: $offsets[0],
                                 onTapEmpty: { onPickForPane(1) },
                                 onLongPressReplace: { onPickForPane(1) })
                     CollagePane(image: $image2, player: player2, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[1], offset: $offsets[1],
                                 onTapEmpty: { onPickForPane(2) },
                                 onLongPressReplace: { onPickForPane(2) })
                 }
                 HStack(spacing: spacing) {
                     CollagePane(image: $image3, player: player3, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[2], offset: $offsets[2],
                                 onTapEmpty: { onPickForPane(3) },
                                 onLongPressReplace: { onPickForPane(3) })
                     CollagePane(image: $image4, player: player4, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[3], offset: $offsets[3],
                                 onTapEmpty: { onPickForPane(4) },
                                 onLongPressReplace: { onPickForPane(4) })
                 }
                 HStack(spacing: spacing) {
                     CollagePane(image: $image5, player: player5, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[4], offset: $offsets[4],
                                 onTapEmpty: { onPickForPane(5) },
                                 onLongPressReplace: { onPickForPane(5) })
                     CollagePane(image: $image6, player: player6, radius: radius, border: border, backgroundColor: backgroundColor, hidePaneFrame: hidePaneFrame,
+                                scale: $scales[5], offset: $offsets[5],
                                 onTapEmpty: { onPickForPane(6) },
                                 onLongPressReplace: { onPickForPane(6) })
                 }
@@ -1441,14 +1513,14 @@ struct CollagePane: View {
     var border: ContentView.BorderStyle
     var backgroundColor: Color = Color(UIColor.systemBackground)
     var hidePaneFrame: Bool = false
+    @Binding var scale: CGFloat
+    @Binding var offset: CGSize
     var onTapEmpty: (() -> Void)? = nil
     var onLongPressReplace: (() -> Void)? = nil
 
     @Environment(\.colorScheme) private var colorScheme
 
-    @State private var scale: CGFloat = 1
     @State private var lastScale: CGFloat = 1
-    @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
     @State private var endObserver: Any?
 
