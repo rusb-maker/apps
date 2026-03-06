@@ -217,6 +217,11 @@ struct ContentView: View {
     @State private var borderPanelDrag: CGFloat = 0
     // Current canvas aspect ratio (width/height)
     @State private var canvasAspect: CGFloat = 1.0
+    // Current on-screen canvas size (used to match export geometry to preview)
+    @State private var canvasSize: CGSize = CGSize(width: 1, height: 1)
+
+    private let maxBorderGap: CGFloat = 13
+    private let maxBorderRadius: CGFloat = 34
 
 
     var body: some View {
@@ -314,6 +319,16 @@ struct ContentView: View {
         .task(id: item4) { await loadPhoto(item: item4, into: $image4) }
         .onAppear {
             showTemplatePicker = true
+            borderGap = min(max(0, borderGap), maxBorderGap)
+            borderRadius = min(max(0, borderRadius), maxBorderRadius)
+        }
+        .onChange(of: borderGap) { _, newValue in
+            let clamped = min(max(0, newValue), maxBorderGap)
+            if clamped != newValue { borderGap = clamped }
+        }
+        .onChange(of: borderRadius) { _, newValue in
+            let clamped = min(max(0, newValue), maxBorderRadius)
+            if clamped != newValue { borderRadius = clamped }
         }
     }
 
@@ -453,6 +468,9 @@ struct ContentView: View {
 
     @ViewBuilder
     private var canvasSection: some View {
+        let currentGap = min(max(0, borderGap), maxBorderGap)
+        let currentRadius = min(max(0, borderRadius), maxBorderRadius)
+        let currentPaneRadius = max(0, currentRadius - currentGap)
         CollageCanvas(
             template: selectedTemplate,
             border: borderStyle,
@@ -475,16 +493,16 @@ struct ContentView: View {
             },
             scales: $paneScales,
             offsets: $paneOffsets,
-            spacingOverride: borderGap,
-            cornerRadiusOverride: max(0, borderRadius - borderGap),
+            spacingOverride: currentGap,
+            cornerRadiusOverride: currentPaneRadius,
             hidePaneFrame: hidePaneFrame
         )
         .background(borderStyle == .separators ? borderColor : Color(UIColor.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: max(0, borderRadius - borderGap), style: .continuous))
-        .padding(borderGap)
+        .clipShape(RoundedRectangle(cornerRadius: currentPaneRadius, style: .continuous))
+        .padding(currentGap)
         .background(
-            RoundedRectangle(cornerRadius: borderRadius, style: .continuous)
-                .fill(borderGap > 0 ? AnyShapeStyle(borderColor) : AnyShapeStyle(Color(UIColor.systemBackground)))
+            RoundedRectangle(cornerRadius: currentRadius, style: .continuous)
+                .fill(currentGap > 0 ? AnyShapeStyle(borderColor) : AnyShapeStyle(Color(UIColor.systemBackground)))
         )
         .background(
             GeometryReader { geo in
@@ -493,11 +511,13 @@ struct ContentView: View {
                         let w = max(1, geo.size.width)
                         let h = max(1, geo.size.height)
                         canvasAspect = w / h
+                        canvasSize = CGSize(width: w, height: h)
                     }
                     .onChange(of: geo.size) { _, newSize in
                         let w = max(1, newSize.width)
                         let h = max(1, newSize.height)
                         canvasAspect = w / h
+                        canvasSize = CGSize(width: w, height: h)
                     }
             }
         )
@@ -518,8 +538,8 @@ struct ContentView: View {
                 ColorPicker("", selection: $borderColor, supportsOpacity: true)
                     .labelsHidden()
             }
-            LiquidSlider(label: "Gap", value: $borderGap, range: 0...32, step: 0.5, resetValue: 4)
-            LiquidSlider(label: "Radius", value: $borderRadius, range: 0...64, step: 0.5, resetValue: 16)
+            LiquidSlider(label: "Gap", value: $borderGap, range: 0...13, step: 0.5, resetValue: 4)
+            LiquidSlider(label: "Radius", value: $borderRadius, range: 0...34, step: 0.5, resetValue: 16)
             Toggle(isOn: $hidePaneFrame) {
                 Text("Hide frame")
                     .font(.subheadline)
@@ -563,13 +583,27 @@ struct ContentView: View {
     }
 
     // MARK: - Rendering & Saving
+    private func exportScaleFactor(targetWidth: CGFloat) -> CGFloat {
+        let sourceWidth = max(1, canvasSize.width)
+        guard sourceWidth > 1.5 else { return 1 }
+        return targetWidth / sourceWidth
+    }
+
+    private func scaledOffsets(_ offsets: [CGSize], factor: CGFloat) -> [CGSize] {
+        offsets.map { CGSize(width: $0.width * factor, height: $0.height * factor) }
+    }
+
     private func renderCollage() {
-        // Render just the collage canvas with current template.
-        // canvasAspect includes the outer border padding, so exportHeight matches preview.
+        // Scale geometry from on-screen canvas to export canvas, so export matches preview.
         let exportWidth: CGFloat = 2048
         let exportHeight: CGFloat = max(1, exportWidth / max(0.1, canvasAspect))
-        let innerW = exportWidth - 2 * borderGap
-        let innerH = exportHeight - 2 * borderGap
+        let exportScale = exportScaleFactor(targetWidth: exportWidth)
+        let scaledGap = min(max(0, borderGap), maxBorderGap) * exportScale
+        let scaledRadius = min(max(0, borderRadius), maxBorderRadius) * exportScale
+        let scaledPaneRadius = max(0, scaledRadius - scaledGap)
+        let scaledPaneOffsets = scaledOffsets(paneOffsets, factor: exportScale)
+        let innerW = max(1, exportWidth - 2 * scaledGap)
+        let innerH = max(1, exportHeight - 2 * scaledGap)
         let view = CollageCanvas(template: selectedTemplate,
                                  border: borderStyle,
                                  image1: .constant(image1), image2: .constant(image2), image3: .constant(image3), image4: .constant(image4), image5: .constant(image5), image6: .constant(image6),
@@ -577,17 +611,17 @@ struct ContentView: View {
                                  backgroundColor: (borderStyle == .separators ? borderColor : Color(UIColor.systemBackground)),
                                  onPickForPane: { _ in },
                                  scales: .constant(paneScales),
-                                 offsets: .constant(paneOffsets),
-                                 spacingOverride: borderGap,
-                                 cornerRadiusOverride: max(0, borderRadius - borderGap),
+                                 offsets: .constant(scaledPaneOffsets),
+                                 spacingOverride: scaledGap,
+                                 cornerRadiusOverride: scaledPaneRadius,
                                  hidePaneFrame: hidePaneFrame)
             .frame(width: innerW, height: innerH, alignment: .center)
             .background(borderStyle == .separators ? borderColor : Color(UIColor.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: max(0, borderRadius - borderGap), style: .continuous))
-            .padding(borderGap)
+            .clipShape(RoundedRectangle(cornerRadius: scaledPaneRadius, style: .continuous))
+            .padding(scaledGap)
             .background(
-                RoundedRectangle(cornerRadius: borderRadius, style: .continuous)
-                    .fill(borderGap > 0 ? AnyShapeStyle(borderColor) : AnyShapeStyle(Color(UIColor.systemBackground)))
+                RoundedRectangle(cornerRadius: scaledRadius, style: .continuous)
+                    .fill(scaledGap > 0 ? AnyShapeStyle(borderColor) : AnyShapeStyle(Color(UIColor.systemBackground)))
             )
             .frame(width: exportWidth, height: exportHeight)
 
@@ -756,7 +790,9 @@ struct ContentView: View {
         canvasSize: CGSize,
         bgCGColor: CGColor,
         pool: CVPixelBufferPool,
-        transforms: [Int: (scale: CGFloat, offset: CGSize)] = [:]
+        transforms: [Int: (scale: CGFloat, offset: CGSize)] = [:],
+        paneCornerRadius: CGFloat = 0,
+        outerCornerRadius: CGFloat = 0
     ) -> CVPixelBuffer? {
         var pb: CVPixelBuffer?
         guard CVPixelBufferPoolCreatePixelBuffer(nil, pool, &pb) == kCVReturnSuccess, let pb else { return nil }
@@ -774,6 +810,12 @@ struct ContentView: View {
         ctx.translateBy(x: 0, y: canvasSize.height)
         ctx.scaleBy(x: 1, y: -1)
         let canvasRect = CGRect(origin: .zero, size: canvasSize)
+        // Outer rounded clip to match preview container.
+        ctx.saveGState()
+        if outerCornerRadius > 0 {
+            ctx.addPath(CGPath(roundedRect: canvasRect, cornerWidth: outerCornerRadius, cornerHeight: outerCornerRadius, transform: nil))
+            ctx.clip()
+        }
         // Background
         ctx.setFillColor(bgCGColor)
         ctx.fill(canvasRect)
@@ -781,7 +823,7 @@ struct ContentView: View {
         for (idx, cg) in staticImages {
             if let rect = rects[idx] {
                 let t = transforms[idx]
-                drawImageInPane(cg, into: rect, cornerRadius: 0, ctx: ctx,
+                drawImageInPane(cg, into: rect, cornerRadius: paneCornerRadius, ctx: ctx,
                                 userScale: t?.scale ?? 1, userOffset: t?.offset ?? .zero)
             }
         }
@@ -794,11 +836,12 @@ struct ContentView: View {
                 ctx.saveGState()
                 ctx.translateBy(x: 0, y: rect.minY + rect.maxY)
                 ctx.scaleBy(x: 1, y: -1)
-                drawImageInPane(cg, into: rect, cornerRadius: 0, ctx: ctx,
+                drawImageInPane(cg, into: rect, cornerRadius: paneCornerRadius, ctx: ctx,
                                 userScale: t?.scale ?? 1, userOffset: t?.offset ?? .zero)
                 ctx.restoreGState()
             }
         }
+        ctx.restoreGState()
         return pb
     }
 
@@ -868,14 +911,16 @@ struct ContentView: View {
         let exportHeightRaw = exportWidth / max(0.01, canvasAspect)
         let exportHeight: CGFloat = CGFloat(Int(exportHeightRaw / 2) * 2)
         let canvasSize = CGSize(width: exportWidth, height: exportHeight)
-
-        let spacing: CGFloat = borderGap
+        let exportScale = exportScaleFactor(targetWidth: exportWidth)
+        let spacing: CGFloat = min(max(0, borderGap), maxBorderGap) * exportScale
+        let paneCornerRadius = max(0, (min(max(0, borderRadius), maxBorderRadius) - min(max(0, borderGap), maxBorderGap)) * exportScale)
+        let outerCornerRadius = min(max(0, borderRadius), maxBorderRadius) * exportScale
         let bgCGColor = UIColor(borderStyle == .separators ? borderColor : Color(UIColor.systemBackground)).cgColor
         // Outer border is the background color filling the margin area — no separate stroke needed.
         let rects = paneRects(for: selectedTemplate, canvasSize: canvasSize, spacing: spacing, margin: spacing)
         // Capture transforms on MainActor before background processing
         let capturedScales = paneScales
-        let capturedOffsets = paneOffsets
+        let capturedOffsets = scaledOffsets(paneOffsets, factor: exportScale)
         let exportTransforms: [Int: (scale: CGFloat, offset: CGSize)] = Dictionary(
             uniqueKeysWithValues: (1...6).map { i in (i, (capturedScales[i-1], capturedOffsets[i-1])) }
         )
@@ -954,7 +999,9 @@ struct ContentView: View {
                                   canvasSize: canvasSize,
                                   bgCGColor: bgCGColor,
                                   pool: pool,
-                                  transforms: exportTransforms
+                                  transforms: exportTransforms,
+                                  paneCornerRadius: paneCornerRadius,
+                                  outerCornerRadius: outerCornerRadius
                               ) else { frameCount += 1; return }
                         adaptor.append(pb, withPresentationTime: CMTimeMultiply(frameDuration, multiplier: Int32(frameCount)))
                         frameCount += 1
