@@ -5,13 +5,144 @@ import AppKit
 
 enum SortField: String, CaseIterable {
     case name = "Name"
-    case date = "Date Modified"
     case size = "Size"
+    case date = "Date Modified"
 }
 
 private struct TreeNodeKey: Hashable {
     let bucket: String
     let prefix: String
+}
+
+// MARK: - Equatable row views (prevents O(N) re-renders on selection change)
+
+private struct ObjectRowView: View, Equatable {
+    let obj: S3Object
+    let id: String
+    let isSelected: Bool
+    let sizeColumnWidth: CGFloat
+    let dateColumnWidth: CGFloat
+    let onTap: () -> Void
+    let onDoubleTap: () -> Void
+    let onSelectSingle: () -> Void
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.isSelected == rhs.isSelected &&
+        lhs.sizeColumnWidth == rhs.sizeColumnWidth &&
+        lhs.dateColumnWidth == rhs.dateColumnWidth
+    }
+
+    var body: some View {
+        let iconName: String
+        let iconColor: Color
+        if obj.isFolder {
+            iconName = "folder.fill"
+            iconColor = .yellow
+        } else {
+            iconName = fileIconName(for: obj.name)
+            iconColor = .blue
+        }
+
+        return HStack(spacing: 0) {
+            HStack(spacing: 8) {
+                Image(systemName: iconName)
+                    .foregroundStyle(isSelected ? Color.white : iconColor)
+                Text(obj.name)
+                    .lineLimit(1)
+                    .foregroundStyle(isSelected ? Color.white : Color.primary)
+            }
+            .padding(.horizontal, 6)
+            .padding(.vertical, 1)
+            .contentShape(Rectangle())
+            .onTapGesture(count: 1) { onTap() }
+            .onTapGesture(count: 2) { onSelectSingle(); onDoubleTap() }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            Text(obj.isFolder ? "—" : obj.formattedSize)
+                .font(.caption)
+                .foregroundStyle(isSelected ? Color.white : Color.secondary)
+                .frame(width: sizeColumnWidth, alignment: .center)
+                .frame(maxHeight: .infinity)
+                .contentShape(Rectangle())
+                .onTapGesture { onTap() }
+
+            Text(obj.lastModified?.formatted(date: .abbreviated, time: .shortened) ?? "—")
+                .font(.caption)
+                .foregroundStyle(isSelected ? Color.white : Color.secondary)
+                .frame(width: dateColumnWidth, alignment: .center)
+                .frame(maxHeight: .infinity)
+                .contentShape(Rectangle())
+                .onTapGesture { onTap() }
+        }
+        .frame(height: 20)
+    }
+
+    private func fileIconName(for name: String) -> String {
+        switch (name as NSString).pathExtension.lowercased() {
+        case "jpg", "jpeg", "png", "gif", "webp": return "photo"
+        case "mp4", "mov", "avi": return "film"
+        case "mp3", "wav", "flac", "aac": return "music.note"
+        case "pdf": return "doc.richtext"
+        case "txt", "md": return "doc.text"
+        case "json", "xml", "yaml", "yml": return "curlybraces"
+        case "zip", "gz", "tar": return "archivebox"
+        default: return "doc"
+        }
+    }
+}
+
+private struct BucketRowContentView: View, Equatable {
+    let id: String
+    let bucketName: String
+    let isSelected: Bool
+    let sizeColumnWidth: CGFloat
+    let dateColumnWidth: CGFloat
+    let onTap: () -> Void
+    let onDoubleTap: () -> Void
+    let onSelectSingle: () -> Void
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.isSelected == rhs.isSelected &&
+        lhs.sizeColumnWidth == rhs.sizeColumnWidth &&
+        lhs.dateColumnWidth == rhs.dateColumnWidth
+    }
+
+    var body: some View {
+        HStack(spacing: 0) {
+            HStack(spacing: 8) {
+                Image(systemName: "externaldrive")
+                    .foregroundStyle(isSelected ? Color.white : Color.blue)
+                Text(bucketName)
+                    .lineLimit(1)
+                    .foregroundStyle(isSelected ? Color.white : Color.primary)
+            }
+            .padding(.horizontal, 6)
+            .padding(.vertical, 1)
+            .contentShape(Rectangle())
+            .onTapGesture(count: 1) { onTap() }
+            .onTapGesture(count: 2) { onSelectSingle(); onDoubleTap() }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            Text("—")
+                .font(.caption)
+                .foregroundStyle(isSelected ? Color.white : Color.secondary)
+                .frame(width: sizeColumnWidth, alignment: .center)
+                .frame(maxHeight: .infinity)
+                .contentShape(Rectangle())
+                .onTapGesture { onTap() }
+
+            Text("—")
+                .font(.caption)
+                .foregroundStyle(isSelected ? Color.white : Color.secondary)
+                .frame(width: dateColumnWidth, alignment: .center)
+                .frame(maxHeight: .infinity)
+                .contentShape(Rectangle())
+                .onTapGesture { onTap() }
+        }
+        .frame(height: 20)
+    }
 }
 
 struct FileBrowserView: View {
@@ -49,8 +180,10 @@ struct FileBrowserView: View {
     }
     private let minSizeColumnWidth: CGFloat = 70
     private let minDateColumnWidth: CGFloat = 120
-    private let tableRowHeight: CGFloat = 24
-    private let tableHeaderHeight: CGFloat = 26
+    private let tableRowHeight: CGFloat = 20
+    private let tableHeaderHeight: CGFloat = 22
+    private let tableHorizontalInset: CGFloat = 8
+    private let disclosureGridCompensation: CGFloat = 16
 
     private func rowID(bucket: String, key: String) -> String {
         "\(bucket)||\(key)"
@@ -59,6 +192,10 @@ struct FileBrowserView: View {
     private func bucketRowID(_ bucket: String) -> String {
         "bucket||\(bucket)"
     }
+    
+    private var rowInsets: EdgeInsets {
+        EdgeInsets(top: 0, leading: tableHorizontalInset, bottom: 0, trailing: tableHorizontalInset)
+    }
 
     private func sorted(_ items: [S3Object]) -> [S3Object] {
         items.sorted { a, b in
@@ -66,8 +203,8 @@ struct FileBrowserView: View {
             let ascending: Bool
             switch sortField {
             case .name: ascending = a.name.localizedCompare(b.name) == .orderedAscending
-            case .date: ascending = (a.lastModified ?? .distantPast) < (b.lastModified ?? .distantPast)
             case .size: ascending = a.size < b.size
+            case .date: ascending = (a.lastModified ?? .distantPast) < (b.lastModified ?? .distantPast)
             }
             return sortAscending ? ascending : !ascending
         }
@@ -148,7 +285,8 @@ struct FileBrowserView: View {
             columnHeaderButton("Date Added", field: .date, width: dateColumnWidth)
         }
         .frame(height: tableHeaderHeight)
-        .padding(.horizontal, 12)
+        .padding(.leading, tableHorizontalInset)
+        .padding(.trailing, tableHorizontalInset + disclosureGridCompensation)
         .background(Color(nsColor: .controlBackgroundColor))
     }
 
@@ -205,7 +343,7 @@ struct FileBrowserView: View {
                     bucketRow(bucket, orderedIDs: bucketIDs)
                 }
             }
-            .listStyle(.inset(alternatesRowBackgrounds: true))
+            .listStyle(.plain)
         }
     }
 
@@ -224,43 +362,20 @@ struct FileBrowserView: View {
             }
         )
 
-        let isSelected = selectedKeys.contains(id)
         return DisclosureGroup(isExpanded: isExpanded) {
             treeChildren(for: node, bucket: bucket.name)
         } label: {
-            HStack(spacing: 0) {
-                nameCell(
-                    id: id,
-                    orderedIDs: orderedIDs,
-                    iconName: "externaldrive",
-                    iconColor: .blue,
-                    text: bucket.name,
-                    onDoubleTap: {
-                        toggleNodeExpansion(bucket: bucket.name, prefix: "")
-                    }
-                )
-
-                columnSeparator
-
-                Text("—")
-                    .font(.caption)
-                    .foregroundStyle(isSelected ? Color.white : Color.secondary)
-                    .frame(width: sizeColumnWidth, alignment: .center)
-                    .frame(maxHeight: .infinity)
-                    .contentShape(Rectangle())
-                    .onTapGesture { handlePrimaryClickSelection(for: id, in: orderedIDs) }
-
-                columnSeparator
-
-                Text("Bucket")
-                    .font(.caption)
-                    .foregroundStyle(isSelected ? Color.white : Color.secondary)
-                    .frame(width: dateColumnWidth, alignment: .center)
-                    .frame(maxHeight: .infinity)
-                    .contentShape(Rectangle())
-                    .onTapGesture { handlePrimaryClickSelection(for: id, in: orderedIDs) }
-            }
-            .frame(height: tableRowHeight)
+            BucketRowContentView(
+                id: id,
+                bucketName: bucket.name,
+                isSelected: selectedKeys.contains(id),
+                sizeColumnWidth: sizeColumnWidth,
+                dateColumnWidth: dateColumnWidth,
+                onTap: { handlePrimaryClickSelection(for: id, in: orderedIDs) },
+                onDoubleTap: { toggleNodeExpansion(bucket: bucket.name, prefix: "") },
+                onSelectSingle: { selectSingleObject(id) }
+            )
+            .equatable()
             .contentShape(Rectangle())
             .contextMenu {
                 Button {
@@ -268,10 +383,18 @@ struct FileBrowserView: View {
                 } label: {
                     Label("Upload Files Here", systemImage: "arrow.up.circle")
                 }
+
+                Divider()
+
+                Button {
+                    Task { await refreshNode(bucket: bucket.name, prefix: "") }
+                } label: {
+                    Label("Refresh Bucket", systemImage: "arrow.clockwise")
+                }
             }
         }
-        .listRowInsets(EdgeInsets(top: 2, leading: 12, bottom: 2, trailing: 12))
-        .listRowBackground(isSelected ? Color.accentColor : nil)
+        .listRowInsets(rowInsets)
+        .listRowBackground(selectedKeys.contains(id) ? Color.accentColor : Color.clear)
     }
 
     @ViewBuilder
@@ -284,15 +407,15 @@ struct FileBrowserView: View {
 
             ForEach(children) { child in
                 if child.isFolder {
-                    folderRow(child, bucket: bucket, orderedIDs: orderedIDs)
+                    folderRow(child, bucket: bucket, orderedIDs: orderedIDs, parentPrefix: node.prefix)
                 } else {
-                    objectRow(child, bucket: bucket, orderedIDs: orderedIDs)
+                    objectRow(child, bucket: bucket, orderedIDs: orderedIDs, parentPrefix: node.prefix)
                 }
             }
         }
     }
 
-    private func folderRow(_ obj: S3Object, bucket: String, orderedIDs: [String]) -> AnyView {
+    private func folderRow(_ obj: S3Object, bucket: String, orderedIDs: [String], parentPrefix: String) -> AnyView {
         let node = TreeNodeKey(bucket: bucket, prefix: obj.key)
         let id = rowID(bucket: bucket, key: obj.key)
         let isExpanded = Binding(
@@ -311,44 +434,50 @@ struct FileBrowserView: View {
             DisclosureGroup(isExpanded: isExpanded) {
                 treeChildren(for: node, bucket: bucket)
             } label: {
-                objectRowContent(
-                    obj,
+                ObjectRowView(
+                    obj: obj,
                     id: id,
-                    orderedIDs: orderedIDs,
-                    onDoubleTap: {
-                        toggleNodeExpansion(bucket: bucket, prefix: obj.key)
-                    }
+                    isSelected: selectedKeys.contains(id),
+                    sizeColumnWidth: sizeColumnWidth,
+                    dateColumnWidth: dateColumnWidth,
+                    onTap: { handlePrimaryClickSelection(for: id, in: orderedIDs) },
+                    onDoubleTap: { toggleNodeExpansion(bucket: bucket, prefix: obj.key) },
+                    onSelectSingle: { selectSingleObject(id) }
                 )
+                .equatable()
                 .contextMenu {
-                    objectContextMenu(obj, bucket: bucket)
+                    objectContextMenu(obj, bucket: bucket, parentPrefix: parentPrefix)
                 }
             }
-            .listRowInsets(EdgeInsets(top: 2, leading: 12, bottom: 2, trailing: 12))
-            .listRowBackground(selectedKeys.contains(id) ? Color.accentColor : nil)
+            .listRowInsets(rowInsets)
+            .listRowBackground(selectedKeys.contains(id) ? Color.accentColor : Color.clear)
         )
     }
 
-    private func objectRow(_ obj: S3Object, bucket: String, orderedIDs: [String]) -> some View {
+    private func objectRow(_ obj: S3Object, bucket: String, orderedIDs: [String], parentPrefix: String) -> some View {
         let id = rowID(bucket: bucket, key: obj.key)
 
-        return objectRowContent(
-            obj,
+        return ObjectRowView(
+            obj: obj,
             id: id,
-            orderedIDs: orderedIDs,
-            onDoubleTap: {
-                downloadObject(obj, bucket: bucket)
-            }
+            isSelected: selectedKeys.contains(id),
+            sizeColumnWidth: sizeColumnWidth,
+            dateColumnWidth: dateColumnWidth,
+            onTap: { handlePrimaryClickSelection(for: id, in: orderedIDs) },
+            onDoubleTap: { downloadObject(obj, bucket: bucket) },
+            onSelectSingle: { selectSingleObject(id) }
         )
+        .equatable()
         .contextMenu {
-            objectContextMenu(obj, bucket: bucket)
+            objectContextMenu(obj, bucket: bucket, parentPrefix: parentPrefix)
         }
-        .listRowInsets(EdgeInsets(top: 2, leading: 12, bottom: 2, trailing: 12))
-        .listRowBackground(selectedKeys.contains(id) ? Color.accentColor : nil)
+        .listRowInsets(rowInsets)
+        .listRowBackground(selectedKeys.contains(id) ? Color.accentColor : Color.clear)
     }
 
     // MARK: - Context Menu
 
-    private func objectContextMenu(_ obj: S3Object, bucket: String) -> some View {
+    private func objectContextMenu(_ obj: S3Object, bucket: String, parentPrefix: String) -> some View {
         Group {
             if !obj.isFolder {
                 Button {
@@ -362,6 +491,22 @@ struct FileBrowserView: View {
                 uploadFiles(to: bucket, prefix: obj.isFolder ? obj.key : "")
             } label: {
                 Label("Upload Files Here", systemImage: "arrow.up.circle")
+            }
+
+            Divider()
+
+            if obj.isFolder {
+                Button {
+                    Task { await refreshNode(bucket: bucket, prefix: obj.key) }
+                } label: {
+                    Label("Refresh", systemImage: "arrow.clockwise")
+                }
+            } else {
+                Button {
+                    Task { await refreshNode(bucket: bucket, prefix: parentPrefix) }
+                } label: {
+                    Label("Refresh Folder", systemImage: "arrow.clockwise")
+                }
             }
 
             Divider()
@@ -401,7 +546,8 @@ struct FileBrowserView: View {
     }
 
     private func handlePrimaryClickSelection(for key: String, in orderedKeys: [String]) {
-        let modifiers = NSEvent.modifierFlags.intersection(.deviceIndependentFlagsMask)
+        let currentModifiers = (NSApp.currentEvent?.modifierFlags ?? NSEvent.modifierFlags)
+        let modifiers = currentModifiers.intersection(.deviceIndependentFlagsMask)
         let isShift = modifiers.contains(.shift)
         let isCommand = modifiers.contains(.command)
 
@@ -438,89 +584,6 @@ struct FileBrowserView: View {
         selectionAnchorKey = key
     }
 
-    // MARK: - Shared row content
-
-    @ViewBuilder
-    private func objectRowContent(
-        _ obj: S3Object,
-        id: String,
-        orderedIDs: [String],
-        onDoubleTap: @escaping () -> Void
-    ) -> some View {
-        let isSelected = selectedKeys.contains(id)
-        HStack(spacing: 0) {
-            if obj.isFolder {
-                nameCell(
-                    id: id,
-                    orderedIDs: orderedIDs,
-                    iconName: "folder.fill",
-                    iconColor: .yellow,
-                    text: obj.name,
-                    onDoubleTap: onDoubleTap
-                )
-            } else {
-                nameCell(
-                    id: id,
-                    orderedIDs: orderedIDs,
-                    iconName: fileIcon(for: obj.name),
-                    iconColor: .blue,
-                    text: obj.name,
-                    onDoubleTap: onDoubleTap
-                )
-            }
-
-            columnSeparator
-
-            Text(obj.isFolder ? "—" : obj.formattedSize)
-                .font(.caption)
-                .foregroundStyle(isSelected ? Color.white : Color.secondary)
-                .frame(width: sizeColumnWidth, alignment: .center)
-                .frame(maxHeight: .infinity)
-                .contentShape(Rectangle())
-                .onTapGesture { handlePrimaryClickSelection(for: id, in: orderedIDs) }
-
-            columnSeparator
-
-            Text(obj.lastModified?.formatted(date: .abbreviated, time: .shortened) ?? "—")
-                .font(.caption)
-                .foregroundStyle(isSelected ? Color.white : Color.secondary)
-                .frame(width: dateColumnWidth, alignment: .center)
-                .frame(maxHeight: .infinity)
-                .contentShape(Rectangle())
-                .onTapGesture { handlePrimaryClickSelection(for: id, in: orderedIDs) }
-        }
-        .frame(height: tableRowHeight)
-    }
-
-    private func nameCell(
-        id: String,
-        orderedIDs: [String],
-        iconName: String,
-        iconColor: Color,
-        text: String,
-        onDoubleTap: @escaping () -> Void
-    ) -> some View {
-        let isSelected = selectedKeys.contains(id)
-        return HStack(spacing: 8) {
-            Image(systemName: iconName)
-                .foregroundStyle(isSelected ? Color.white : iconColor)
-            Text(text)
-                .lineLimit(1)
-                .foregroundStyle(isSelected ? Color.white : Color.primary)
-        }
-        .padding(.horizontal, 6)
-        .padding(.vertical, 2)
-        .contentShape(Rectangle())
-        .onTapGesture(count: 1) {
-            handlePrimaryClickSelection(for: id, in: orderedIDs)
-        }
-        .onTapGesture(count: 2) {
-            selectSingleObject(id)
-            onDoubleTap()
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
     private func toggleNodeExpansion(bucket: String, prefix: String) {
         let node = TreeNodeKey(bucket: bucket, prefix: prefix)
         if expandedKeys.contains(node) {
@@ -528,19 +591,6 @@ struct FileBrowserView: View {
         } else {
             expandedKeys.insert(node)
             Task { await loadChildren(bucket: bucket, prefix: prefix) }
-        }
-    }
-
-    private func fileIcon(for name: String) -> String {
-        switch (name as NSString).pathExtension.lowercased() {
-        case "jpg", "jpeg", "png", "gif", "webp": return "photo"
-        case "mp4", "mov", "avi": return "film"
-        case "mp3", "wav", "flac", "aac": return "music.note"
-        case "pdf": return "doc.richtext"
-        case "txt", "md": return "doc.text"
-        case "json", "xml", "yaml", "yml": return "curlybraces"
-        case "zip", "gz", "tar": return "archivebox"
-        default: return "doc"
         }
     }
 
@@ -672,11 +722,14 @@ struct FileBrowserView: View {
         }
     }
 
+    private func refreshNode(bucket: String, prefix: String) async {
+        let node = TreeNodeKey(bucket: bucket, prefix: prefix)
+        childItems.removeValue(forKey: node)
+        await loadChildren(bucket: bucket, prefix: prefix)
+    }
+
     private func downloadObject(_ obj: S3Object, bucket: String) {
-        let panel = NSSavePanel()
-        panel.nameFieldStringValue = obj.name
-        panel.canCreateDirectories = true
-        guard panel.runModal() == .OK, let dest = panel.url else { return }
+        guard let destinationFolder = chooseDownloadFolder() else { return }
 
         Task {
             do {
@@ -686,13 +739,7 @@ struct FileBrowserView: View {
                     bucket: bucket,
                     key: obj.key
                 )
-                let destinationFolder = dest.deletingLastPathComponent()
-                let destination: URL
-                if FileManager.default.fileExists(atPath: dest.path) {
-                    destination = uniqueDestinationURL(in: destinationFolder, fileName: dest.lastPathComponent)
-                } else {
-                    destination = dest
-                }
+                let destination = uniqueDestinationURL(in: destinationFolder, fileName: obj.name)
                 try FileManager.default.moveItem(at: tmp, to: destination)
             } catch {
                 loadError = error.localizedDescription
@@ -704,13 +751,7 @@ struct FileBrowserView: View {
         let files = items.filter { !$0.object.isFolder }
         guard !files.isEmpty else { return }
 
-        let panel = NSOpenPanel()
-        panel.canChooseDirectories = true
-        panel.canChooseFiles = false
-        panel.allowsMultipleSelection = false
-        panel.canCreateDirectories = true
-        panel.prompt = "Select Folder"
-        guard panel.runModal() == .OK, let destinationFolder = panel.url else { return }
+        guard let destinationFolder = chooseDownloadFolder() else { return }
 
         Task {
             for item in files {
@@ -729,6 +770,17 @@ struct FileBrowserView: View {
                 }
             }
         }
+    }
+    
+    private func chooseDownloadFolder() -> URL? {
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.allowsMultipleSelection = false
+        panel.canCreateDirectories = true
+        panel.prompt = "Select Folder"
+        guard panel.runModal() == .OK else { return nil }
+        return panel.url
     }
 
     private func uniqueDestinationURL(in folder: URL, fileName: String) -> URL {
