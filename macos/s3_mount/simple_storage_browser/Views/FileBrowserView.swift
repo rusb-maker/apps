@@ -3,29 +3,23 @@ import AppKit
 
 // MARK: - Supporting Enums
 
-enum ViewStyle: String, CaseIterable { case browser, outline }
 enum SortField: String, CaseIterable {
     case name = "Name"
     case date = "Date Modified"
     case size = "Size"
 }
 
-enum SortOrder: String, CaseIterable {
-    case ascending = "Ascending"
-    case descending = "Descending"
+private struct TreeNodeKey: Hashable {
+    let bucket: String
+    let prefix: String
 }
 
 struct FileBrowserView: View {
     let profile: S3Profile
     @Environment(S3Service.self) var s3Service
 
-    @State private var currentBucket: String? = nil
-    @State private var currentPrefix: String = ""
     @State private var buckets: [S3Bucket] = []
-    @State private var objects: [S3Object] = []
-    @State private var continuationToken: String? = nil
     @State private var isLoading = false
-    @State private var isLoadingMore = false
     @State private var loadError: String?
     @State private var uploadError: String?
 
@@ -33,27 +27,38 @@ struct FileBrowserView: View {
     @State private var selectedKeys: Set<String> = []
     @State private var selectionAnchorKey: String? = nil
 
-    // View controls
-    @State private var viewStyle: ViewStyle = .browser
     @State private var sortField: SortField = .name
     @State private var sortAscending = true
+    @State private var sizeColumnWidth: CGFloat = 100
+    @State private var dateColumnWidth: CGFloat = 170
+    @State private var sizeColumnWidthAtDragStart: CGFloat = 100
+    @State private var dateColumnWidthAtDragStart: CGFloat = 170
 
-    // Outline mode state
-    @State private var expandedKeys: Set<String> = []
-    @State private var childItems: [String: [S3Object]] = [:]
-    @State private var loadingKeys: Set<String> = []
-    
+    // Tree state
+    @State private var expandedKeys: Set<TreeNodeKey> = []
+    @State private var childItems: [TreeNodeKey: [S3Object]] = [:]
+    @State private var loadingKeys: Set<TreeNodeKey> = []
+
     // Cache
-    @State private var objectsCache: [String: [S3Object]] = [:]
     @State private var bucketsCache: [S3Bucket]? = nil
-    @State private var sortedObjectsCache: [S3Object] = []
     @State private var objectLookup: [String: S3Object] = [:]
+    @State private var objectBucketLookup: [String: String] = [:]
 
     private var secretKey: String {
         (try? KeychainService.load(for: profile.keychainKey)) ?? ""
     }
+    private let minSizeColumnWidth: CGFloat = 70
+    private let minDateColumnWidth: CGFloat = 120
+    private let tableRowHeight: CGFloat = 24
+    private let tableHeaderHeight: CGFloat = 26
 
-    private var sortedObjects: [S3Object] { sortedObjectsCache }
+    private func rowID(bucket: String, key: String) -> String {
+        "\(bucket)||\(key)"
+    }
+
+    private func bucketRowID(_ bucket: String) -> String {
+        "bucket||\(bucket)"
+    }
 
     private func sorted(_ items: [S3Object]) -> [S3Object] {
         items.sorted { a, b in
@@ -68,40 +73,39 @@ struct FileBrowserView: View {
         }
     }
 
-    private var downloadableSelection: [S3Object] {
-        selectedKeys.compactMap { objectLookup[$0] }.filter { !$0.isFolder }
+    private var downloadableSelection: [(bucket: String, object: S3Object)] {
+        selectedKeys.compactMap { key in
+            guard let obj = objectLookup[key],
+                  let bucket = objectBucketLookup[key],
+                  !obj.isFolder else { return nil }
+            return (bucket, obj)
+        }
     }
 
     private func rebuildObjectLookup() {
-        var next: [String: S3Object] = [:]
-        for obj in objects {
-            next[obj.key] = obj
-        }
-        for children in childItems.values {
+        var nextObjectLookup: [String: S3Object] = [:]
+        var nextBucketLookup: [String: String] = [:]
+
+        for (node, children) in childItems {
             for child in children {
-                next[child.key] = child
+                let id = rowID(bucket: node.bucket, key: child.key)
+                nextObjectLookup[id] = child
+                nextBucketLookup[id] = node.bucket
             }
         }
-        objectLookup = next
-    }
 
-    private func refreshSortedObjects() {
-        sortedObjectsCache = sorted(objects)
+        objectLookup = nextObjectLookup
+        objectBucketLookup = nextBucketLookup
     }
 
     var body: some View {
         VStack(spacing: 0) {
-            breadcrumbBar
-            Divider()
-
             ZStack {
                 if isLoading {
                     ProgressView("Loading…")
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if let err = loadError {
                     errorView(err)
-                } else if viewStyle == .browser {
-                    browserList
                 } else {
                     outlineList
                 }
@@ -114,65 +118,57 @@ struct FileBrowserView: View {
         }
         .navigationTitle(profile.name)
         .toolbar { toolbarItems }
-        .task(id: "\(profile.id)/\(currentBucket ?? "")/\(currentPrefix)") { await loadWithCache() }
-        .onChange(of: sortField) { _ in refreshSortedObjects() }
-        .onChange(of: sortAscending) { _ in refreshSortedObjects() }
-    }
-
-    // MARK: - Breadcrumb
-
-    private var breadcrumbBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 4) {
-                breadcrumbButton(label: profile.name, isLast: currentBucket == nil) {
-                    currentBucket = nil
-                    currentPrefix = ""
-                }
-                if let bucket = currentBucket {
-                    Image(systemName: "chevron.right").font(.caption).foregroundStyle(.secondary)
-                    breadcrumbButton(label: bucket, isLast: currentPrefix.isEmpty) {
-                        currentPrefix = ""
-                    }
-                    let parts = currentPrefix.split(separator: "/").map(String.init)
-                    ForEach(Array(parts.enumerated()), id: \.offset) { idx, part in
-                        Image(systemName: "chevron.right").font(.caption).foregroundStyle(.secondary)
-                        let prefix = parts[0...idx].joined(separator: "/") + "/"
-                        breadcrumbButton(label: part, isLast: idx == parts.count - 1) {
-                            currentPrefix = prefix
-                        }
-                    }
-                }
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-        }
-    }
-
-    private func breadcrumbButton(label: String, isLast: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Text(label)
-                .fontWeight(isLast ? .semibold : .regular)
-                .foregroundStyle(isLast ? .primary : .secondary)
-        }
-        .buttonStyle(.borderless)
-        .disabled(isLast)
+        .task(id: "\(profile.id)") { await loadWithCache() }
     }
 
     // MARK: - Column Header
-    
+
     private var columnHeader: some View {
         HStack(spacing: 0) {
-            columnHeaderButton("Name", field: .name, minWidth: 200)
-            Spacer()
-            columnHeaderButton("Size", field: .size, width: 80)
-            columnHeaderButton("Date Added", field: .date, width: 150)
+            columnHeaderButton("Name", field: .name)
+            resizeSeparator {
+                DragGesture(minimumDistance: 0)
+                    .onChanged { value in
+                        sizeColumnWidth = max(minSizeColumnWidth, sizeColumnWidthAtDragStart - value.translation.width)
+                    }
+                    .onEnded { _ in
+                        sizeColumnWidthAtDragStart = sizeColumnWidth
+                    }
+            }
+            columnHeaderButton("Size", field: .size, width: sizeColumnWidth)
+            resizeSeparator {
+                DragGesture(minimumDistance: 0)
+                    .onChanged { value in
+                        dateColumnWidth = max(minDateColumnWidth, dateColumnWidthAtDragStart - value.translation.width)
+                    }
+                    .onEnded { _ in
+                        dateColumnWidthAtDragStart = dateColumnWidth
+                    }
+            }
+            columnHeaderButton("Date Added", field: .date, width: dateColumnWidth)
         }
+        .frame(height: tableHeaderHeight)
         .padding(.horizontal, 12)
-        .padding(.vertical, 6)
         .background(Color(nsColor: .controlBackgroundColor))
     }
-    
-    private func columnHeaderButton(_ title: String, field: SortField, width: CGFloat? = nil, minWidth: CGFloat? = nil) -> some View {
+
+    private var columnSeparator: some View {
+        Rectangle()
+            .fill(Color.gray.opacity(0.25))
+            .frame(width: 1)
+    }
+
+    private func resizeSeparator(_ gesture: () -> some Gesture) -> some View {
+        columnSeparator
+            .overlay(
+                Color.clear
+                    .frame(width: 10)
+                    .contentShape(Rectangle())
+                    .highPriorityGesture(gesture())
+            )
+    }
+
+    private func columnHeaderButton(_ title: String, field: SortField, width: CGFloat? = nil) -> some View {
         Button {
             if sortField == field {
                 sortAscending.toggle()
@@ -191,164 +187,185 @@ struct FileBrowserView: View {
                         .foregroundStyle(.secondary)
                 }
             }
-            .frame(width: width, alignment: field == .name ? .leading : .trailing)
-            .frame(minWidth: minWidth, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .frame(width: width)
         }
         .buttonStyle(.plain)
     }
 
-    // MARK: - Browser List
+    // MARK: - Outline List
 
-    private var browserList: some View {
+    private var outlineList: some View {
         VStack(spacing: 0) {
-            if currentBucket != nil {
-                columnHeader
-                Divider()
-            }
-            List(selection: $selectedKeys) {
-                if currentBucket == nil {
-                    ForEach(buckets) { bucket in
-                        HStack(spacing: 10) {
-                            Image(systemName: "externaldrive")
-                                .foregroundStyle(.blue)
-                                .frame(width: 20)
-                            Text(bucket.name)
-                            Spacer()
-                            Text("Bucket").font(.caption).foregroundStyle(.secondary)
-                        }
-                        .tag(bucket.name)
-                        .contentShape(Rectangle())
-                        .onTapGesture(count: 2) {
-                            currentBucket = bucket.name
-                            currentPrefix = ""
-                        }
-                    }
-                } else {
-                    let orderedKeys = sortedObjects.map(\.key)
-                    ForEach(sortedObjects) { obj in
-                        objectRowContent(obj)
-                            .tag(obj.key)
-                            .contentShape(Rectangle())
-                            .onTapGesture(count: 1) {
-                                handlePrimaryClickSelection(for: obj.key, in: orderedKeys)
-                            }
-                            .onTapGesture(count: 2) {
-                                if obj.isFolder {
-                                    currentPrefix = obj.key
-                                } else {
-                                    downloadObject(obj)
-                                }
-                            }
-                            .contextMenu {
-                                objectContextMenu(obj)
-                            }
-                    }
+            columnHeader
+            Divider()
+            List {
+                let bucketIDs = buckets.map { bucketRowID($0.name) }
+                ForEach(buckets) { bucket in
+                    bucketRow(bucket, orderedIDs: bucketIDs)
                 }
             }
             .listStyle(.inset(alternatesRowBackgrounds: true))
         }
     }
-    
-    // MARK: - Outline List
 
-    private var outlineList: some View {
-        VStack(spacing: 0) {
-            if currentBucket != nil {
-                columnHeader
-                Divider()
+    private func bucketRow(_ bucket: S3Bucket, orderedIDs: [String]) -> some View {
+        let node = TreeNodeKey(bucket: bucket.name, prefix: "")
+        let id = bucketRowID(bucket.name)
+        let isExpanded = Binding(
+            get: { expandedKeys.contains(node) },
+            set: { expanded in
+                if expanded {
+                    expandedKeys.insert(node)
+                    Task { await loadChildren(bucket: bucket.name, prefix: "") }
+                } else {
+                    expandedKeys.remove(node)
+                }
             }
-            outlineListContent
-        }
-    }
-    
-    private var outlineListContent: some View {
-        List(selection: $selectedKeys) {
-            if currentBucket == nil {
-                ForEach(buckets) { bucket in
-                    let ck = cacheKey(bucket: bucket.name, prefix: "")
-                    let isExpanded = Binding(
-                        get: { expandedKeys.contains(ck) },
-                        set: { expanded in
-                            if expanded {
-                                expandedKeys.insert(ck)
-                                Task { await loadChildren(bucket: bucket.name, prefix: "") }
-                            } else {
-                                expandedKeys.remove(ck)
-                            }
-                        }
-                    )
-                    DisclosureGroup(isExpanded: isExpanded) {
-                        if loadingKeys.contains(ck) {
-                            ProgressView().frame(maxWidth: .infinity).padding(.vertical, 4)
-                        } else {
-                            let childObjects = sorted(childItems[ck] ?? [])
-                            let childKeys = childObjects.map(\.key)
-                            ForEach(childObjects) { child in
-                                if child.isFolder {
-                                    folderRow(child, bucket: bucket.name, orderedKeys: childKeys)
-                                } else {
-                                    objectRowContent(child).tag(child.key)
-                                        .onTapGesture(count: 1) {
-                                            handlePrimaryClickSelection(for: child.key, in: childKeys)
-                                        }
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack(spacing: 10) {
-                            Image(systemName: "externaldrive")
-                                .foregroundStyle(.blue)
-                                .frame(width: 20)
-                            Text(bucket.name)
-                            Spacer()
-                            Text("Bucket").font(.caption).foregroundStyle(.secondary)
-                        }
+        )
+
+        let isSelected = selectedKeys.contains(id)
+        return DisclosureGroup(isExpanded: isExpanded) {
+            treeChildren(for: node, bucket: bucket.name)
+        } label: {
+            HStack(spacing: 0) {
+                nameCell(
+                    id: id,
+                    orderedIDs: orderedIDs,
+                    iconName: "externaldrive",
+                    iconColor: .blue,
+                    text: bucket.name,
+                    onDoubleTap: {
+                        toggleNodeExpansion(bucket: bucket.name, prefix: "")
                     }
-                    .tag(bucket.name)
-                }
-            } else {
-                let orderedKeys = sortedObjects.map(\.key)
-                ForEach(sortedObjects) { obj in
-                    if obj.isFolder {
-                        folderRow(obj, bucket: currentBucket!, orderedKeys: orderedKeys)
-                    } else {
-                        objectRowContent(obj)
-                            .tag(obj.key)
-                            .onTapGesture(count: 1) {
-                                handlePrimaryClickSelection(for: obj.key, in: orderedKeys)
-                            }
-                            .contextMenu {
-                                objectContextMenu(obj)
-                            }
-                    }
-                }
+                )
+
+                columnSeparator
+
+                Text("—")
+                    .font(.caption)
+                    .foregroundStyle(isSelected ? Color.white : Color.secondary)
+                    .frame(width: sizeColumnWidth, alignment: .center)
+                    .frame(maxHeight: .infinity)
+                    .contentShape(Rectangle())
+                    .onTapGesture { handlePrimaryClickSelection(for: id, in: orderedIDs) }
+
+                columnSeparator
+
+                Text("Bucket")
+                    .font(.caption)
+                    .foregroundStyle(isSelected ? Color.white : Color.secondary)
+                    .frame(width: dateColumnWidth, alignment: .center)
+                    .frame(maxHeight: .infinity)
+                    .contentShape(Rectangle())
+                    .onTapGesture { handlePrimaryClickSelection(for: id, in: orderedIDs) }
             }
-        }
-        .listStyle(.inset(alternatesRowBackgrounds: true))
-    }
-    
-    // MARK: - Context Menu
-    
-    private func objectContextMenu(_ obj: S3Object) -> some View {
-        Group {
-            if !obj.isFolder {
+            .frame(height: tableRowHeight)
+            .contentShape(Rectangle())
+            .contextMenu {
                 Button {
-                    downloadObject(obj)
-                } label: {
-                    Label("Download", systemImage: "arrow.down.circle")
-                }
-            }
-            
-            if currentBucket != nil {
-                Button {
-                    uploadFiles()
+                    uploadFiles(to: bucket.name, prefix: "")
                 } label: {
                     Label("Upload Files Here", systemImage: "arrow.up.circle")
                 }
             }
-            
+        }
+        .listRowInsets(EdgeInsets(top: 2, leading: 12, bottom: 2, trailing: 12))
+        .listRowBackground(isSelected ? Color.accentColor : nil)
+    }
+
+    @ViewBuilder
+    private func treeChildren(for node: TreeNodeKey, bucket: String) -> some View {
+        if loadingKeys.contains(node) {
+            ProgressView().frame(maxWidth: .infinity).padding(.vertical, 4)
+        } else {
+            let children = sorted(childItems[node] ?? [])
+            let orderedIDs = children.map { rowID(bucket: bucket, key: $0.key) }
+
+            ForEach(children) { child in
+                if child.isFolder {
+                    folderRow(child, bucket: bucket, orderedIDs: orderedIDs)
+                } else {
+                    objectRow(child, bucket: bucket, orderedIDs: orderedIDs)
+                }
+            }
+        }
+    }
+
+    private func folderRow(_ obj: S3Object, bucket: String, orderedIDs: [String]) -> AnyView {
+        let node = TreeNodeKey(bucket: bucket, prefix: obj.key)
+        let id = rowID(bucket: bucket, key: obj.key)
+        let isExpanded = Binding(
+            get: { expandedKeys.contains(node) },
+            set: { expanded in
+                if expanded {
+                    expandedKeys.insert(node)
+                    Task { await loadChildren(bucket: bucket, prefix: obj.key) }
+                } else {
+                    expandedKeys.remove(node)
+                }
+            }
+        )
+
+        return AnyView(
+            DisclosureGroup(isExpanded: isExpanded) {
+                treeChildren(for: node, bucket: bucket)
+            } label: {
+                objectRowContent(
+                    obj,
+                    id: id,
+                    orderedIDs: orderedIDs,
+                    onDoubleTap: {
+                        toggleNodeExpansion(bucket: bucket, prefix: obj.key)
+                    }
+                )
+                .contextMenu {
+                    objectContextMenu(obj, bucket: bucket)
+                }
+            }
+            .listRowInsets(EdgeInsets(top: 2, leading: 12, bottom: 2, trailing: 12))
+            .listRowBackground(selectedKeys.contains(id) ? Color.accentColor : nil)
+        )
+    }
+
+    private func objectRow(_ obj: S3Object, bucket: String, orderedIDs: [String]) -> some View {
+        let id = rowID(bucket: bucket, key: obj.key)
+
+        return objectRowContent(
+            obj,
+            id: id,
+            orderedIDs: orderedIDs,
+            onDoubleTap: {
+                downloadObject(obj, bucket: bucket)
+            }
+        )
+        .contextMenu {
+            objectContextMenu(obj, bucket: bucket)
+        }
+        .listRowInsets(EdgeInsets(top: 2, leading: 12, bottom: 2, trailing: 12))
+        .listRowBackground(selectedKeys.contains(id) ? Color.accentColor : nil)
+    }
+
+    // MARK: - Context Menu
+
+    private func objectContextMenu(_ obj: S3Object, bucket: String) -> some View {
+        Group {
+            if !obj.isFolder {
+                Button {
+                    downloadObject(obj, bucket: bucket)
+                } label: {
+                    Label("Download", systemImage: "arrow.down.circle")
+                }
+            }
+
+            Button {
+                uploadFiles(to: bucket, prefix: obj.isFolder ? obj.key : "")
+            } label: {
+                Label("Upload Files Here", systemImage: "arrow.up.circle")
+            }
+
             Divider()
-            
+
             Menu("Sort By") {
                 Button {
                     sortField = .name
@@ -381,54 +398,6 @@ struct FileBrowserView: View {
                 }
             }
         }
-    }
-
-    private func folderRow(_ obj: S3Object, bucket: String, orderedKeys: [String]) -> AnyView {
-        let ck = cacheKey(bucket: bucket, prefix: obj.key)
-        let isExpanded = Binding(
-            get: { expandedKeys.contains(ck) },
-            set: { expanded in
-                if expanded {
-                    expandedKeys.insert(ck)
-                    Task { await loadChildren(bucket: bucket, prefix: obj.key) }
-                } else {
-                    expandedKeys.remove(ck)
-                }
-            }
-        )
-        return AnyView(
-            DisclosureGroup(isExpanded: isExpanded) {
-                if loadingKeys.contains(ck) {
-                    ProgressView().frame(maxWidth: .infinity).padding(.vertical, 4)
-                } else {
-                    let childObjects = sorted(childItems[ck] ?? [])
-                    let childKeys = childObjects.map(\.key)
-                    ForEach(childObjects) { child in
-                        if child.isFolder {
-                            folderRow(child, bucket: bucket, orderedKeys: childKeys)
-                        } else {
-                            objectRowContent(child)
-                                .tag(child.key)
-                                .onTapGesture(count: 1) {
-                                    handlePrimaryClickSelection(for: child.key, in: childKeys)
-                                }
-                                .contextMenu {
-                                    objectContextMenu(child)
-                                }
-                        }
-                    }
-                }
-            } label: {
-                objectRowContent(obj)
-            }
-            .tag(obj.key)
-            .onTapGesture(count: 1) {
-                handlePrimaryClickSelection(for: obj.key, in: orderedKeys)
-            }
-            .contextMenu {
-                objectContextMenu(obj)
-            }
-        )
     }
 
     private func handlePrimaryClickSelection(for key: String, in orderedKeys: [String]) {
@@ -464,38 +433,101 @@ struct FileBrowserView: View {
         }
     }
 
+    private func selectSingleObject(_ key: String) {
+        selectedKeys = [key]
+        selectionAnchorKey = key
+    }
+
     // MARK: - Shared row content
 
     @ViewBuilder
-    private func objectRowContent(_ obj: S3Object) -> some View {
-        HStack(spacing: 10) {
-            Image(systemName: obj.isFolder ? "folder.fill" : fileIcon(for: obj.name))
-                .foregroundStyle(obj.isFolder ? .yellow : .blue)
-                .frame(width: 20)
-            Text(obj.name)
-            Spacer()
-            if !obj.isFolder {
-                Text(obj.formattedSize)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .frame(width: 80, alignment: .trailing)
+    private func objectRowContent(
+        _ obj: S3Object,
+        id: String,
+        orderedIDs: [String],
+        onDoubleTap: @escaping () -> Void
+    ) -> some View {
+        let isSelected = selectedKeys.contains(id)
+        HStack(spacing: 0) {
+            if obj.isFolder {
+                nameCell(
+                    id: id,
+                    orderedIDs: orderedIDs,
+                    iconName: "folder.fill",
+                    iconColor: .yellow,
+                    text: obj.name,
+                    onDoubleTap: onDoubleTap
+                )
             } else {
-                Text("—")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .frame(width: 80, alignment: .trailing)
+                nameCell(
+                    id: id,
+                    orderedIDs: orderedIDs,
+                    iconName: fileIcon(for: obj.name),
+                    iconColor: .blue,
+                    text: obj.name,
+                    onDoubleTap: onDoubleTap
+                )
             }
-            if let mod = obj.lastModified {
-                Text(mod.formatted(date: .abbreviated, time: .shortened))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .frame(width: 150, alignment: .trailing)
-            } else {
-                Text("—")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .frame(width: 150, alignment: .trailing)
-            }
+
+            columnSeparator
+
+            Text(obj.isFolder ? "—" : obj.formattedSize)
+                .font(.caption)
+                .foregroundStyle(isSelected ? Color.white : Color.secondary)
+                .frame(width: sizeColumnWidth, alignment: .center)
+                .frame(maxHeight: .infinity)
+                .contentShape(Rectangle())
+                .onTapGesture { handlePrimaryClickSelection(for: id, in: orderedIDs) }
+
+            columnSeparator
+
+            Text(obj.lastModified?.formatted(date: .abbreviated, time: .shortened) ?? "—")
+                .font(.caption)
+                .foregroundStyle(isSelected ? Color.white : Color.secondary)
+                .frame(width: dateColumnWidth, alignment: .center)
+                .frame(maxHeight: .infinity)
+                .contentShape(Rectangle())
+                .onTapGesture { handlePrimaryClickSelection(for: id, in: orderedIDs) }
+        }
+        .frame(height: tableRowHeight)
+    }
+
+    private func nameCell(
+        id: String,
+        orderedIDs: [String],
+        iconName: String,
+        iconColor: Color,
+        text: String,
+        onDoubleTap: @escaping () -> Void
+    ) -> some View {
+        let isSelected = selectedKeys.contains(id)
+        return HStack(spacing: 8) {
+            Image(systemName: iconName)
+                .foregroundStyle(isSelected ? Color.white : iconColor)
+            Text(text)
+                .lineLimit(1)
+                .foregroundStyle(isSelected ? Color.white : Color.primary)
+        }
+        .padding(.horizontal, 6)
+        .padding(.vertical, 2)
+        .contentShape(Rectangle())
+        .onTapGesture(count: 1) {
+            handlePrimaryClickSelection(for: id, in: orderedIDs)
+        }
+        .onTapGesture(count: 2) {
+            selectSingleObject(id)
+            onDoubleTap()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func toggleNodeExpansion(bucket: String, prefix: String) {
+        let node = TreeNodeKey(bucket: bucket, prefix: prefix)
+        if expandedKeys.contains(node) {
+            expandedKeys.remove(node)
+        } else {
+            expandedKeys.insert(node)
+            Task { await loadChildren(bucket: bucket, prefix: prefix) }
         }
     }
 
@@ -555,30 +587,6 @@ struct FileBrowserView: View {
 
     @ToolbarContentBuilder
     private var toolbarItems: some ToolbarContent {
-        ToolbarItemGroup(placement: .secondaryAction) {
-            Menu {
-                Picker("Sort by", selection: $sortField) {
-                    ForEach(SortField.allCases, id: \.self) { field in
-                        Text(field.rawValue).tag(field)
-                    }
-                }
-                .pickerStyle(.inline)
-                Divider()
-                Toggle(isOn: $sortAscending) {
-                    Label("Ascending", systemImage: "arrow.up")
-                }
-            } label: {
-                Label("Sort", systemImage: "arrow.up.arrow.down")
-            }
-
-            Picker("View", selection: $viewStyle) {
-                Image(systemName: "folder").tag(ViewStyle.browser)
-                Image(systemName: "list.bullet.indent").tag(ViewStyle.outline)
-            }
-            .pickerStyle(.segmented)
-            .frame(width: 64)
-        }
-
         ToolbarItemGroup(placement: .primaryAction) {
             let downloadable = downloadableSelection
             if !downloadable.isEmpty {
@@ -586,14 +594,6 @@ struct FileBrowserView: View {
                     downloadSelectedObjects(downloadable)
                 } label: {
                     Label("Download", systemImage: "arrow.down.circle")
-                }
-            }
-
-            if currentBucket != nil {
-                Button {
-                    uploadFiles()
-                } label: {
-                    Label("Upload", systemImage: "arrow.up.circle")
                 }
             }
 
@@ -605,133 +605,74 @@ struct FileBrowserView: View {
         }
     }
 
-    // MARK: - Outline helpers
-
-    private func cacheKey(bucket: String, prefix: String) -> String {
-        "b:\(bucket)/\(prefix)"
-    }
-
-    private func loadChildren(bucket: String, prefix: String) async {
-        let key = cacheKey(bucket: bucket, prefix: prefix)
-        guard childItems[key] == nil else { return }
-        loadingKeys.insert(key)
-        do {
-            // Load ALL objects in subfolder
-            var allObjects: [S3Object] = []
-            var nextToken: String? = nil
-            
-            repeat {
-                let result = try await s3Service.listObjects(
-                    profile: profile, secretKey: secretKey,
-                    bucket: bucket, prefix: prefix,
-                    continuationToken: nextToken)
-                allObjects.append(contentsOf: result.objects)
-                nextToken = result.nextToken
-            } while nextToken != nil
-            
-            childItems[key] = allObjects
-            rebuildObjectLookup()
-        } catch {
-            childItems[key] = []
-        }
-        loadingKeys.remove(key)
-    }
-
     // MARK: - Actions
-    
-    private func cacheKeyForPath() -> String {
-        "\(profile.id)/\(currentBucket ?? "")/\(currentPrefix)"
-    }
-    
+
     private func loadWithCache() async {
-        let key = cacheKeyForPath()
-        
-        // Check cache first
-        if currentBucket == nil {
-            if let cached = bucketsCache {
-                buckets = cached
-                selectedKeys.removeAll()
-                selectionAnchorKey = nil
-                objects = []
-                sortedObjectsCache = []
-                objectLookup = [:]
-                return
-            }
-        } else {
-            if let cached = objectsCache[key] {
-                objects = cached
-                continuationToken = nil
-                refreshSortedObjects()
-                rebuildObjectLookup()
-                return
-            }
+        if let cached = bucketsCache {
+            buckets = cached
+            return
         }
-        
-        // Not in cache, load from server
         await loadAllFromServer()
     }
 
     private func load() async {
-        // Clear cache and reload
-        let key = cacheKeyForPath()
-        if currentBucket == nil {
-            bucketsCache = nil
-        } else {
-            objectsCache.removeValue(forKey: key)
-        }
+        bucketsCache = nil
+        childItems.removeAll()
+        expandedKeys.removeAll()
+        loadingKeys.removeAll()
+        objectLookup = [:]
+        objectBucketLookup = [:]
+        selectedKeys.removeAll()
+        selectionAnchorKey = nil
         await loadAllFromServer()
     }
-    
+
     private func loadAllFromServer() async {
         isLoading = true
         loadError = nil
-        continuationToken = nil
-        
+
         do {
-            if let bucket = currentBucket {
-                // Load ALL objects in folder for proper sorting
-                var allObjects: [S3Object] = []
-                var nextToken: String? = nil
-                
-                repeat {
-                    let result = try await s3Service.listObjects(
-                        profile: profile, secretKey: secretKey,
-                        bucket: bucket, prefix: currentPrefix,
-                        continuationToken: nextToken)
-                    allObjects.append(contentsOf: result.objects)
-                    nextToken = result.nextToken
-                } while nextToken != nil
-                
-                objects = allObjects
-                continuationToken = nil
-                refreshSortedObjects()
-                
-                // Cache the result
-                let key = cacheKeyForPath()
-                objectsCache[key] = allObjects
-                rebuildObjectLookup()
-            } else {
-                buckets = try await s3Service.listBuckets(profile: profile, secretKey: secretKey)
-                bucketsCache = buckets
-                selectedKeys.removeAll()
-                selectionAnchorKey = nil
-                objects = []
-                sortedObjectsCache = []
-                objectLookup = [:]
-            }
+            buckets = try await s3Service.listBuckets(profile: profile, secretKey: secretKey)
+            bucketsCache = buckets
         } catch {
             loadError = error.localizedDescription
         }
+
         isLoading = false
     }
-    
-    private func loadMore() async {
-        // No longer needed since we load all at once
-        // Kept for compatibility but does nothing
+
+    private func loadChildren(bucket: String, prefix: String) async {
+        let node = TreeNodeKey(bucket: bucket, prefix: prefix)
+        guard childItems[node] == nil else { return }
+
+        loadingKeys.insert(node)
+        defer { loadingKeys.remove(node) }
+
+        do {
+            var allObjects: [S3Object] = []
+            var nextToken: String? = nil
+
+            repeat {
+                let result = try await s3Service.listObjects(
+                    profile: profile,
+                    secretKey: secretKey,
+                    bucket: bucket,
+                    prefix: prefix,
+                    continuationToken: nextToken
+                )
+                allObjects.append(contentsOf: result.objects)
+                nextToken = result.nextToken
+            } while nextToken != nil
+
+            childItems[node] = allObjects
+            rebuildObjectLookup()
+        } catch {
+            childItems[node] = []
+            loadError = error.localizedDescription
+        }
     }
 
-    private func downloadObject(_ obj: S3Object) {
-        guard let bucket = currentBucket else { return }
+    private func downloadObject(_ obj: S3Object, bucket: String) {
         let panel = NSSavePanel()
         panel.nameFieldStringValue = obj.name
         panel.canCreateDirectories = true
@@ -740,18 +681,27 @@ struct FileBrowserView: View {
         Task {
             do {
                 let tmp = try await s3Service.download(
-                    profile: profile, secretKey: secretKey,
-                    bucket: bucket, key: obj.key)
-                try FileManager.default.moveItem(at: tmp, to: dest)
+                    profile: profile,
+                    secretKey: secretKey,
+                    bucket: bucket,
+                    key: obj.key
+                )
+                let destinationFolder = dest.deletingLastPathComponent()
+                let destination: URL
+                if FileManager.default.fileExists(atPath: dest.path) {
+                    destination = uniqueDestinationURL(in: destinationFolder, fileName: dest.lastPathComponent)
+                } else {
+                    destination = dest
+                }
+                try FileManager.default.moveItem(at: tmp, to: destination)
             } catch {
                 loadError = error.localizedDescription
             }
         }
     }
 
-    private func downloadSelectedObjects(_ items: [S3Object]) {
-        guard let bucket = currentBucket else { return }
-        let files = items.filter { !$0.isFolder }
+    private func downloadSelectedObjects(_ items: [(bucket: String, object: S3Object)]) {
+        let files = items.filter { !$0.object.isFolder }
         guard !files.isEmpty else { return }
 
         let panel = NSOpenPanel()
@@ -763,20 +713,20 @@ struct FileBrowserView: View {
         guard panel.runModal() == .OK, let destinationFolder = panel.url else { return }
 
         Task {
-            do {
-                for obj in files {
+            for item in files {
+                do {
                     let tmp = try await s3Service.download(
                         profile: profile,
                         secretKey: secretKey,
-                        bucket: bucket,
-                        key: obj.key
+                        bucket: item.bucket,
+                        key: item.object.key
                     )
 
-                    let destination = uniqueDestinationURL(in: destinationFolder, fileName: obj.name)
+                    let destination = uniqueDestinationURL(in: destinationFolder, fileName: item.object.name)
                     try FileManager.default.moveItem(at: tmp, to: destination)
+                } catch {
+                    loadError = error.localizedDescription
                 }
-            } catch {
-                loadError = error.localizedDescription
             }
         }
     }
@@ -797,8 +747,7 @@ struct FileBrowserView: View {
         return candidate
     }
 
-    private func uploadFiles() {
-        guard let bucket = currentBucket else { return }
+    private func uploadFiles(to bucket: String, prefix: String) {
         let panel = NSOpenPanel()
         panel.allowsMultipleSelection = true
         panel.canChooseDirectories = false
@@ -809,12 +758,20 @@ struct FileBrowserView: View {
             for url in urls {
                 do {
                     try await s3Service.upload(
-                        profile: profile, secretKey: secretKey,
-                        bucket: bucket, prefix: currentPrefix, from: url)
+                        profile: profile,
+                        secretKey: secretKey,
+                        bucket: bucket,
+                        prefix: prefix,
+                        from: url
+                    )
                 } catch {
                     uploadError = error.localizedDescription
                 }
             }
+            childItems.removeAll()
+            expandedKeys.removeAll()
+            objectLookup = [:]
+            objectBucketLookup = [:]
             await load()
         }
     }
