@@ -1,6 +1,25 @@
 import SwiftUI
 import AppKit
 
+// MARK: - Helpers
+
+private func finderFormattedDate(_ date: Date?) -> String {
+    guard let date else { return "—" }
+    let cal = Calendar.current
+    let timeFormatter = DateFormatter()
+    timeFormatter.dateFormat = "h:mm a"
+    let timeStr = timeFormatter.string(from: date)
+    if cal.isDateInToday(date) {
+        return "Today at \(timeStr)"
+    } else if cal.isDateInYesterday(date) {
+        return "Yesterday at \(timeStr)"
+    } else {
+        let fullFormatter = DateFormatter()
+        fullFormatter.dateFormat = "MMM d, yyyy 'at' h:mm a"
+        return fullFormatter.string(from: date)
+    }
+}
+
 // MARK: - Supporting Enums
 
 enum SortField: String, CaseIterable {
@@ -38,7 +57,7 @@ private struct ObjectRowView: View, Equatable {
         let iconColor: Color
         if obj.isFolder {
             iconName = "folder.fill"
-            iconColor = .yellow
+            iconColor = Color(nsColor: .systemBlue)
         } else {
             iconName = fileIconName(for: obj.name)
             iconColor = .blue
@@ -62,20 +81,20 @@ private struct ObjectRowView: View, Equatable {
             Text(obj.isFolder ? "—" : obj.formattedSize)
                 .font(.caption)
                 .foregroundStyle(isSelected ? Color.white : Color.secondary)
-                .frame(width: sizeColumnWidth, alignment: .center)
+                .frame(width: sizeColumnWidth, alignment: .trailing)
                 .frame(maxHeight: .infinity)
                 .contentShape(Rectangle())
                 .onTapGesture { onTap() }
 
-            Text(obj.lastModified?.formatted(date: .abbreviated, time: .shortened) ?? "—")
+            Text(finderFormattedDate(obj.lastModified))
                 .font(.caption)
                 .foregroundStyle(isSelected ? Color.white : Color.secondary)
-                .frame(width: dateColumnWidth, alignment: .center)
+                .frame(width: dateColumnWidth, alignment: .trailing)
                 .frame(maxHeight: .infinity)
                 .contentShape(Rectangle())
                 .onTapGesture { onTap() }
         }
-        .frame(height: 20)
+        .frame(height: 22)
     }
 
     private func fileIconName(for name: String) -> String {
@@ -113,7 +132,7 @@ private struct BucketRowContentView: View, Equatable {
         HStack(spacing: 0) {
             HStack(spacing: 8) {
                 Image(systemName: "externaldrive")
-                    .foregroundStyle(isSelected ? Color.white : Color.blue)
+                    .foregroundStyle(isSelected ? Color.white : Color(nsColor: .systemBlue))
                 Text(bucketName)
                     .lineLimit(1)
                     .foregroundStyle(isSelected ? Color.white : Color.primary)
@@ -128,7 +147,7 @@ private struct BucketRowContentView: View, Equatable {
             Text("—")
                 .font(.caption)
                 .foregroundStyle(isSelected ? Color.white : Color.secondary)
-                .frame(width: sizeColumnWidth, alignment: .center)
+                .frame(width: sizeColumnWidth, alignment: .trailing)
                 .frame(maxHeight: .infinity)
                 .contentShape(Rectangle())
                 .onTapGesture { onTap() }
@@ -136,12 +155,12 @@ private struct BucketRowContentView: View, Equatable {
             Text("—")
                 .font(.caption)
                 .foregroundStyle(isSelected ? Color.white : Color.secondary)
-                .frame(width: dateColumnWidth, alignment: .center)
+                .frame(width: dateColumnWidth, alignment: .trailing)
                 .frame(maxHeight: .infinity)
                 .contentShape(Rectangle())
                 .onTapGesture { onTap() }
         }
-        .frame(height: 20)
+        .frame(height: 22)
     }
 }
 
@@ -170,6 +189,9 @@ struct FileBrowserView: View {
     @State private var childItems: [TreeNodeKey: [S3Object]] = [:]
     @State private var loadingKeys: Set<TreeNodeKey> = []
 
+    // Path breadcrumb
+    @State private var breadcrumbPath: [String] = []
+
     // Cache
     @State private var bucketsCache: [S3Bucket]? = nil
     @State private var objectLookup: [String: S3Object] = [:]
@@ -180,7 +202,7 @@ struct FileBrowserView: View {
     }
     private let minSizeColumnWidth: CGFloat = 70
     private let minDateColumnWidth: CGFloat = 120
-    private let tableRowHeight: CGFloat = 20
+    private let tableRowHeight: CGFloat = 22
     private let tableHeaderHeight: CGFloat = 22
     private let tableHorizontalInset: CGFloat = 8
     private let disclosureGridCompensation: CGFloat = 16
@@ -219,6 +241,14 @@ struct FileBrowserView: View {
         }
     }
 
+    private var allSelectedItems: [(bucket: String, object: S3Object)] {
+        selectedKeys.compactMap { key in
+            guard let obj = objectLookup[key],
+                  let bucket = objectBucketLookup[key] else { return nil }
+            return (bucket, obj)
+        }
+    }
+
     private func rebuildObjectLookup() {
         var nextObjectLookup: [String: S3Object] = [:]
         var nextBucketLookup: [String: String] = [:]
@@ -248,6 +278,9 @@ struct FileBrowserView: View {
                 }
             }
 
+            Divider()
+            pathBar
+
             if !s3Service.transfers.isEmpty {
                 Divider()
                 transferBar
@@ -256,6 +289,56 @@ struct FileBrowserView: View {
         .navigationTitle(profile.name)
         .toolbar { toolbarItems }
         .task(id: "\(profile.id)") { await loadWithCache() }
+        .onChange(of: selectedKeys) { _, newKeys in
+            breadcrumbPath = buildBreadcrumb(from: newKeys.first)
+        }
+    }
+
+    // MARK: - Path Bar
+
+    private var pathBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 4) {
+                if breadcrumbPath.isEmpty {
+                    Text(profile.name)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(Array(breadcrumbPath.enumerated()), id: \.offset) { index, segment in
+                        if index > 0 {
+                            Image(systemName: "chevron.right")
+                                .font(.caption2)
+                                .foregroundStyle(.tertiary)
+                        }
+                        Text(segment)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 5)
+        }
+        .frame(maxWidth: .infinity)
+        .background(.bar)
+    }
+
+    private func buildBreadcrumb(from rowID: String?) -> [String] {
+        guard let rowID else { return [profile.name] }
+        // Bucket row: "bucket||name"
+        if rowID.hasPrefix("bucket||") {
+            let bucketName = String(rowID.dropFirst("bucket||".count))
+            return [profile.name, bucketName]
+        }
+        // Object/folder row: "bucketName||key/path/"
+        guard let separatorRange = rowID.range(of: "||") else { return [profile.name] }
+        let bucket = String(rowID[rowID.startIndex..<separatorRange.lowerBound])
+        let key = String(rowID[separatorRange.upperBound...]).trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        var segments = [profile.name, bucket]
+        let pathComponents = key.split(separator: "/").map(String.init)
+        segments.append(contentsOf: pathComponents)
+        return segments
     }
 
     // MARK: - Column Header
@@ -272,7 +355,7 @@ struct FileBrowserView: View {
                         sizeColumnWidthAtDragStart = sizeColumnWidth
                     }
             }
-            columnHeaderButton("Size", field: .size, width: sizeColumnWidth)
+            columnHeaderButton("Size", field: .size, width: sizeColumnWidth, alignment: .center)
             resizeSeparator {
                 DragGesture(minimumDistance: 0)
                     .onChanged { value in
@@ -282,7 +365,7 @@ struct FileBrowserView: View {
                         dateColumnWidthAtDragStart = dateColumnWidth
                     }
             }
-            columnHeaderButton("Date Added", field: .date, width: dateColumnWidth)
+            columnHeaderButton("Date Modified", field: .date, width: dateColumnWidth, alignment: .center)
         }
         .frame(height: tableHeaderHeight)
         .padding(.leading, tableHorizontalInset)
@@ -306,7 +389,7 @@ struct FileBrowserView: View {
             )
     }
 
-    private func columnHeaderButton(_ title: String, field: SortField, width: CGFloat? = nil) -> some View {
+    private func columnHeaderButton(_ title: String, field: SortField, width: CGFloat? = nil, alignment: Alignment = .leading) -> some View {
         Button {
             if sortField == field {
                 sortAscending.toggle()
@@ -325,7 +408,7 @@ struct FileBrowserView: View {
                         .foregroundStyle(.secondary)
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: alignment)
             .frame(width: width)
         }
         .buttonStyle(.plain)
@@ -394,6 +477,8 @@ struct FileBrowserView: View {
             }
         }
         .listRowInsets(rowInsets)
+        .listRowSeparator(.visible)
+        .listRowSeparatorTint(Color.gray.opacity(0.2))
         .listRowBackground(selectedKeys.contains(id) ? Color.accentColor : Color.clear)
     }
 
@@ -450,6 +535,8 @@ struct FileBrowserView: View {
                 }
             }
             .listRowInsets(rowInsets)
+            .listRowSeparator(.visible)
+            .listRowSeparatorTint(Color.gray.opacity(0.2))
             .listRowBackground(selectedKeys.contains(id) ? Color.accentColor : Color.clear)
         )
     }
@@ -472,20 +559,54 @@ struct FileBrowserView: View {
             objectContextMenu(obj, bucket: bucket, parentPrefix: parentPrefix)
         }
         .listRowInsets(rowInsets)
+        .listRowSeparator(.visible)
+        .listRowSeparatorTint(Color.gray.opacity(0.2))
         .listRowBackground(selectedKeys.contains(id) ? Color.accentColor : Color.clear)
     }
 
     // MARK: - Context Menu
 
     private func objectContextMenu(_ obj: S3Object, bucket: String, parentPrefix: String) -> some View {
-        Group {
+        let id = rowID(bucket: bucket, key: obj.key)
+        let downloadable = downloadableSelection
+        let isMultiSelected = selectedKeys.count > 1 && selectedKeys.contains(id)
+
+        return Group {
             if !obj.isFolder {
-                Button {
-                    downloadObject(obj, bucket: bucket)
-                } label: {
-                    Label("Download", systemImage: "arrow.down.circle")
+                if downloadable.count > 1 && isMultiSelected {
+                    Button {
+                        downloadSelectedObjects(downloadable)
+                    } label: {
+                        Label("Download \(downloadable.count) Files", systemImage: "arrow.down.circle")
+                    }
+                } else {
+                    Button {
+                        downloadObject(obj, bucket: bucket)
+                    } label: {
+                        Label("Download", systemImage: "arrow.down.circle")
+                    }
                 }
             }
+
+            // Copy S3 URL
+            if isMultiSelected {
+                let selectedItems = allSelectedItems
+                if !selectedItems.isEmpty {
+                    Button {
+                        copyS3URLs(selectedItems)
+                    } label: {
+                        Label("Copy \(selectedItems.count) S3 URLs", systemImage: "link")
+                    }
+                }
+            } else {
+                Button {
+                    copyS3URL(bucket: bucket, key: obj.key)
+                } label: {
+                    Label("Copy S3 URL", systemImage: "link")
+                }
+            }
+
+            Divider()
 
             Button {
                 uploadFiles(to: bucket, prefix: obj.isFolder ? obj.key : "")
@@ -540,6 +661,25 @@ struct FileBrowserView: View {
                     sortAscending = false
                 } label: {
                     Label("Descending", systemImage: !sortAscending ? "checkmark" : "")
+                }
+            }
+
+            Divider()
+
+            // Delete
+            if !obj.isFolder {
+                if downloadable.count > 1 && isMultiSelected {
+                    Button(role: .destructive) {
+                        deleteFiles(downloadable.map { (bucket: $0.bucket, key: $0.object.key) })
+                    } label: {
+                        Label("Delete \(downloadable.count) Files", systemImage: "trash")
+                    }
+                } else {
+                    Button(role: .destructive) {
+                        deleteFiles([(bucket: bucket, key: obj.key)])
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
                 }
             }
         }
@@ -826,5 +966,71 @@ struct FileBrowserView: View {
             objectBucketLookup = [:]
             await load()
         }
+    }
+
+    // MARK: - Copy S3 URL
+
+    private func copyS3URL(bucket: String, key: String) {
+        let url = profile.bucketURL(bucket: bucket).appendingPathComponent(key)
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(url.absoluteString, forType: .string)
+    }
+
+    private func copyS3URLs(_ items: [(bucket: String, object: S3Object)]) {
+        let urls = items.map { profile.bucketURL(bucket: $0.bucket).appendingPathComponent($0.object.key).absoluteString }
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(urls.joined(separator: "\n"), forType: .string)
+    }
+
+    // MARK: - Delete
+
+    private func deleteFiles(_ items: [(bucket: String, key: String)]) {
+        guard !items.isEmpty else { return }
+
+        let alert = NSAlert()
+        if items.count == 1 {
+            let name = (items[0].key as NSString).lastPathComponent
+            alert.messageText = "Delete \"\(name)\"?"
+            alert.informativeText = "This will permanently remove the file from S3."
+        } else {
+            alert.messageText = "Delete \(items.count) files?"
+            alert.informativeText = "This will permanently remove these files from S3."
+        }
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "Delete")
+        alert.addButton(withTitle: "Cancel")
+        alert.buttons.first?.hasDestructiveAction = true
+        guard alert.runModal() == .alertFirstButtonReturn else { return }
+
+        Task {
+            var parentPrefixes: Set<String> = []
+            for item in items {
+                do {
+                    try await s3Service.delete(
+                        profile: profile,
+                        secretKey: secretKey,
+                        bucket: item.bucket,
+                        key: item.key
+                    )
+                    parentPrefixes.insert(parentPrefix(forKey: item.key))
+                } catch {
+                    loadError = error.localizedDescription
+                }
+            }
+            selectedKeys.removeAll()
+            // Refresh each affected parent folder
+            let affectedBuckets = Set(items.map(\.bucket))
+            for bucket in affectedBuckets {
+                for prefix in parentPrefixes {
+                    await refreshNode(bucket: bucket, prefix: prefix)
+                }
+            }
+        }
+    }
+
+    private func parentPrefix(forKey key: String) -> String {
+        let trimmed = key.hasSuffix("/") ? String(key.dropLast()) : key
+        guard let lastSlash = trimmed.lastIndex(of: "/") else { return "" }
+        return String(trimmed[...lastSlash])
     }
 }

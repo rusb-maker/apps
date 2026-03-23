@@ -38,8 +38,10 @@ struct LiquidSlider: View {
             let w = geo.size.width
             let fraction = (value - range.lowerBound) / (range.upperBound - range.lowerBound)
             ZStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(.regularMaterial)
+                if #unavailable(iOS 26) {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(.regularMaterial)
+                }
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .fill(.primary.opacity(0.12))
                     .frame(width: max(fraction * w, 0))
@@ -70,6 +72,7 @@ struct LiquidSlider: View {
             }
             .frame(width: w, height: 56)
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .modifier(LiquidGlassModifier(shape: RoundedRectangle(cornerRadius: 16, style: .continuous)))
             .gesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { drag in
@@ -89,29 +92,123 @@ struct LiquidSlider: View {
     }
 }
 
+// MARK: - Liquid Glass compatibility modifier
+struct LiquidGlassModifier<S: Shape>: ViewModifier {
+    let shape: S
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.glassEffect(.regular, in: shape)
+        } else {
+            content
+        }
+    }
+}
+
+// MARK: - Sheet glass background (iOS 26 auto-glass, fallback to material)
+struct SheetGlassBackground: ViewModifier {
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content // iOS 26 sheets automatically get glass background
+        } else {
+            content.presentationBackground(.regularMaterial)
+        }
+    }
+}
+
+// MARK: - Border panel background (glass curtain from top, iOS 26 style)
+struct BorderPanelBackground: ViewModifier {
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content
+                .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        } else {
+            content
+                .background(.ultraThinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+                .shadow(color: .black.opacity(0.15), radius: 20, x: 0, y: -8)
+        }
+    }
+}
+
 // MARK: - Glass button style
 struct GlassButtonStyle: ButtonStyle {
+    @ViewBuilder
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.subheadline)
-            .foregroundStyle(.primary)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 8)
-            .background(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(.regularMaterial)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .strokeBorder(
-                                LinearGradient(
-                                    colors: [.white.opacity(0.45), .white.opacity(0.1)],
-                                    startPoint: .topLeading, endPoint: .bottomTrailing),
-                                lineWidth: 1)
-                    )
-            )
-            .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
-            .scaleEffect(configuration.isPressed ? 0.96 : 1.0)
-            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+        if #available(iOS 26.0, *) {
+            configuration.label
+                .font(.subheadline)
+                .foregroundStyle(.primary)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .glassEffect(.regular.interactive(), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .scaleEffect(configuration.isPressed ? 0.96 : 1.0)
+                .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+        } else {
+            configuration.label
+                .font(.subheadline)
+                .foregroundStyle(.primary)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(.regularMaterial)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .strokeBorder(
+                                    LinearGradient(
+                                        colors: [.white.opacity(0.45), .white.opacity(0.1)],
+                                        startPoint: .topLeading, endPoint: .bottomTrailing),
+                                    lineWidth: 1)
+                        )
+                )
+                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+                .scaleEffect(configuration.isPressed ? 0.96 : 1.0)
+                .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+        }
+    }
+}
+
+// MARK: - Adaptive glass button modifier (native .glass on iOS 26, custom fallback)
+struct GlassButtonModifier: ViewModifier {
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.buttonStyle(.glass)
+        } else {
+            content.buttonStyle(GlassButtonStyle())
+        }
+    }
+}
+
+// MARK: - Optional glass container (wraps in GlassEffectContainer on iOS 26)
+struct OptionalGlassContainer<Content: View>: View {
+    let spacing: CGFloat
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        if #available(iOS 26.0, *) {
+            GlassEffectContainer(spacing: spacing) { content }
+        } else {
+            content
+        }
+    }
+}
+
+// MARK: - Glass effect ID modifier (morphing on iOS 26)
+struct GlassIDModifier: ViewModifier {
+    let id: String
+    let namespace: Namespace.ID
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.glassEffectID(id, in: namespace)
+        } else {
+            content
+        }
     }
 }
 
@@ -219,6 +316,8 @@ struct ContentView: View {
     @State private var canvasAspect: CGFloat = 1.0
     // Current on-screen canvas size (used to match export geometry to preview)
     @State private var canvasSize: CGSize = CGSize(width: 1, height: 1)
+    // Glass morphing namespace (iOS 26)
+    @Namespace private var glassNS
 
     private let maxBorderGap: CGFloat = 13
     private let maxBorderRadius: CGFloat = 34
@@ -228,25 +327,20 @@ struct ContentView: View {
         NavigationStack {
             mainContent
             .navigationTitle("Collage")
-            .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
-                    Button("Reset") { resetCollageMedia() }
-                        .buttonStyle(GlassButtonStyle())
-                        .onChange(of: scenePhase) { _, newPhase in
-                            switch newPhase {
-                            case .active: resumeAllVideos()
-                            case .inactive, .background: pauseAllVideos()
-                            @unknown default: pauseAllVideos()
-                            }
-                        }
-                    Button("Templates") { showTemplatePicker = true }
-                        .buttonStyle(GlassButtonStyle())
+                    Button("Reset", systemImage: "arrow.counterclockwise") { resetCollageMedia() }
+                    Button("Templates", systemImage: "square.grid.2x2") { showTemplatePicker = true }
                 }
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button("Save") { saveTapped() }
-                        .buttonStyle(GlassButtonStyle())
+                    Button("Save", systemImage: "square.and.arrow.down") { saveTapped() }
+                }
+            }
+            .onChange(of: scenePhase) { _, newPhase in
+                switch newPhase {
+                case .active: resumeAllVideos()
+                case .inactive, .background: pauseAllVideos()
+                @unknown default: pauseAllVideos()
                 }
             }
             .sheet(isPresented: $showTemplatePicker) {
@@ -335,70 +429,80 @@ struct ContentView: View {
     // MARK: - Split content to help type-checker
     @ViewBuilder
     private var mainContent: some View {
+        OptionalGlassContainer(spacing: 40) {
         ZStack(alignment: .bottom) {
             VStack(spacing: 12) {
                 canvasSection
-                // Open settings button
-                Button("Border settings") {
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.9)) { showBorderSettings = true }
+                // Open settings button (removed from hierarchy when panel is open for glass morphing)
+                if !showBorderSettings {
+                    Button {
+                        withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { showBorderSettings = true }
+                    } label: {
+                        Label("Border settings", systemImage: "slider.horizontal.3")
+                            .font(.subheadline.weight(.medium))
+                    }
+                    .modifier(GlassButtonModifier())
+                    .controlSize(.large)
+                    .padding(.horizontal)
+                    .padding(.bottom)
+                    .modifier(GlassIDModifier(id: "borderSettings", namespace: glassNS))
                 }
-                .buttonStyle(GlassButtonStyle())
-                .padding(.horizontal)
-                .padding(.bottom)
-                .opacity(showBorderSettings ? 0 : 1)
             }
             .padding(.bottom, showBorderSettings ? max(0, borderPanelHeight - borderPanelDrag) + 16 : 0)
 
             if showBorderSettings {
-                // Bottom slide-up panel
+                // Bottom slide-up glass curtain panel
                 VStack(spacing: 0) {
-                    // Handle / collapse button
-                    Button(action: {
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.9)) { showBorderSettings = false }
-                    }) {
-                        Image(systemName: "chevron.compact.down")
-                            .font(.system(size: 28, weight: .regular))
-                            .foregroundStyle(.secondary)
-                            .padding(.top, 6)
-                    }
+                    // Drag handle at the top of the curtain
+                    Capsule()
+                        .fill(Color.secondary.opacity(0.4))
+                        .frame(width: 36, height: 5)
+                        .padding(.top, 10)
 
                     HStack {
                         Text("Border settings").font(.headline)
                         Spacer()
+                        Button(action: {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { showBorderSettings = false }
+                        }) {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.system(size: 24))
+                                .foregroundStyle(.secondary)
+                        }
                     }
                     .padding(.horizontal)
                     .padding(.top, 12)
                     .padding(.bottom, 8)
 
                     Divider()
+                        .padding(.horizontal)
 
                     ScrollView {
                         borderControls
                     }
-                    .frame(maxHeight: 280)
-                    .padding(.bottom, 4)
+                    .frame(maxHeight: 300)
+                    .padding(.bottom, 8)
                 }
-                .background(.ultraThinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                .shadow(color: .black.opacity(0.1), radius: 12, x: 0, y: -4)
-                .padding(.horizontal)
+                .modifier(BorderPanelBackground())
+                .modifier(GlassIDModifier(id: "borderSettings", namespace: glassNS))
+                .padding(.horizontal, 8)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
                 .offset(y: max(0, borderPanelDrag))
                 .gesture(
                     DragGesture(minimumDistance: 5)
                         .onChanged { value in
                             let dy = value.translation.height
-                            borderPanelDrag = max(0, dy)
+                            borderPanelDrag = max(0, dy) // only allow dragging downward
                         }
                         .onEnded { value in
                             let dy = value.translation.height
-                            if dy > 120 { // threshold to close
-                                withAnimation(.spring(response: 0.3, dampingFraction: 0.9)) {
+                            if dy > 100 { // threshold to close (swipe down)
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
                                     showBorderSettings = false
                                     borderPanelDrag = 0
                                 }
                             } else {
-                                withAnimation(.spring(response: 0.3, dampingFraction: 0.9)) {
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
                                     borderPanelDrag = 0
                                 }
                             }
@@ -438,13 +542,19 @@ struct ContentView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
-                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .modifier(LiquidGlassModifier(shape: RoundedRectangle(cornerRadius: 16, style: .continuous)))
+                .background {
+                    if #unavailable(iOS 26) {
+                        RoundedRectangle(cornerRadius: 16, style: .continuous).fill(.regularMaterial)
+                    }
+                }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 16)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
                 .zIndex(10)
             }
         }
+        } // OptionalGlassContainer
         .overlay(alignment: .top) {
             if let toast = saveToast {
                 HStack(spacing: 8) {
@@ -455,8 +565,13 @@ struct ContentView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 10)
-                .background(.regularMaterial, in: Capsule())
-                .shadow(color: .black.opacity(0.12), radius: 8, x: 0, y: 2)
+                .modifier(LiquidGlassModifier(shape: Capsule()))
+                .background {
+                    if #unavailable(iOS 26) {
+                        Capsule().fill(.regularMaterial)
+                            .shadow(color: .black.opacity(0.12), radius: 8, x: 0, y: 2)
+                    }
+                }
                 .padding(.top, 8)
                 .transition(.move(edge: .top).combined(with: .opacity))
                 .zIndex(20)
@@ -1121,6 +1236,7 @@ struct TemplatePickerView: View {
                 .padding(.bottom, 16)
 
             ScrollView {
+                OptionalGlassContainer(spacing: 12) {
                 LazyVGrid(columns: columns, spacing: 12) {
                     ForEach(ContentView.Template.allCases) { t in
                         let isSelected = selected == t
@@ -1134,33 +1250,53 @@ struct TemplatePickerView: View {
                             }
                             .frame(maxWidth: .infinity)
                             .padding(12)
-                            .background {
-                                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                    .fill(isSelected
-                                          ? AnyShapeStyle(.thinMaterial)
-                                          : AnyShapeStyle(Color.primary.opacity(0.06)))
-                                    .overlay {
-                                        if isSelected {
-                                            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                                .strokeBorder(Color.primary.opacity(0.2), lineWidth: 1.5)
-                                        }
-                                    }
-                            }
-                            .shadow(color: isSelected ? .black.opacity(0.08) : .clear,
-                                    radius: 8, x: 0, y: 2)
+                            .modifier(TemplateCardBackground(isSelected: isSelected))
                         }
                         .buttonStyle(.plain)
                         .animation(.spring(response: 0.25, dampingFraction: 0.8), value: isSelected)
                     }
                 }
+                } // OptionalGlassContainer
                 .padding(.horizontal, 20)
                 .padding(.bottom, 32)
             }
         }
         .presentationDetents([.medium, .large])
-        .presentationBackground(.regularMaterial)
         .presentationDragIndicator(.hidden)
         .presentationCornerRadius(28)
+        .modifier(SheetGlassBackground())
+    }
+}
+
+// MARK: - Template card background (glass with tint on iOS 26, material fallback)
+struct TemplateCardBackground: ViewModifier {
+    let isSelected: Bool
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content
+                .glassEffect(
+                    isSelected ? .regular.tint(.accentColor).interactive() : .regular.interactive(),
+                    in: RoundedRectangle(cornerRadius: 18, style: .continuous)
+                )
+        } else {
+            content
+                .background {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(isSelected
+                              ? AnyShapeStyle(.thinMaterial)
+                              : AnyShapeStyle(Color.primary.opacity(0.06)))
+                        .overlay {
+                            if isSelected {
+                                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                    .strokeBorder(Color.primary.opacity(0.2), lineWidth: 1.5)
+                            }
+                        }
+                }
+                .shadow(color: isSelected ? .black.opacity(0.08) : .clear,
+                        radius: 8, x: 0, y: 2)
+        }
     }
 }
 
@@ -1641,7 +1777,12 @@ struct CollagePane: View {
                             }
                             .padding(.horizontal, 20)
                             .padding(.vertical, 14)
-                            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .modifier(LiquidGlassModifier(shape: RoundedRectangle(cornerRadius: 14, style: .continuous)))
+                            .background {
+                                if #unavailable(iOS 26) {
+                                    RoundedRectangle(cornerRadius: 14, style: .continuous).fill(.thinMaterial)
+                                }
+                            }
                         }
                     }
                     .buttonStyle(.plain)
