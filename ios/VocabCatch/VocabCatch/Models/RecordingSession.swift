@@ -36,24 +36,23 @@ class RecordingSession {
 struct ExtractedPhrase: Codable, Identifiable {
     var id: UUID
     var phrase: String
-    var verb: String
-    var contextSentence: String
-    var verbType: VerbType
+    var translation: String
     var isSelected: Bool
+
+    // Legacy fields kept for backward compatibility with stored data
+    var verb: String?
+    var contextSentence: String?
+    var verbType: VerbType?
 
     init(
         id: UUID = UUID(),
         phrase: String,
-        verb: String,
-        contextSentence: String,
-        verbType: VerbType,
+        translation: String,
         isSelected: Bool = true
     ) {
         self.id = id
         self.phrase = phrase
-        self.verb = verb
-        self.contextSentence = contextSentence
-        self.verbType = verbType
+        self.translation = translation
         self.isSelected = isSelected
     }
 }

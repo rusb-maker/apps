@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		15C1ED69BB2FCA071D8275F7 /* ClaudeAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399A8D5CE429D84FF63670B9 /* ClaudeAPIService.swift */; };
+		274C1E19057EEDA75BAD9B71 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31799BBC738C00B261DB8DD4 /* SettingsView.swift */; };
 		AA000001000000000000001A /* VocabCatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000001000000000000001B /* VocabCatchApp.swift */; };
 		AA000002000000000000001A /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002000000000000001B /* Card.swift */; };
 		AA000003000000000000001A /* CardGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000003000000000000001B /* CardGroup.swift */; };
@@ -33,7 +35,26 @@
 		AA000018000000000000001A /* VocabCatchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000018000000000000001B /* VocabCatchUITests.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		AAPROXY0000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AAPROJECT0000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AATARGET000000000000001;
+			remoteInfo = VocabCatch;
+		};
+		AAPROXY0000000000000002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AAPROJECT0000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AATARGET000000000000001;
+			remoteInfo = VocabCatch;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		31799BBC738C00B261DB8DD4 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		399A8D5CE429D84FF63670B9 /* ClaudeAPIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClaudeAPIService.swift; sourceTree = "<group>"; };
 		AA000001000000000000001B /* VocabCatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabCatchApp.swift; sourceTree = "<group>"; };
 		AA000002000000000000001B /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		AA000003000000000000001B /* CardGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardGroup.swift; sourceTree = "<group>"; };
@@ -139,6 +160,7 @@
 				AAGROUP00000000000000000A /* Groups */,
 				AAGROUP00000000000000000B /* Study */,
 				AAGROUP00000000000000000C /* Components */,
+				31799BBC738C00B261DB8DD4 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -149,6 +171,7 @@
 				AA000013000000000000001B /* SM2.swift */,
 				AA000014000000000000001B /* NotificationService.swift */,
 				AA000015000000000000001B /* PhrasalVerbDictionary.swift */,
+				399A8D5CE429D84FF63670B9 /* ClaudeAPIService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -231,7 +254,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		AAROOT000000000000000001 /* / */ = {
+		AAROOT000000000000000001 = {
 			isa = PBXGroup;
 			children = (
 				AAGROUP000000000000000001 /* VocabCatch */,
@@ -328,7 +351,7 @@
 				en,
 				Base,
 			);
-			mainGroup = AAROOT000000000000000001 /* / */;
+			mainGroup = AAROOT000000000000000001;
 			productRefGroup = AAGROUP00000000000000000F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -391,6 +414,8 @@
 				AA000013000000000000001A /* SM2.swift in Sources */,
 				AA000014000000000000001A /* NotificationService.swift in Sources */,
 				AA000015000000000000001A /* PhrasalVerbDictionary.swift in Sources */,
+				15C1ED69BB2FCA071D8275F7 /* ClaudeAPIService.swift in Sources */,
+				274C1E19057EEDA75BAD9B71 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,23 +449,6 @@
 			targetProxy = AAPROXY0000000000000002 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXContainerItemProxy section */
-		AAPROXY0000000000000001 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AAPROJECT0000000000000001 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = AATARGET000000000000001;
-			remoteInfo = VocabCatch;
-		};
-		AAPROXY0000000000000002 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AAPROJECT0000000000000001 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = AATARGET000000000000001;
-			remoteInfo = VocabCatch;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin XCBuildConfiguration section */
 		AACONF00000000000000001 /* Debug */ = {
@@ -728,7 +736,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
 	};
 	rootObject = AAPROJECT0000000000000001 /* Project object */;
 }

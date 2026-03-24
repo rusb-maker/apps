@@ -23,9 +23,10 @@ class ReviewViewModel {
         let group = selectedGroup ?? createDefaultGroup(context: context)
         for phrase in phrases where phrase.isSelected {
             let card = Card(
-                front: phrase.verb,
-                contextSentence: phrase.contextSentence,
-                verbType: phrase.verbType,
+                front: phrase.phrase,
+                back: phrase.translation,
+                contextSentence: phrase.contextSentence ?? phrase.phrase,
+                verbType: phrase.verbType ?? .regular,
                 group: group
             )
             context.insert(card)

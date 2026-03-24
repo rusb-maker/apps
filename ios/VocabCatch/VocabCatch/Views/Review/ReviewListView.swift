@@ -65,18 +65,9 @@ struct ReviewRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            HStack {
-                Text(phrase.verb)
-                    .font(.headline)
-                Spacer()
-                Text(phrase.verbType == .phrasal ? "phrasal" : "verb")
-                    .font(.caption)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 2)
-                    .background(phrase.verbType == .phrasal ? Color.orange.opacity(0.2) : Color.blue.opacity(0.2))
-                    .clipShape(Capsule())
-            }
-            Text(phrase.contextSentence)
+            Text(phrase.phrase)
+                .font(.headline)
+            Text(phrase.translation)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .lineLimit(2)

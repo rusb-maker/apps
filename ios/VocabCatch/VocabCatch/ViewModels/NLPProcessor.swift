@@ -19,10 +19,8 @@ class NLPProcessor {
             for phrasal in foundPhrasals {
                 let context = extractContext(around: phrasal, in: sentence, windowSize: 5...8)
                 results.append(ExtractedPhrase(
-                    phrase: phrasal,
-                    verb: phrasal,
-                    contextSentence: context,
-                    verbType: .phrasal
+                    phrase: context,
+                    translation: phrasal
                 ))
             }
 
@@ -31,10 +29,8 @@ class NLPProcessor {
                 for verb in verbs {
                     let context = extractContext(around: verb, in: sentence, windowSize: 5...8)
                     results.append(ExtractedPhrase(
-                        phrase: verb,
-                        verb: verb,
-                        contextSentence: context,
-                        verbType: .regular
+                        phrase: context,
+                        translation: verb
                     ))
                 }
             }
@@ -95,11 +91,56 @@ class NLPProcessor {
         tagger.string = sentence
         var verbs: [String] = []
 
-        let auxiliaries: Set<String> = [
+        // Auxiliaries, modals, and basic high-frequency verbs
+        // that are too generic to be useful as standalone flashcards
+        let filteredVerbs: Set<String> = [
+            // auxiliaries & modals
             "is", "am", "are", "was", "were",
             "be", "been", "being", "have", "has", "had",
             "do", "does", "did", "will", "would", "shall",
-            "should", "can", "could", "may", "might", "must"
+            "should", "can", "could", "may", "might", "must",
+            // basic high-frequency verbs (no learning value alone)
+            "get", "gets", "got", "getting", "gotten",
+            "go", "goes", "went", "going", "gone",
+            "come", "comes", "came", "coming",
+            "make", "makes", "made", "making",
+            "take", "takes", "took", "taking", "taken",
+            "give", "gives", "gave", "giving", "given",
+            "say", "says", "said", "saying",
+            "tell", "tells", "told", "telling",
+            "know", "knows", "knew", "knowing", "known",
+            "think", "thinks", "thought", "thinking",
+            "see", "sees", "saw", "seeing", "seen",
+            "want", "wants", "wanted", "wanting",
+            "let", "lets", "letting",
+            "put", "puts", "putting",
+            "keep", "keeps", "kept", "keeping",
+            "leave", "leaves", "left", "leaving",
+            "need", "needs", "needed", "needing",
+            "like", "likes", "liked", "liking",
+            "look", "looks", "looked", "looking",
+            "try", "tries", "tried", "trying",
+            "use", "uses", "used", "using",
+            "seem", "seems", "seemed", "seeming",
+            "mean", "means", "meant", "meaning",
+            "help", "helps", "helped", "helping",
+            "start", "starts", "started", "starting",
+            "show", "shows", "showed", "showing", "shown",
+            "hear", "hears", "heard", "hearing",
+            "feel", "feels", "felt", "feeling",
+            "become", "becomes", "became", "becoming",
+            "set", "sets", "setting",
+            "run", "runs", "ran", "running",
+            "move", "moves", "moved", "moving",
+            "live", "lives", "lived", "living",
+            "play", "plays", "played", "playing",
+            "believe", "believes", "believed", "believing",
+            "bring", "brings", "brought", "bringing",
+            "happen", "happens", "happened", "happening",
+            "call", "calls", "called", "calling",
+            "turn", "turns", "turned", "turning",
+            "ask", "asks", "asked", "asking",
+            "hold", "holds", "held", "holding",
         ]
 
         tagger.enumerateTags(
@@ -109,7 +150,7 @@ class NLPProcessor {
         ) { tag, range in
             if tag == .verb {
                 let word = String(sentence[range])
-                if !auxiliaries.contains(word.lowercased()) {
+                if !filteredVerbs.contains(word.lowercased()) {
                     verbs.append(word)
                 }
             }

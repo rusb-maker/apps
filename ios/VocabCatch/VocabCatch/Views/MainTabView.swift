@@ -15,6 +15,10 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Study", systemImage: "brain.head.profile")
                 }
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape")
+                }
         }
     }
 }

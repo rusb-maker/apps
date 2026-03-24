@@ -5,8 +5,8 @@ struct RecordingView: View {
     @State private var showReview = false
     @State private var extractedPhrases: [ExtractedPhrase] = []
     @State private var permissionsGranted = false
-
-    private let nlpProcessor = NLPProcessor()
+    @State private var isExtracting = false
+    @State private var extractionError: String?
 
     var body: some View {
         NavigationStack {
@@ -65,15 +65,21 @@ struct RecordingView: View {
 
                 // Extract button
                 if !viewModel.isRecording && !viewModel.transcript.isEmpty {
-                    Button("Extract Phrases") {
-                        extractedPhrases = nlpProcessor.extractPhrases(from: viewModel.transcript)
-                        showReview = true
+                    if isExtracting {
+                        ProgressView("Analyzing with AI...")
+                            .padding()
+                    } else {
+                        Button("Extract Phrases") {
+                            Task {
+                                await extractWithLLM()
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.large)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
                 }
 
-                if let error = viewModel.errorMessage {
+                if let error = extractionError ?? viewModel.errorMessage {
                     Text(error)
                         .font(.caption)
                         .foregroundStyle(.red)
@@ -90,6 +96,18 @@ struct RecordingView: View {
                 permissionsGranted = await viewModel.requestPermissions()
             }
         }
+    }
+
+    private func extractWithLLM() async {
+        isExtracting = true
+        extractionError = nil
+        do {
+            extractedPhrases = try await ClaudeAPIService.shared.extractPhrases(from: viewModel.transcript)
+            showReview = true
+        } catch {
+            extractionError = error.localizedDescription
+        }
+        isExtracting = false
     }
 
     private func formatDuration(_ duration: TimeInterval) -> String {
