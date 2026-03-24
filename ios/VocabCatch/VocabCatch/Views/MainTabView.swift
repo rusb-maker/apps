@@ -7,6 +7,10 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Record", systemImage: "mic.fill")
                 }
+            RecordingsListView()
+                .tabItem {
+                    Label("History", systemImage: "clock.fill")
+                }
             GroupsListView()
                 .tabItem {
                     Label("Groups", systemImage: "folder.fill")

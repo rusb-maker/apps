@@ -43,14 +43,17 @@ class RecorderViewModel {
         recognitionRequest.shouldReportPartialResults = true
 
         recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest) { [weak self] result, error in
-            if let result {
-                self?.transcript = result.bestTranscription.formattedString
-            }
-            if let error, (error as NSError).domain == "kAFAssistantErrorDomain" && (error as NSError).code != 1101 {
-                self?.errorMessage = error.localizedDescription
-            }
-            if result?.isFinal ?? false {
-                self?.stopRecording()
+            guard let self else { return }
+            DispatchQueue.main.async {
+                if let result {
+                    self.transcript = result.bestTranscription.formattedString
+                }
+                if let error, (error as NSError).domain == "kAFAssistantErrorDomain" && (error as NSError).code != 1101 {
+                    self.errorMessage = error.localizedDescription
+                }
+                if result?.isFinal ?? false {
+                    self.stopRecording()
+                }
             }
         }
 
@@ -74,16 +77,30 @@ class RecorderViewModel {
     }
 
     func stopRecording() {
+        guard isRecording else { return }
+
         audioEngine.stop()
         audioEngine.inputNode.removeTap(onBus: 0)
         recognitionRequest?.endAudio()
+        recognitionRequest = nil
         recognitionTask?.cancel()
-        isRecording = false
+        recognitionTask = nil
         durationTimer?.invalidate()
         durationTimer = nil
 
         if let start = recordingStartTime {
             recordingDuration = Date().timeIntervalSince(start)
+        }
+
+        let updateUI = {
+            self.isRecording = false
+            self.audioLevel = 0
+        }
+
+        if Thread.isMainThread {
+            updateUI()
+        } else {
+            DispatchQueue.main.async(execute: updateUI)
         }
     }
 

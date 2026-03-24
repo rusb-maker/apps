@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 struct RecordingView: View {
     @State private var viewModel = RecorderViewModel()
@@ -7,6 +8,8 @@ struct RecordingView: View {
     @State private var permissionsGranted = false
     @State private var isExtracting = false
     @State private var extractionError: String?
+    @State private var showSavedConfirmation = false
+    @Environment(\.modelContext) private var context
 
     var body: some View {
         NavigationStack {
@@ -63,19 +66,29 @@ struct RecordingView: View {
                 }
                 .disabled(!permissionsGranted)
 
-                // Extract button
+                // Action buttons
                 if !viewModel.isRecording && !viewModel.transcript.isEmpty {
                     if isExtracting {
                         ProgressView("Analyzing with AI...")
                             .padding()
                     } else {
-                        Button("Extract Phrases") {
-                            Task {
-                                await extractWithLLM()
+                        HStack(spacing: 16) {
+                            Button {
+                                saveRecording()
+                            } label: {
+                                Label("Save", systemImage: "square.and.arrow.down")
                             }
+                            .buttonStyle(.bordered)
+                            .controlSize(.large)
+
+                            Button("Extract Phrases") {
+                                Task {
+                                    await extractWithLLM()
+                                }
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .controlSize(.large)
                         }
-                        .buttonStyle(.borderedProminent)
-                        .controlSize(.large)
                     }
                 }
 
@@ -95,6 +108,43 @@ struct RecordingView: View {
             .task {
                 permissionsGranted = await viewModel.requestPermissions()
             }
+            .overlay {
+                if showSavedConfirmation {
+                    savedConfirmationOverlay
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                }
+            }
+            .animation(.easeInOut, value: showSavedConfirmation)
+        }
+    }
+
+    private var savedConfirmationOverlay: some View {
+        VStack {
+            Text("Recording saved")
+                .font(.subheadline.weight(.medium))
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .background(.green, in: Capsule())
+                .foregroundStyle(.white)
+                .padding(.top, 8)
+            Spacer()
+        }
+    }
+
+    private func saveRecording() {
+        let session = RecordingSession(
+            rawTranscript: viewModel.transcript,
+            duration: viewModel.recordingDuration
+        )
+        context.insert(session)
+        try? context.save()
+
+        viewModel.transcript = ""
+        viewModel.recordingDuration = 0
+
+        showSavedConfirmation = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            showSavedConfirmation = false
         }
     }
 
@@ -102,7 +152,18 @@ struct RecordingView: View {
         isExtracting = true
         extractionError = nil
         do {
-            extractedPhrases = try await ClaudeAPIService.shared.extractPhrases(from: viewModel.transcript)
+            let phrases = try await ClaudeAPIService.shared.extractPhrases(from: viewModel.transcript)
+
+            // Save recording session with extracted phrases
+            let session = RecordingSession(
+                rawTranscript: viewModel.transcript,
+                extractedPhrases: phrases,
+                duration: viewModel.recordingDuration
+            )
+            context.insert(session)
+            try? context.save()
+
+            extractedPhrases = phrases
             showReview = true
         } catch {
             extractionError = error.localizedDescription

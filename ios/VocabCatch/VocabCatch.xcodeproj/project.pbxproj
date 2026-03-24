@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		15C1ED69BB2FCA071D8275F7 /* ClaudeAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399A8D5CE429D84FF63670B9 /* ClaudeAPIService.swift */; };
 		274C1E19057EEDA75BAD9B71 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31799BBC738C00B261DB8DD4 /* SettingsView.swift */; };
+		BB000001000000000000001A /* RecordingsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000000000000001B /* RecordingsListView.swift */; };
+		BB000002000000000000001A /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000001B /* RecordingDetailView.swift */; };
 		AA000001000000000000001A /* VocabCatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000001000000000000001B /* VocabCatchApp.swift */; };
 		AA000002000000000000001A /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002000000000000001B /* Card.swift */; };
 		AA000003000000000000001A /* CardGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000003000000000000001B /* CardGroup.swift */; };
@@ -55,6 +57,8 @@
 /* Begin PBXFileReference section */
 		31799BBC738C00B261DB8DD4 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		399A8D5CE429D84FF63670B9 /* ClaudeAPIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClaudeAPIService.swift; sourceTree = "<group>"; };
+		BB000001000000000000001B /* RecordingsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingsListView.swift; sourceTree = "<group>"; };
+		BB000002000000000000001B /* RecordingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailView.swift; sourceTree = "<group>"; };
 		AA000001000000000000001B /* VocabCatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabCatchApp.swift; sourceTree = "<group>"; };
 		AA000002000000000000001B /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		AA000003000000000000001B /* CardGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardGroup.swift; sourceTree = "<group>"; };
@@ -156,6 +160,7 @@
 			children = (
 				AA000009000000000000001B /* MainTabView.swift */,
 				AAGROUP000000000000000008 /* Recording */,
+				BBGROUP000000000000000001 /* Recordings */,
 				AAGROUP000000000000000009 /* Review */,
 				AAGROUP00000000000000000A /* Groups */,
 				AAGROUP00000000000000000B /* Study */,
@@ -163,6 +168,15 @@
 				31799BBC738C00B261DB8DD4 /* SettingsView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		BBGROUP000000000000000001 /* Recordings */ = {
+			isa = PBXGroup;
+			children = (
+				BB000001000000000000001B /* RecordingsListView.swift */,
+				BB000002000000000000001B /* RecordingDetailView.swift */,
+			);
+			path = Recordings;
 			sourceTree = "<group>";
 		};
 		AAGROUP000000000000000006 /* Services */ = {
@@ -416,6 +430,8 @@
 				AA000015000000000000001A /* PhrasalVerbDictionary.swift in Sources */,
 				15C1ED69BB2FCA071D8275F7 /* ClaudeAPIService.swift in Sources */,
 				274C1E19057EEDA75BAD9B71 /* SettingsView.swift in Sources */,
+				BB000001000000000000001A /* RecordingsListView.swift in Sources */,
+				BB000002000000000000001A /* RecordingDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -642,6 +658,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FH852G5TN6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "VocabCatch needs microphone access to record audio and capture vocabulary from your speech.";
@@ -673,6 +690,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FH852G5TN6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "VocabCatch needs microphone access to record audio and capture vocabulary from your speech.";
