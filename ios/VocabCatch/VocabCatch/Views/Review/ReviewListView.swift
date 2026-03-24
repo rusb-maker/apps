@@ -1,0 +1,87 @@
+import SwiftUI
+import SwiftData
+
+struct ReviewListView: View {
+    @State private var viewModel = ReviewViewModel()
+    @State private var showGroupPicker = false
+    @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) private var dismiss
+
+    init(phrases: [ExtractedPhrase]) {
+        _viewModel = State(initialValue: {
+            let vm = ReviewViewModel()
+            vm.phrases = phrases
+            return vm
+        }())
+    }
+
+    var body: some View {
+        List {
+            ForEach(Array(viewModel.phrases.enumerated()), id: \.element.id) { index, phrase in
+                ReviewRow(phrase: phrase)
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            viewModel.phrases[index].isSelected = false
+                        } label: {
+                            Label("Skip", systemImage: "xmark")
+                        }
+                    }
+                    .swipeActions(edge: .leading) {
+                        Button {
+                            viewModel.phrases[index].isSelected = true
+                        } label: {
+                            Label("Keep", systemImage: "checkmark")
+                        }
+                        .tint(.green)
+                    }
+            }
+            .onDelete { offsets in
+                viewModel.remove(at: offsets)
+            }
+        }
+        .navigationTitle("Review Phrases")
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button("Save \(viewModel.selectedCount)") {
+                    viewModel.saveSelectedCards(context: context)
+                    dismiss()
+                }
+                .disabled(viewModel.selectedCount == 0)
+            }
+            ToolbarItem(placement: .secondaryAction) {
+                Button("Choose Group") {
+                    showGroupPicker = true
+                }
+            }
+        }
+        .sheet(isPresented: $showGroupPicker) {
+            GroupPickerView(selected: $viewModel.selectedGroup)
+        }
+    }
+}
+
+struct ReviewRow: View {
+    let phrase: ExtractedPhrase
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(phrase.verb)
+                    .font(.headline)
+                Spacer()
+                Text(phrase.verbType == .phrasal ? "phrasal" : "verb")
+                    .font(.caption)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 2)
+                    .background(phrase.verbType == .phrasal ? Color.orange.opacity(0.2) : Color.blue.opacity(0.2))
+                    .clipShape(Capsule())
+            }
+            Text(phrase.contextSentence)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+        }
+        .padding(.vertical, 4)
+        .opacity(phrase.isSelected ? 1.0 : 0.4)
+    }
+}

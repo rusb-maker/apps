@@ -3,15 +3,18 @@ import SwiftUI
 struct MainTabView: View {
     var body: some View {
         TabView {
-            Tab("Record", systemImage: "mic.fill") {
-                RecordingView()
-            }
-            Tab("Groups", systemImage: "folder.fill") {
-                GroupsListView()
-            }
-            Tab("Study", systemImage: "brain.head.profile") {
-                StudySessionView()
-            }
+            RecordingView()
+                .tabItem {
+                    Label("Record", systemImage: "mic.fill")
+                }
+            GroupsListView()
+                .tabItem {
+                    Label("Groups", systemImage: "folder.fill")
+                }
+            StudySessionView()
+                .tabItem {
+                    Label("Study", systemImage: "brain.head.profile")
+                }
         }
     }
 }
