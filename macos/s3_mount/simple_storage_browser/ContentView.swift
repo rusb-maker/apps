@@ -16,6 +16,7 @@ struct ContentView: View {
                let profile = profileStore.profiles.first(where: { $0.id == id }) {
                 FileBrowserView(profile: profile)
                     .environment(s3Service)
+                    .backgroundExtensionEffect()
                     .id(profile.id)
             } else {
                 emptyDetail
@@ -94,7 +95,7 @@ struct ContentView: View {
                 .foregroundStyle(.tertiary)
             Text("No connections").foregroundStyle(.secondary)
             Button("Add Connection") { showingAdd = true }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.glass)
                 .controlSize(.small)
         }
     }
@@ -113,6 +114,8 @@ struct ContentView: View {
                 .foregroundStyle(.tertiary)
                 .multilineTextAlignment(.center)
         }
+        .padding()
+        .glassEffect(.regular, in: .rect(cornerRadius: 16))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

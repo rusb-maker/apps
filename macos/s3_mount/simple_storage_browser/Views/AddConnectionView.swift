@@ -50,6 +50,7 @@ struct AddConnectionView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save", action: save)
+                        .buttonStyle(.glass)
                         .disabled(profile.name.isEmpty || profile.accessKeyID.isEmpty || secretKey.isEmpty)
                 }
             }

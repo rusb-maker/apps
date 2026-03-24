@@ -12,6 +12,5 @@ struct SettingsView: View {
         }
         .formStyle(.grouped)
         .frame(minWidth: 450)
-        .padding()
     }
 }

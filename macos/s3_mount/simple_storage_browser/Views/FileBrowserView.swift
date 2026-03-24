@@ -66,10 +66,10 @@ private struct ObjectRowView: View, Equatable {
         return HStack(spacing: 0) {
             HStack(spacing: 8) {
                 Image(systemName: iconName)
-                    .foregroundStyle(isSelected ? Color.white : iconColor)
+                    .foregroundStyle(iconColor)
                 Text(obj.name)
                     .lineLimit(1)
-                    .foregroundStyle(isSelected ? Color.white : Color.primary)
+                    .foregroundStyle(.primary)
             }
             .padding(.horizontal, 6)
             .padding(.vertical, 1)
@@ -80,7 +80,7 @@ private struct ObjectRowView: View, Equatable {
 
             Text(obj.isFolder ? "—" : obj.formattedSize)
                 .font(.caption)
-                .foregroundStyle(isSelected ? Color.white : Color.secondary)
+                .foregroundStyle(.secondary)
                 .frame(width: sizeColumnWidth, alignment: .trailing)
                 .frame(maxHeight: .infinity)
                 .contentShape(Rectangle())
@@ -88,13 +88,13 @@ private struct ObjectRowView: View, Equatable {
 
             Text(finderFormattedDate(obj.lastModified))
                 .font(.caption)
-                .foregroundStyle(isSelected ? Color.white : Color.secondary)
+                .foregroundStyle(.secondary)
                 .frame(width: dateColumnWidth, alignment: .trailing)
                 .frame(maxHeight: .infinity)
                 .contentShape(Rectangle())
                 .onTapGesture { onTap() }
         }
-        .frame(height: 22)
+        .frame(height: 28)
     }
 
     private func fileIconName(for name: String) -> String {
@@ -132,10 +132,10 @@ private struct BucketRowContentView: View, Equatable {
         HStack(spacing: 0) {
             HStack(spacing: 8) {
                 Image(systemName: "externaldrive")
-                    .foregroundStyle(isSelected ? Color.white : Color(nsColor: .systemBlue))
+                    .foregroundStyle(Color(nsColor: .systemBlue))
                 Text(bucketName)
                     .lineLimit(1)
-                    .foregroundStyle(isSelected ? Color.white : Color.primary)
+                    .foregroundStyle(.primary)
             }
             .padding(.horizontal, 6)
             .padding(.vertical, 1)
@@ -146,7 +146,7 @@ private struct BucketRowContentView: View, Equatable {
 
             Text("—")
                 .font(.caption)
-                .foregroundStyle(isSelected ? Color.white : Color.secondary)
+                .foregroundStyle(.secondary)
                 .frame(width: sizeColumnWidth, alignment: .trailing)
                 .frame(maxHeight: .infinity)
                 .contentShape(Rectangle())
@@ -154,13 +154,13 @@ private struct BucketRowContentView: View, Equatable {
 
             Text("—")
                 .font(.caption)
-                .foregroundStyle(isSelected ? Color.white : Color.secondary)
+                .foregroundStyle(.secondary)
                 .frame(width: dateColumnWidth, alignment: .trailing)
                 .frame(maxHeight: .infinity)
                 .contentShape(Rectangle())
                 .onTapGesture { onTap() }
         }
-        .frame(height: 22)
+        .frame(height: 28)
     }
 }
 
@@ -202,7 +202,7 @@ struct FileBrowserView: View {
     }
     private let minSizeColumnWidth: CGFloat = 70
     private let minDateColumnWidth: CGFloat = 120
-    private let tableRowHeight: CGFloat = 22
+    private let tableRowHeight: CGFloat = 28
     private let tableHeaderHeight: CGFloat = 22
     private let tableHorizontalInset: CGFloat = 8
     private let disclosureGridCompensation: CGFloat = 16
@@ -370,13 +370,11 @@ struct FileBrowserView: View {
         .frame(height: tableHeaderHeight)
         .padding(.leading, tableHorizontalInset)
         .padding(.trailing, tableHorizontalInset + disclosureGridCompensation)
-        .background(Color(nsColor: .controlBackgroundColor))
+        .background(.bar)
     }
 
     private var columnSeparator: some View {
-        Rectangle()
-            .fill(Color.gray.opacity(0.25))
-            .frame(width: 1)
+        Divider()
     }
 
     private func resizeSeparator(_ gesture: () -> some Gesture) -> some View {
@@ -417,16 +415,15 @@ struct FileBrowserView: View {
     // MARK: - Outline List
 
     private var outlineList: some View {
-        VStack(spacing: 0) {
-            columnHeader
-            Divider()
-            List {
-                let bucketIDs = buckets.map { bucketRowID($0.name) }
-                ForEach(buckets) { bucket in
-                    bucketRow(bucket, orderedIDs: bucketIDs)
-                }
+        List {
+            let bucketIDs = buckets.map { bucketRowID($0.name) }
+            ForEach(buckets) { bucket in
+                bucketRow(bucket, orderedIDs: bucketIDs)
             }
-            .listStyle(.plain)
+        }
+        .listStyle(.plain)
+        .safeAreaBar(edge: .top) {
+            columnHeader
         }
     }
 
@@ -478,8 +475,7 @@ struct FileBrowserView: View {
         }
         .listRowInsets(rowInsets)
         .listRowSeparator(.visible)
-        .listRowSeparatorTint(Color.gray.opacity(0.2))
-        .listRowBackground(selectedKeys.contains(id) ? Color.accentColor : Color.clear)
+        .listRowBackground(selectedKeys.contains(id) ? Color.accentColor.opacity(0.2) : Color.clear)
     }
 
     @ViewBuilder
@@ -536,8 +532,7 @@ struct FileBrowserView: View {
             }
             .listRowInsets(rowInsets)
             .listRowSeparator(.visible)
-            .listRowSeparatorTint(Color.gray.opacity(0.2))
-            .listRowBackground(selectedKeys.contains(id) ? Color.accentColor : Color.clear)
+                .listRowBackground(selectedKeys.contains(id) ? Color.accentColor.opacity(0.2) : Color.clear)
         )
     }
 
@@ -560,8 +555,7 @@ struct FileBrowserView: View {
         }
         .listRowInsets(rowInsets)
         .listRowSeparator(.visible)
-        .listRowSeparatorTint(Color.gray.opacity(0.2))
-        .listRowBackground(selectedKeys.contains(id) ? Color.accentColor : Color.clear)
+        .listRowBackground(selectedKeys.contains(id) ? Color.accentColor.opacity(0.2) : Color.clear)
     }
 
     // MARK: - Context Menu
@@ -743,6 +737,7 @@ struct FileBrowserView: View {
             Button("Retry") { Task { await load() } }
         }
         .padding()
+        .glassEffect(.regular, in: .rect(cornerRadius: 16))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
