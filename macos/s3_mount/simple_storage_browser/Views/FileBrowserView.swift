@@ -321,7 +321,7 @@ struct FileBrowserView: View {
             .padding(.vertical, 5)
         }
         .frame(maxWidth: .infinity)
-        .background(.bar)
+        .background(.background)
     }
 
     private func buildBreadcrumb(from rowID: String?) -> [String] {
@@ -370,7 +370,7 @@ struct FileBrowserView: View {
         .frame(height: tableHeaderHeight)
         .padding(.leading, tableHorizontalInset)
         .padding(.trailing, tableHorizontalInset + disclosureGridCompensation)
-        .background(.bar)
+        .background(.background)
     }
 
     private var columnSeparator: some View {
@@ -737,7 +737,6 @@ struct FileBrowserView: View {
             Button("Retry") { Task { await load() } }
         }
         .padding()
-        .glassEffect(.regular, in: .rect(cornerRadius: 16))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
@@ -765,7 +764,7 @@ struct FileBrowserView: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
-        .background(.bar)
+        .background(.background)
     }
 
     // MARK: - Toolbar
