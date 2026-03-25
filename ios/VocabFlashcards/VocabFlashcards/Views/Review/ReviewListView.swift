@@ -3,9 +3,15 @@ import SwiftData
 
 struct ReviewListView: View {
     @State private var viewModel = ReviewViewModel()
-    @State private var showGroupPicker = false
+    @State private var showNewFolder = false
+    @State private var newFolderName = ""
+    @Query(sort: \CardGroup.createdAt, order: .reverse) private var allGroups: [CardGroup]
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
+
+    private var rootGroups: [CardGroup] {
+        allGroups.filter { $0.parent == nil && !$0.isTrashed }
+    }
 
     init(phrases: [ExtractedPhrase]) {
         _viewModel = State(initialValue: {
@@ -17,26 +23,71 @@ struct ReviewListView: View {
 
     var body: some View {
         List {
-            ForEach(Array(viewModel.phrases.enumerated()), id: \.element.id) { index, phrase in
-                ReviewRow(phrase: phrase)
-                    .swipeActions(edge: .trailing) {
-                        Button(role: .destructive) {
-                            viewModel.phrases[index].isSelected = false
-                        } label: {
-                            Label("Skip", systemImage: "xmark")
+            // MARK: - Phrases
+            Section {
+                ForEach(Array(viewModel.phrases.enumerated()), id: \.element.id) { index, phrase in
+                    ReviewRow(phrase: phrase)
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                viewModel.phrases[index].isSelected = false
+                            } label: {
+                                Label("Skip", systemImage: "xmark")
+                            }
                         }
-                    }
-                    .swipeActions(edge: .leading) {
-                        Button {
-                            viewModel.phrases[index].isSelected = true
-                        } label: {
-                            Label("Keep", systemImage: "checkmark")
+                        .swipeActions(edge: .leading) {
+                            Button {
+                                viewModel.phrases[index].isSelected = true
+                            } label: {
+                                Label("Keep", systemImage: "checkmark")
+                            }
+                            .tint(.green)
                         }
-                        .tint(.green)
-                    }
+                }
+                .onDelete { offsets in
+                    viewModel.remove(at: offsets)
+                }
             }
-            .onDelete { offsets in
-                viewModel.remove(at: offsets)
+
+            // MARK: - Save to folder
+            Section("Save to") {
+                // Existing folders
+                ForEach(rootGroups) { group in
+                    Button {
+                        viewModel.selectedGroup = group
+                    } label: {
+                        HStack {
+                            Image(systemName: "folder.fill")
+                                .foregroundStyle(.blue)
+                                .frame(width: 24)
+                            VStack(alignment: .leading) {
+                                Text(group.name)
+                                    .font(.body)
+                                Text("\(group.totalCardCount) cards")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            if viewModel.selectedGroup?.id == group.id {
+                                Image(systemName: "checkmark")
+                                    .foregroundStyle(.blue)
+                                    .fontWeight(.semibold)
+                            }
+                        }
+                    }
+                    .tint(.primary)
+                }
+
+                // New folder button
+                Button {
+                    showNewFolder = true
+                } label: {
+                    HStack {
+                        Image(systemName: "folder.badge.plus")
+                            .foregroundStyle(.green)
+                            .frame(width: 24)
+                        Text("New Folder")
+                    }
+                }
             }
         }
         .navigationTitle("Review Phrases")
@@ -48,14 +99,19 @@ struct ReviewListView: View {
                 }
                 .disabled(viewModel.selectedCount == 0)
             }
-            ToolbarItem(placement: .secondaryAction) {
-                Button("Choose Group") {
-                    showGroupPicker = true
-                }
-            }
         }
-        .sheet(isPresented: $showGroupPicker) {
-            GroupPickerView(selected: $viewModel.selectedGroup)
+        .alert("New Folder", isPresented: $showNewFolder) {
+            TextField("Folder name", text: $newFolderName)
+            Button("Create") {
+                let trimmed = newFolderName.trimmingCharacters(in: .whitespaces)
+                guard !trimmed.isEmpty else { return }
+                let group = CardGroup(name: trimmed)
+                context.insert(group)
+                try? context.save()
+                viewModel.selectedGroup = group
+                newFolderName = ""
+            }
+            Button("Cancel", role: .cancel) { newFolderName = "" }
         }
     }
 }
