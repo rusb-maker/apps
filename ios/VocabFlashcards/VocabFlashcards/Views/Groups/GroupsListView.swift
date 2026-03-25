@@ -22,7 +22,7 @@ struct GroupRowView: View {
                     }
                 }
                 let parts = [
-                    group.hasChildren ? "\(group.children.count) subfolders" : nil,
+                    group.hasChildren ? "\(group.activeChildren.count) subfolders" : nil,
                     "\(group.totalCardCount) cards"
                 ].compactMap { $0 }
                 Text(parts.joined(separator: " · "))
@@ -54,11 +54,16 @@ struct GroupsListView: View {
     @State private var renameGroupName = ""
     @State private var groupToRename: CardGroup?
     @State private var showMerge = false
-    @State private var showMoveGroup = false
     @State private var groupToMove: CardGroup?
+    @State private var groupToDelete: CardGroup?
+    @State private var showDeleteConfirm = false
 
     private var rootGroups: [CardGroup] {
-        allGroups.filter { $0.parent == nil }
+        allGroups.filter { $0.parent == nil && !$0.isTrashed }
+    }
+
+    private var trashedCount: Int {
+        allGroups.filter { $0.isTrashed }.count
     }
 
     var body: some View {
@@ -95,7 +100,6 @@ struct GroupsListView: View {
                         }
                         Button {
                             groupToMove = group
-                            showMoveGroup = true
                         } label: {
                             Label("Move to…", systemImage: "folder.badge.arrow.up")
                         }
@@ -110,7 +114,8 @@ struct GroupsListView: View {
                             }
                         }
                         Button(role: .destructive) {
-                            context.delete(group)
+                            groupToDelete = group
+                            showDeleteConfirm = true
                         } label: {
                             Label("Delete", systemImage: "trash")
                         }
@@ -118,8 +123,28 @@ struct GroupsListView: View {
                 }
                 .onDelete { offsets in
                     let groups = rootGroups
-                    for index in offsets {
-                        context.delete(groups[index])
+                    if let index = offsets.first {
+                        groupToDelete = groups[index]
+                        showDeleteConfirm = true
+                    }
+                }
+
+                // Trash row
+                NavigationLink {
+                    TrashView()
+                } label: {
+                    HStack {
+                        Image(systemName: "trash")
+                            .foregroundStyle(.secondary)
+                            .frame(width: 24)
+                        Text("Trash")
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        if trashedCount > 0 {
+                            Text("\(trashedCount)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
             }
@@ -177,9 +202,23 @@ struct GroupsListView: View {
             .sheet(isPresented: $showMerge) {
                 MergeGroupsView(groups: rootGroups, context: context, isPresented: $showMerge)
             }
-            .sheet(isPresented: $showMoveGroup) {
-                if let group = groupToMove {
-                    MoveToFolderView(groupToMove: group)
+            .sheet(item: $groupToMove) { group in
+                MoveToFolderView(groupToMove: group)
+            }
+            .alert("Move to Trash?", isPresented: $showDeleteConfirm) {
+                Button("Move to Trash", role: .destructive) {
+                    if let group = groupToDelete {
+                        group.moveToTrash()
+                        try? context.save()
+                    }
+                    groupToDelete = nil
+                }
+                Button("Cancel", role: .cancel) {
+                    groupToDelete = nil
+                }
+            } message: {
+                if let group = groupToDelete {
+                    Text("'\(group.name)' and all its contents will be moved to Trash. Items in Trash are deleted after 7 days.")
                 }
             }
         }
@@ -191,25 +230,170 @@ struct GroupsListView: View {
 struct FolderContentView: View {
     @Bindable var folder: CardGroup
     @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) private var dismiss
     @State private var showNewFolder = false
     @State private var newItemName = ""
     @State private var showRenameChild = false
     @State private var renameChildName = ""
     @State private var childToRename: CardGroup?
     @State private var showMerge = false
-    @State private var showMoveGroup = false
     @State private var groupToMove: CardGroup?
     @State private var showAddCard = false
     @State private var newFront = ""
     @State private var newContext = ""
+    @State private var showRenameFolder = false
+    @State private var renameFolderName = ""
+    @State private var showMoveSelf = false
+    @State private var cardToMove: Card?
+    @State private var isSelecting = false
+    @State private var selectedCards: Set<UUID> = []
+    @State private var showMoveSelected = false
+    @State private var childToDelete: CardGroup?
+    @State private var showDeleteChildConfirm = false
+    @State private var cardToDelete: Card?
+    @State private var showDeleteCardConfirm = false
+    @State private var showDeleteBulkConfirm = false
 
     private var sortedCards: [Card] {
-        folder.cards.sorted { $0.createdAt > $1.createdAt }
+        folder.activeCards.sorted { $0.createdAt > $1.createdAt }
+    }
+
+    @ViewBuilder
+    private var cardsSection: some View {
+        Section {
+            if isSelecting {
+                HStack {
+                    Button(selectedCards.count == sortedCards.count ? "Deselect All" : "Select All") {
+                        if selectedCards.count == sortedCards.count {
+                            selectedCards.removeAll()
+                        } else {
+                            selectedCards = Set(sortedCards.map(\.id))
+                        }
+                    }
+                    .font(.subheadline)
+                    Spacer()
+                    Text("\(selectedCards.count) selected")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            ForEach(sortedCards) { card in
+                if isSelecting {
+                    Button {
+                        if selectedCards.contains(card.id) {
+                            selectedCards.remove(card.id)
+                        } else {
+                            selectedCards.insert(card.id)
+                        }
+                    } label: {
+                        HStack {
+                            Image(systemName: selectedCards.contains(card.id) ? "checkmark.circle.fill" : "circle")
+                                .foregroundStyle(selectedCards.contains(card.id) ? .blue : .secondary)
+                                .font(.title3)
+                            CardRowContent(card: card)
+                        }
+                    }
+                    .tint(.primary)
+                } else {
+                    NavigationLink(value: card) {
+                        CardRowContent(card: card)
+                    }
+                    .contextMenu {
+                        Button {
+                            cardToMove = card
+                        } label: {
+                            Label("Move to…", systemImage: "folder.badge.arrow.up")
+                        }
+                        Button(role: .destructive) {
+                            cardToDelete = card
+                            showDeleteCardConfirm = true
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                }
+            }
+            .onDelete { offsets in
+                guard !isSelecting else { return }
+                let cards = sortedCards
+                if let index = offsets.first {
+                    cardToDelete = cards[index]
+                    showDeleteCardConfirm = true
+                }
+            }
+        } header: {
+            Text("Cards (\(folder.activeCards.count))")
+        }
+    }
+
+    @ViewBuilder
+    private var subfoldersSection: some View {
+        Section("Subfolders") {
+            ForEach(folder.sortedChildren) { child in
+                NavigationLink(value: child) {
+                    GroupRowView(group: child)
+                }
+                .swipeActions(edge: .leading) {
+                    Button {
+                        renameChildName = child.name
+                        childToRename = child
+                        showRenameChild = true
+                    } label: {
+                        Label("Rename", systemImage: "pencil")
+                    }
+                    .tint(.blue)
+                }
+                .contextMenu {
+                    Button {
+                        renameChildName = child.name
+                        childToRename = child
+                        showRenameChild = true
+                    } label: {
+                        Label("Rename", systemImage: "pencil")
+                    }
+                    Button {
+                        child.parent = folder.parent
+                        do { try context.save() } catch { print("[Folder] move up error: \(error)") }
+                    } label: {
+                        Label("Move Up", systemImage: "arrow.up.doc")
+                    }
+                    Button {
+                        groupToMove = child
+                    } label: {
+                        Label("Move to…", systemImage: "folder.badge.arrow.up")
+                    }
+                    Button {
+                        child.setStudyEnabled(!child.isStudyEnabled)
+                        do { try context.save() } catch { print("[Folder] toggle save error: \(error)") }
+                    } label: {
+                        if child.isStudyEnabled {
+                            Label("Disable for Study", systemImage: "pause.circle")
+                        } else {
+                            Label("Enable for Study", systemImage: "play.circle")
+                        }
+                    }
+                    Button(role: .destructive) {
+                        childToDelete = child
+                        showDeleteChildConfirm = true
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                }
+            }
+            .onDelete { offsets in
+                let sorted = folder.sortedChildren
+                if let index = offsets.first {
+                    childToDelete = sorted[index]
+                    showDeleteChildConfirm = true
+                }
+            }
+        }
     }
 
     var body: some View {
         List {
-            if folder.children.isEmpty && folder.cards.isEmpty {
+            if folder.activeChildren.isEmpty && folder.activeCards.isEmpty {
                 ContentUnavailableView(
                     "Empty Folder",
                     systemImage: "folder",
@@ -219,104 +403,12 @@ struct FolderContentView: View {
 
             // Subfolders section
             if folder.hasChildren {
-                Section("Subfolders") {
-                    ForEach(folder.sortedChildren) { child in
-                        NavigationLink(value: child) {
-                            GroupRowView(group: child)
-                        }
-                        .swipeActions(edge: .leading) {
-                            Button {
-                                renameChildName = child.name
-                                childToRename = child
-                                showRenameChild = true
-                            } label: {
-                                Label("Rename", systemImage: "pencil")
-                            }
-                            .tint(.blue)
-                        }
-                        .contextMenu {
-                            Button {
-                                renameChildName = child.name
-                                childToRename = child
-                                showRenameChild = true
-                            } label: {
-                                Label("Rename", systemImage: "pencil")
-                            }
-                            Button {
-                                child.parent = folder.parent
-                                do { try context.save() } catch { print("[Folder] move up error: \(error)") }
-                            } label: {
-                                Label("Move Up", systemImage: "arrow.up.doc")
-                            }
-                            Button {
-                                groupToMove = child
-                                showMoveGroup = true
-                            } label: {
-                                Label("Move to…", systemImage: "folder.badge.arrow.up")
-                            }
-                            Button {
-                                child.setStudyEnabled(!child.isStudyEnabled)
-                                do { try context.save() } catch { print("[Folder] toggle save error: \(error)") }
-                            } label: {
-                                if child.isStudyEnabled {
-                                    Label("Disable for Study", systemImage: "pause.circle")
-                                } else {
-                                    Label("Enable for Study", systemImage: "play.circle")
-                                }
-                            }
-                            Button(role: .destructive) {
-                                context.delete(child)
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
-                        }
-                    }
-                    .onDelete { offsets in
-                        let sorted = folder.sortedChildren
-                        for index in offsets {
-                            context.delete(sorted[index])
-                        }
-                    }
-                }
+                subfoldersSection
             }
 
             // Cards section
-            if !folder.cards.isEmpty {
-                Section("Cards (\(folder.cards.count))") {
-                    ForEach(sortedCards) { card in
-                        NavigationLink(value: card) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                HStack {
-                                    Text(card.front)
-                                        .font(.headline)
-                                    Spacer()
-                                    Text(card.verbType == .phrasal ? "phrasal" : "verb")
-                                        .font(.caption2)
-                                        .padding(.horizontal, 6)
-                                        .padding(.vertical, 2)
-                                        .background(card.verbType == .phrasal ? Color.orange.opacity(0.2) : Color.blue.opacity(0.2))
-                                        .clipShape(Capsule())
-                                }
-                                Text(card.contextSentence)
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                    .lineLimit(1)
-                                if !card.back.isEmpty {
-                                    Text(card.back)
-                                        .font(.caption)
-                                        .foregroundStyle(.blue)
-                                }
-                            }
-                            .padding(.vertical, 2)
-                        }
-                    }
-                    .onDelete { offsets in
-                        let cards = sortedCards
-                        for index in offsets {
-                            context.delete(cards[index])
-                        }
-                    }
-                }
+            if !folder.activeCards.isEmpty {
+                cardsSection
             }
         }
         .navigationTitle(folder.name)
@@ -327,6 +419,33 @@ struct FolderContentView: View {
             CardEditView(card: card)
         }
         .toolbar {
+            if !folder.activeCards.isEmpty {
+                ToolbarItemGroup(placement: .topBarLeading) {
+                    Button(isSelecting ? "Done" : "Select") {
+                        isSelecting.toggle()
+                        if !isSelecting {
+                            selectedCards.removeAll()
+                        }
+                    }
+                    if isSelecting {
+                        Button {
+                            showMoveSelected = true
+                        } label: {
+                            Image(systemName: "folder")
+                        }
+                        .disabled(selectedCards.isEmpty)
+
+                        Button {
+                            showDeleteBulkConfirm = true
+                        } label: {
+                            Image(systemName: "trash")
+                                .foregroundStyle(.red)
+                        }
+                        .disabled(selectedCards.isEmpty)
+                    }
+                }
+            }
+
             ToolbarItem(placement: .primaryAction) {
                 Menu {
                     Button {
@@ -346,8 +465,31 @@ struct FolderContentView: View {
                             Label("Merge…", systemImage: "arrow.triangle.merge")
                         }
                     }
+
+                    Divider()
+
+                    Button {
+                        renameFolderName = folder.name
+                        showRenameFolder = true
+                    } label: {
+                        Label("Rename Folder", systemImage: "pencil")
+                    }
+                    Button {
+                        showMoveSelf = true
+                    } label: {
+                        Label("Move Folder…", systemImage: "folder.badge.arrow.up")
+                    }
+                    if folder.parent != nil {
+                        Button {
+                            folder.parent = folder.parent?.parent
+                            do { try context.save() } catch { print("[Folder] move up error: \(error)") }
+                            dismiss()
+                        } label: {
+                            Label("Move Up One Level", systemImage: "arrow.up.doc")
+                        }
+                    }
                 } label: {
-                    Image(systemName: "plus")
+                    Image(systemName: "ellipsis.circle")
                 }
             }
         }
@@ -402,11 +544,151 @@ struct FolderContentView: View {
         .sheet(isPresented: $showMerge) {
             MergeGroupsView(groups: folder.sortedChildren, context: context, isPresented: $showMerge, parentFolder: folder)
         }
-        .sheet(isPresented: $showMoveGroup) {
-            if let group = groupToMove {
-                MoveToFolderView(groupToMove: group)
+        .sheet(item: $groupToMove) { group in
+            MoveToFolderView(groupToMove: group)
+        }
+        .sheet(isPresented: $showMoveSelf) {
+            MoveToFolderView(groupToMove: folder)
+        }
+        .sheet(item: $cardToMove) { card in
+            GroupPickerView(selected: Binding(
+                get: { card.group },
+                set: { newGroup in
+                    if let newGroup {
+                        card.group = newGroup
+                        do { try context.save() } catch { print("[Folder] move card error: \(error)") }
+                    }
+                }
+            ))
+        }
+        .sheet(isPresented: $showMoveSelected) {
+            MoveCardsToFolderView(
+                cards: sortedCards.filter { selectedCards.contains($0.id) },
+                onComplete: {
+                    selectedCards.removeAll()
+                    isSelecting = false
+                }
+            )
+        }
+        .alert("Rename Folder", isPresented: $showRenameFolder) {
+            TextField("Name", text: $renameFolderName)
+            Button("Save") {
+                let trimmed = renameFolderName.trimmingCharacters(in: .whitespaces)
+                if !trimmed.isEmpty {
+                    folder.name = trimmed
+                    do { try context.save() } catch { print("[Folder] rename save error: \(error)") }
+                }
+                renameFolderName = ""
+            }
+            Button("Cancel", role: .cancel) {
+                renameFolderName = ""
             }
         }
+        .alert("Move to Trash?", isPresented: $showDeleteChildConfirm) {
+            Button("Move to Trash", role: .destructive) {
+                if let child = childToDelete {
+                    child.moveToTrash()
+                    try? context.save()
+                }
+                childToDelete = nil
+            }
+            Button("Cancel", role: .cancel) { childToDelete = nil }
+        } message: {
+            if let child = childToDelete {
+                Text("'\(child.name)' and all its contents will be moved to Trash.")
+            }
+        }
+        .alert("Move to Trash?", isPresented: $showDeleteCardConfirm) {
+            Button("Move to Trash", role: .destructive) {
+                if let card = cardToDelete {
+                    card.isTrashed = true
+                    card.trashedAt = Date()
+                    try? context.save()
+                }
+                cardToDelete = nil
+            }
+            Button("Cancel", role: .cancel) { cardToDelete = nil }
+        } message: {
+            if let card = cardToDelete {
+                Text("'\(card.front)' will be moved to Trash.")
+            }
+        }
+        .alert("Move \(selectedCards.count) Cards to Trash?", isPresented: $showDeleteBulkConfirm) {
+            Button("Move to Trash", role: .destructive) {
+                let now = Date()
+                let cardsToTrash = sortedCards.filter { selectedCards.contains($0.id) }
+                for card in cardsToTrash {
+                    card.isTrashed = true
+                    card.trashedAt = now
+                }
+                try? context.save()
+                selectedCards.removeAll()
+                if sortedCards.isEmpty {
+                    isSelecting = false
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("\(selectedCards.count) cards will be moved to Trash.")
+        }
+    }
+}
+
+// MARK: - Card Row Content
+
+private struct CardRowContent: View {
+    let card: Card
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(card.front)
+                    .font(.headline)
+                Spacer()
+                Text(card.verbType == .phrasal ? "phrasal" : "verb")
+                    .font(.caption2)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(card.verbType == .phrasal ? Color.orange.opacity(0.2) : Color.blue.opacity(0.2))
+                    .clipShape(Capsule())
+            }
+            Text(card.contextSentence)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+            if !card.back.isEmpty {
+                Text(card.back)
+                    .font(.caption)
+                    .foregroundStyle(.blue)
+            }
+        }
+        .padding(.vertical, 2)
+    }
+}
+
+// MARK: - Move Cards to Folder (bulk)
+
+struct MoveCardsToFolderView: View {
+    let cards: [Card]
+    let onComplete: () -> Void
+    @State private var selectedFolder: CardGroup?
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
+
+    var body: some View {
+        GroupPickerView(selected: Binding(
+            get: { selectedFolder },
+            set: { newFolder in
+                if let newFolder {
+                    selectedFolder = newFolder
+                    for card in cards {
+                        card.group = newFolder
+                    }
+                    do { try context.save() } catch { print("[MoveCards] save error: \(error)") }
+                    onComplete()
+                }
+            }
+        ))
     }
 }
 
@@ -419,7 +701,7 @@ struct MoveToFolderView: View {
     @Environment(\.modelContext) private var context
 
     private var rootGroups: [CardGroup] {
-        allGroups.filter { $0.parent == nil }
+        allGroups.filter { $0.parent == nil && !$0.isTrashed }
     }
 
     /// Check if a group is a descendant of the group being moved (to prevent cycles)

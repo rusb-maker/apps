@@ -16,6 +16,9 @@ class StudyViewModel {
     // Cards that were graded "Again" — re-queued for this session
     private var failedCards: [Card] = []
 
+    // Configurable intervals from settings
+    var intervals: StudyIntervals = .fromUserDefaults()
+
     var currentCard: Card? {
         guard currentIndex < cards.count else { return nil }
         return cards[currentIndex]
@@ -33,7 +36,19 @@ class StudyViewModel {
     }
     private var _nextDueDate: Date?
 
+    func intervalPreview(for grade: Int) -> String {
+        guard let card = currentCard else { return "" }
+        return SM2.previewInterval(
+            grade: grade,
+            currentEaseFactor: card.easeFactor,
+            currentInterval: card.interval,
+            currentRepetitions: card.repetitions,
+            intervals: intervals
+        )
+    }
+
     func loadDueCards(context: ModelContext) {
+        intervals = .fromUserDefaults()
         let now = Date()
         let descriptor = FetchDescriptor<Card>(
             predicate: #Predicate { $0.nextReviewDate <= now },
@@ -72,7 +87,8 @@ class StudyViewModel {
             grade: grade,
             currentEaseFactor: card.easeFactor,
             currentInterval: card.interval,
-            currentRepetitions: card.repetitions
+            currentRepetitions: card.repetitions,
+            intervals: intervals
         )
 
         card.easeFactor = result.newEaseFactor

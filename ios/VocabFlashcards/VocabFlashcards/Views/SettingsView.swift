@@ -3,7 +3,12 @@ import SwiftUI
 struct SettingsView: View {
     @AppStorage("llm_provider") private var selectedProvider = LLMProvider.gemini.rawValue
     @AppStorage("min_cefr_level") private var minCEFRLevel = CEFRLevel.b2.rawValue
+    @AppStorage("study_again_minutes") private var againMinutes = 0
+    @AppStorage("study_hard_minutes") private var hardMinutes = 2
+    @AppStorage("study_good_days") private var goodDays = 1
+    @AppStorage("study_easy_days") private var easyDays = 2
     @State private var editingKey = ""
+    @State private var savedKey = ""
     @State private var showKey = false
     @State private var showProviderInfo = false
 
@@ -60,10 +65,10 @@ struct SettingsView: View {
                         .buttonStyle(.borderless)
                     }
 
-                    let currentKey = UserDefaults.standard.string(forKey: provider.settingsKey) ?? ""
-                    if editingKey != currentKey {
+                    if editingKey != savedKey {
                         Button("Save") {
                             UserDefaults.standard.set(editingKey, forKey: provider.settingsKey)
+                            savedKey = editingKey
                         }
                         .bold()
                     }
@@ -76,8 +81,7 @@ struct SettingsView: View {
                     HStack {
                         Text("Status")
                         Spacer()
-                        let key = UserDefaults.standard.string(forKey: provider.settingsKey) ?? ""
-                        if key.isEmpty {
+                        if savedKey.isEmpty {
                             Label("Not configured", systemImage: "xmark.circle")
                                 .foregroundStyle(.red)
                         } else {
@@ -99,14 +103,30 @@ struct SettingsView: View {
                 } footer: {
                     Text("Only extract phrases at this level or above. B2 recommended for upper-intermediate learners.")
                 }
+
+                // Study Intervals
+                Section {
+                    Stepper("Again: \(againMinutes)m", value: $againMinutes, in: 0...120)
+                    Stepper("Hard: \(hardMinutes)m", value: $hardMinutes, in: 0...120)
+                    Stepper("Good: \(goodDays)d", value: $goodDays, in: 1...60)
+                    Stepper("Easy: \(easyDays)d", value: $easyDays, in: 1...90)
+                } header: {
+                    Text("Study Intervals")
+                } footer: {
+                    Text("Base intervals for first review. Subsequent reviews scale with the ease factor.")
+                }
             }
             .scrollDismissesKeyboard(.interactively)
             .navigationTitle("Settings")
             .onAppear {
-                editingKey = UserDefaults.standard.string(forKey: provider.settingsKey) ?? ""
+                let key = UserDefaults.standard.string(forKey: provider.settingsKey) ?? ""
+                editingKey = key
+                savedKey = key
             }
             .onChange(of: selectedProvider) {
-                editingKey = UserDefaults.standard.string(forKey: provider.settingsKey) ?? ""
+                let key = UserDefaults.standard.string(forKey: provider.settingsKey) ?? ""
+                editingKey = key
+                savedKey = key
                 showKey = false
             }
             .sheet(isPresented: $showProviderInfo) {

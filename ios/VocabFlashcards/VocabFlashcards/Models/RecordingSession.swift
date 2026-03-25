@@ -9,6 +9,10 @@ class RecordingSession {
     var createdAt: Date
     var duration: TimeInterval
 
+    // Soft-delete
+    var isTrashed: Bool = false
+    var trashedAt: Date?
+
     var extractedPhrases: [ExtractedPhrase] {
         get {
             (try? JSONDecoder().decode([ExtractedPhrase].self, from: extractedPhrasesData)) ?? []

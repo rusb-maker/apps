@@ -13,6 +13,10 @@ struct ReviewListView: View {
         allGroups.filter { $0.parent == nil && !$0.isTrashed }
     }
 
+    private var selectedFolderName: String {
+        viewModel.selectedGroup?.name ?? "Auto"
+    }
+
     init(phrases: [ExtractedPhrase]) {
         _viewModel = State(initialValue: {
             let vm = ReviewViewModel()
@@ -49,43 +53,42 @@ struct ReviewListView: View {
             }
 
             // MARK: - Save to folder
-            Section("Save to") {
-                // Existing folders
-                ForEach(rootGroups) { group in
-                    Button {
-                        viewModel.selectedGroup = group
-                    } label: {
-                        HStack {
-                            Image(systemName: "folder.fill")
-                                .foregroundStyle(.blue)
-                                .frame(width: 24)
-                            VStack(alignment: .leading) {
-                                Text(group.name)
-                                    .font(.body)
-                                Text("\(group.totalCardCount) cards")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            }
-                            Spacer()
-                            if viewModel.selectedGroup?.id == group.id {
-                                Image(systemName: "checkmark")
-                                    .foregroundStyle(.blue)
-                                    .fontWeight(.semibold)
+            Section {
+                HStack {
+                    Text("Save to")
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Menu {
+                        Button {
+                            showNewFolder = true
+                        } label: {
+                            Label("New Folder", systemImage: "folder.badge.plus")
+                        }
+
+                        if !rootGroups.isEmpty {
+                            Divider()
+                        }
+
+                        ForEach(rootGroups) { group in
+                            Button {
+                                viewModel.selectedGroup = group
+                            } label: {
+                                HStack {
+                                    Text(group.name)
+                                    if viewModel.selectedGroup?.id == group.id {
+                                        Image(systemName: "checkmark")
+                                    }
+                                }
                             }
                         }
-                    }
-                    .tint(.primary)
-                }
-
-                // New folder button
-                Button {
-                    showNewFolder = true
-                } label: {
-                    HStack {
-                        Image(systemName: "folder.badge.plus")
-                            .foregroundStyle(.green)
-                            .frame(width: 24)
-                        Text("New Folder")
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(selectedFolderName)
+                                .foregroundStyle(.primary)
+                            Image(systemName: "chevron.up.chevron.down")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
             }

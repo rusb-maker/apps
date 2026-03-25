@@ -23,6 +23,10 @@ class Card {
 
     var group: CardGroup?
 
+    // Soft-delete
+    var isTrashed: Bool = false
+    var trashedAt: Date?
+
     init(
         id: UUID = UUID(),
         front: String,

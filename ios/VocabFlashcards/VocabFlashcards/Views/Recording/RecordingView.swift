@@ -3,6 +3,7 @@ import SwiftData
 
 struct RecordingView: View {
     @State private var viewModel = RecorderViewModel()
+    @State private var selectedLanguage: SourceLanguage = .english
     @State private var showReview = false
     @State private var extractedPhrases: [ExtractedPhrase] = []
     @State private var permissionsGranted = false
@@ -14,6 +15,24 @@ struct RecordingView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 24) {
+                // Language picker
+                HStack {
+                    Picker("Language", selection: $selectedLanguage) {
+                        ForEach(SourceLanguage.allCases) { lang in
+                            Text(lang.displayName).tag(lang)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .tint(.primary)
+                    .font(.subheadline)
+                    Spacer()
+                }
+                .padding(.horizontal)
+                .disabled(viewModel.isRecording || isExtracting)
+                .onChange(of: selectedLanguage) {
+                    viewModel.language = selectedLanguage
+                }
+
                 Spacer()
 
                 // Waveform visualization
@@ -163,7 +182,7 @@ struct RecordingView: View {
         isExtracting = true
         extractionError = nil
         do {
-            let phrases = try await LLMService.shared.extractPhrases(from: viewModel.transcript)
+            let phrases = try await LLMService.shared.extractPhrases(from: viewModel.transcript, language: selectedLanguage)
 
             // Save recording session with extracted phrases
             let session = RecordingSession(

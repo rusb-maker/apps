@@ -32,7 +32,7 @@ struct MainTabView: View {
                         Label("Study", systemImage: "brain.head.profile")
                     }
                     .tag(3)
-                Color.clear
+                moreTabContent
                     .tabItem {
                         Label("More", systemImage: "ellipsis")
                     }
@@ -41,27 +41,36 @@ struct MainTabView: View {
             .onChange(of: selectedTab) { oldValue, newValue in
                 if newValue == 4 {
                     previousTab = oldValue
-                    selectedTab = oldValue
                     withAnimation(.easeOut(duration: 0.2)) {
                         showMoreMenu = true
                     }
                 } else {
+                    if showMoreMenu {
+                        withAnimation(.easeIn(duration: 0.15)) {
+                            showMoreMenu = false
+                        }
+                    }
                     previousTab = newValue
                 }
             }
 
             // Glass overlay
             if showMoreMenu {
+                // Scrim — visual only, taps pass through to tab bar
                 Color.black.opacity(0.15)
                     .ignoresSafeArea()
-                    .onTapGesture {
-                        withAnimation(.easeIn(duration: 0.15)) {
-                            showMoreMenu = false
-                        }
-                    }
+                    .allowsHitTesting(false)
 
                 VStack {
+                    // Tappable area above popup — dismisses on tap
                     Spacer()
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            withAnimation(.easeIn(duration: 0.15)) {
+                                showMoreMenu = false
+                            }
+                            selectedTab = previousTab
+                        }
 
                     VStack(spacing: 0) {
                         Button {
@@ -93,32 +102,32 @@ struct MainTabView: View {
                     .shadow(color: .black.opacity(0.15), radius: 20, y: 5)
                     .padding(.horizontal, 40)
                     .padding(.bottom, 70)
-                    .transition(.scale(scale: 0.8, anchor: .bottom).combined(with: .opacity))
                 }
+                .transition(.scale(scale: 0.8, anchor: .bottom).combined(with: .opacity))
             }
         }
-        .sheet(isPresented: $showHistory) {
-            NavigationStack {
-                RecordingsListView()
-                    .toolbar {
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("Done") { showHistory = false }
-                        }
-                    }
-            }
+        .sheet(isPresented: $showHistory, onDismiss: {
+            selectedTab = previousTab
+        }) {
+            RecordingsListView()
         }
-        .sheet(isPresented: $showSettings) {
-            NavigationStack {
-                SettingsView()
-                    .toolbar {
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("Done") { showSettings = false }
-                        }
-                    }
-            }
+        .sheet(isPresented: $showSettings, onDismiss: {
+            selectedTab = previousTab
+        }) {
+            SettingsView()
         }
         .task {
             cleanupExpiredTrash()
+        }
+    }
+
+    @ViewBuilder
+    private var moreTabContent: some View {
+        switch previousTab {
+        case 1:  TextInputView()
+        case 2:  GroupsListView()
+        case 3:  StudySessionView()
+        default: RecordingView()
         }
     }
 

@@ -4,7 +4,7 @@ struct FlipCardView: View {
     let front: String
     let back: String
     let context: String
-    let isFlipped: Bool
+    @Binding var isFlipped: Bool
 
     var body: some View {
         ZStack {
@@ -14,7 +14,7 @@ struct FlipCardView: View {
                     Text(front)
                         .font(.title.bold())
                         .multilineTextAlignment(.center)
-                    Text("Tap 'Show Answer' to flip")
+                    Text("Tap card to flip")
                         .font(.caption)
                         .foregroundStyle(.tertiary)
                 }
@@ -40,6 +40,10 @@ struct FlipCardView: View {
             }
             .opacity(isFlipped ? 1 : 0)
             .rotation3DEffect(.degrees(isFlipped ? 0 : -180), axis: (x: 0, y: 1, z: 0))
+        }
+        .contentShape(RoundedRectangle(cornerRadius: 20))
+        .onTapGesture {
+            isFlipped.toggle()
         }
         .animation(.easeInOut(duration: 0.4), value: isFlipped)
     }

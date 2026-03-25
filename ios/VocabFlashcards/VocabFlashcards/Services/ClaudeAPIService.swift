@@ -136,47 +136,57 @@ final class LLMService: Sendable {
 
     // MARK: - Public API
 
-    func extractPhrases(from transcript: String) async throws -> [ExtractedPhrase] {
+    func extractPhrases(from transcript: String, language: SourceLanguage = .english) async throws -> [ExtractedPhrase] {
+        let cefrLevel = await minCEFR
+        let systemPrompt = buildPrompt(minLevel: cefrLevel, language: language)
+        return try await callLLM(systemPrompt: systemPrompt, userMessage: "Transcript:\n\n\(transcript)")
+    }
+
+    func generateCards(prompt: String, count: Int = 10, language: SourceLanguage = .english) async throws -> [ExtractedPhrase] {
+        let systemPrompt = buildGenerationPrompt(count: count, language: language)
+        return try await callLLM(systemPrompt: systemPrompt, userMessage: prompt)
+    }
+
+    // MARK: - LLM Router
+
+    private func callLLM(systemPrompt: String, userMessage: String) async throws -> [ExtractedPhrase] {
         let currentProvider = await provider
         let key = await apiKey(for: currentProvider)
         guard !key.isEmpty else {
             throw LLMError.missingAPIKey(provider: currentProvider)
         }
 
-        let cefrLevel = await minCEFR
-        let prompt = buildPrompt(minLevel: cefrLevel)
-
         switch currentProvider {
         case .claude:
-            return try await callClaude(transcript: transcript, systemPrompt: prompt, apiKey: key)
+            return try await callClaude(userMessage: userMessage, systemPrompt: systemPrompt, apiKey: key)
         case .gemini:
-            return try await callGemini(transcript: transcript, systemPrompt: prompt, apiKey: key)
+            return try await callGemini(userMessage: userMessage, systemPrompt: systemPrompt, apiKey: key)
         case .groq:
             return try await callOpenAICompatible(
                 endpoint: "https://api.groq.com/openai/v1/chat/completions",
                 model: "llama-3.3-70b-versatile",
-                transcript: transcript, systemPrompt: prompt, apiKey: key,
+                userMessage: userMessage, systemPrompt: systemPrompt, apiKey: key,
                 supportsJSONMode: true
             )
         case .mistral:
             return try await callOpenAICompatible(
                 endpoint: "https://api.mistral.ai/v1/chat/completions",
                 model: "mistral-small-latest",
-                transcript: transcript, systemPrompt: prompt, apiKey: key,
+                userMessage: userMessage, systemPrompt: systemPrompt, apiKey: key,
                 supportsJSONMode: true
             )
         case .openRouter:
             return try await callOpenAICompatible(
                 endpoint: "https://openrouter.ai/api/v1/chat/completions",
                 model: "mistralai/mistral-small-3.1-24b-instruct:free",
-                transcript: transcript, systemPrompt: prompt, apiKey: key,
+                userMessage: userMessage, systemPrompt: systemPrompt, apiKey: key,
                 supportsJSONMode: false
             )
         case .deepSeek:
             return try await callOpenAICompatible(
                 endpoint: "https://api.deepseek.com/chat/completions",
                 model: "deepseek-chat",
-                transcript: transcript, systemPrompt: prompt, apiKey: key,
+                userMessage: userMessage, systemPrompt: systemPrompt, apiKey: key,
                 supportsJSONMode: true
             )
         }
@@ -184,26 +194,45 @@ final class LLMService: Sendable {
 
     // MARK: - Prompt
 
-    private func buildPrompt(minLevel level: CEFRLevel) -> String {
+    private func buildPrompt(minLevel level: CEFRLevel, language: SourceLanguage) -> String {
         return """
-        You are an English language tutor helping a Russian-speaking student. \
-        Analyze the conversation transcript and extract useful English expressions, \
-        phrasal verbs, idioms, and collocations worth learning.
+        You are \(language.tutorDescription). \
+        Analyze the conversation transcript and extract useful \(language.expressionsDescription) worth learning.
 
         IMPORTANT: Only include expressions at CEFR level \(level.rawValue) or higher. \
         Skip basic expressions that a \(belowLevel(level)) learner would already know. \
-        Focus on advanced phrasal verbs, idiomatic expressions, formal/academic collocations, \
+        Focus on advanced verb phrases, idiomatic expressions, formal/academic collocations, \
         and nuanced vocabulary.
 
         Return a JSON array. Each item has:
-        - "phrase": the English expression with enough context to understand usage (5-10 words)
+        - "phrase": the \(language.displayName) expression with enough context to understand usage (5-10 words)
         - "translation": natural Russian translation
         - "level": estimated CEFR level (B1, B2, C1, or C2)
 
         Focus on expressions that are:
-        - Non-trivial (skip basic verbs like "is", "have", "go", "get")
+        - Non-trivial (skip basic common verbs)
         - At CEFR level \(level.rawValue) or above
         - Include enough surrounding words to show how the expression is used
+
+        Return ONLY a valid JSON array, no markdown, no code fences, no other text.
+        """
+    }
+
+    private func buildGenerationPrompt(count: Int, language: SourceLanguage) -> String {
+        return """
+        You are \(language.tutorDescription) creating flashcards. \
+        Generate exactly \(count) flashcards based on the user's request.
+
+        Return a JSON array. Each item has:
+        - "phrase": \(language.displayName) phrase or sentence (the front of the flashcard)
+        - "translation": natural Russian translation (the back of the flashcard)
+        - "level": estimated CEFR level (B1, B2, C1, or C2)
+
+        Rules:
+        - Make each flashcard unique and progressively more challenging
+        - Follow the user's instructions about topic, word count, grammar focus, etc.
+        - If the user asks for sentences, create natural example sentences
+        - If the user asks for verb phrases, include the verb phrase in a short sentence
 
         Return ONLY a valid JSON array, no markdown, no code fences, no other text.
         """
@@ -220,14 +249,14 @@ final class LLMService: Sendable {
 
     // MARK: - Claude (custom format)
 
-    private func callClaude(transcript: String, systemPrompt: String, apiKey: String) async throws -> [ExtractedPhrase] {
+    private func callClaude(userMessage: String, systemPrompt: String, apiKey: String) async throws -> [ExtractedPhrase] {
         let endpoint = URL(string: "https://api.anthropic.com/v1/messages")!
         let body: [String: Any] = [
             "model": "claude-sonnet-4-20250514",
             "max_tokens": 2048,
             "system": systemPrompt,
             "messages": [
-                ["role": "user", "content": "Transcript:\n\n\(transcript)"]
+                ["role": "user", "content": userMessage]
             ]
         ]
 
@@ -252,7 +281,7 @@ final class LLMService: Sendable {
 
     // MARK: - Gemini (custom format)
 
-    private func callGemini(transcript: String, systemPrompt: String, apiKey: String) async throws -> [ExtractedPhrase] {
+    private func callGemini(userMessage: String, systemPrompt: String, apiKey: String) async throws -> [ExtractedPhrase] {
         let endpoint = URL(string: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=\(apiKey)")!
 
         let body: [String: Any] = [
@@ -261,7 +290,7 @@ final class LLMService: Sendable {
             ],
             "contents": [
                 [
-                    "parts": [["text": "Transcript:\n\n\(transcript)"]]
+                    "parts": [["text": userMessage]]
                 ]
             ],
             "generationConfig": [
@@ -293,7 +322,7 @@ final class LLMService: Sendable {
     private func callOpenAICompatible(
         endpoint: String,
         model: String,
-        transcript: String,
+        userMessage: String,
         systemPrompt: String,
         apiKey: String,
         supportsJSONMode: Bool
@@ -306,7 +335,7 @@ final class LLMService: Sendable {
             "max_tokens": 2048,
             "messages": [
                 ["role": "system", "content": systemPrompt],
-                ["role": "user", "content": "Transcript:\n\n\(transcript)"]
+                ["role": "user", "content": userMessage]
             ]
         ]
 

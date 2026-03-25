@@ -4,11 +4,17 @@ import SwiftData
 struct RecordingsListView: View {
     @Query(sort: \RecordingSession.createdAt, order: .reverse) private var recordings: [RecordingSession]
     @Environment(\.modelContext) private var context
+    @State private var recordingToDelete: RecordingSession?
+    @State private var showDeleteConfirm = false
+
+    private var activeRecordings: [RecordingSession] {
+        recordings.filter { !$0.isTrashed }
+    }
 
     var body: some View {
         NavigationStack {
             Group {
-                if recordings.isEmpty {
+                if activeRecordings.isEmpty {
                     ContentUnavailableView(
                         "No Recordings",
                         systemImage: "waveform",
@@ -16,14 +22,23 @@ struct RecordingsListView: View {
                     )
                 } else {
                     List {
-                        ForEach(recordings) { session in
+                        ForEach(activeRecordings) { session in
                             NavigationLink(value: session) {
                                 RecordingRow(session: session)
                             }
+                            .contextMenu {
+                                Button(role: .destructive) {
+                                    recordingToDelete = session
+                                    showDeleteConfirm = true
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
                         }
                         .onDelete { offsets in
-                            for index in offsets {
-                                context.delete(recordings[index])
+                            if let index = offsets.first {
+                                recordingToDelete = activeRecordings[index]
+                                showDeleteConfirm = true
                             }
                         }
                     }
@@ -32,6 +47,19 @@ struct RecordingsListView: View {
             .navigationTitle("History")
             .navigationDestination(for: RecordingSession.self) { session in
                 RecordingDetailView(session: session)
+            }
+            .alert("Move to Trash?", isPresented: $showDeleteConfirm) {
+                Button("Move to Trash", role: .destructive) {
+                    if let recording = recordingToDelete {
+                        recording.isTrashed = true
+                        recording.trashedAt = Date()
+                        try? context.save()
+                    }
+                    recordingToDelete = nil
+                }
+                Button("Cancel", role: .cancel) { recordingToDelete = nil }
+            } message: {
+                Text("This recording will be moved to Trash.")
             }
         }
     }

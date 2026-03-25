@@ -34,7 +34,7 @@ struct StudySessionView: View {
                             front: card.front,
                             back: card.back.isEmpty ? card.contextSentence : card.back,
                             context: card.contextSentence,
-                            isFlipped: viewModel.isShowingAnswer
+                            isFlipped: $viewModel.isShowingAnswer
                         )
                         .padding(.horizontal)
 
@@ -47,37 +47,46 @@ struct StudySessionView: View {
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                                 HStack(spacing: 12) {
-                                    GradeButton(label: "Again", grade: 0, color: .red) {
+                                    GradeButton(label: "Again", subtitle: viewModel.intervalPreview(for: 0), color: .red) {
                                         viewModel.grade(0, context: context)
                                     }
-                                    GradeButton(label: "Hard", grade: 3, color: .orange) {
+                                    GradeButton(label: "Hard", subtitle: viewModel.intervalPreview(for: 3), color: .orange) {
                                         viewModel.grade(3, context: context)
                                     }
-                                    GradeButton(label: "Good", grade: 4, color: .green) {
+                                    GradeButton(label: "Good", subtitle: viewModel.intervalPreview(for: 4), color: .green) {
                                         viewModel.grade(4, context: context)
                                     }
-                                    GradeButton(label: "Easy", grade: 5, color: .blue) {
+                                    GradeButton(label: "Easy", subtitle: viewModel.intervalPreview(for: 5), color: .blue) {
                                         viewModel.grade(5, context: context)
                                     }
                                 }
                             }
                             .padding(.horizontal)
-                        } else {
-                            Button("Show Answer") {
-                                viewModel.showAnswer()
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .controlSize(.large)
                         }
 
                         Spacer()
                     }
                 } else {
-                    ContentUnavailableView(
-                        "No Cards Due",
-                        systemImage: "checkmark.circle",
-                        description: Text("All caught up! Record a conversation to add new cards.")
-                    )
+                    VStack(spacing: 16) {
+                        Spacer()
+                        Image(systemName: "checkmark.circle")
+                            .font(.system(size: 60))
+                            .foregroundStyle(.secondary)
+                        Text("No Cards Due")
+                            .font(.title2.bold())
+                        if let nextDate = viewModel.nextDueDate {
+                            Text("Next review: \(nextDate, style: .relative)")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        } else {
+                            Text("Record a conversation or generate cards to start studying.")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal)
+                        }
+                        Spacer()
+                    }
                 }
             }
             .navigationTitle("Study")
@@ -105,41 +114,48 @@ struct StudySessionView: View {
 // MARK: - Group Filter
 
 struct StudyGroupFilterView: View {
-    @Query(sort: \CardGroup.createdAt, order: .reverse) private var groups: [CardGroup]
+    @Query(sort: \CardGroup.createdAt, order: .reverse) private var allGroups: [CardGroup]
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
     var onDismiss: () -> Void
+
+    private var rootGroups: [CardGroup] {
+        allGroups.filter { $0.parent == nil && !$0.isTrashed }
+    }
 
     var body: some View {
         NavigationStack {
             List {
-                if groups.isEmpty {
+                if rootGroups.isEmpty {
                     ContentUnavailableView(
-                        "No Groups",
+                        "No Folders",
                         systemImage: "folder",
-                        description: Text("Create groups by recording conversations or pasting text.")
+                        description: Text("Create folders by recording conversations or pasting text.")
                     )
                 } else {
                     Section {
-                        ForEach(groups) { group in
-                            StudyGroupRow(group: group)
+                        ForEach(rootGroups) { group in
+                            StudyGroupTreeRow(group: group)
                         }
                     } header: {
-                        Text("Toggle groups for study sessions")
+                        Text("Toggle folders for study sessions")
                     } footer: {
-                        let enabledCount = groups.filter(\.isStudyEnabled).count
-                        Text("\(enabledCount) of \(groups.count) groups active")
+                        let enabledCount = allGroups.filter(\.isStudyEnabled).count
+                        Text("\(enabledCount) of \(allGroups.count) folders active")
                     }
 
                     Section {
                         Button("Enable All") {
-                            for group in groups { group.isStudyEnabled = true }
+                            for group in allGroups { group.isStudyEnabled = true }
+                            try? context.save()
                         }
-                        .disabled(groups.allSatisfy(\.isStudyEnabled))
+                        .disabled(allGroups.allSatisfy(\.isStudyEnabled))
 
                         Button("Disable All") {
-                            for group in groups { group.isStudyEnabled = false }
+                            for group in allGroups { group.isStudyEnabled = false }
+                            try? context.save()
                         }
-                        .disabled(groups.allSatisfy { !$0.isStudyEnabled })
+                        .disabled(allGroups.allSatisfy { !$0.isStudyEnabled })
                     }
                 }
             }
@@ -148,6 +164,7 @@ struct StudyGroupFilterView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
+                        try? context.save()
                         onDismiss()
                         dismiss()
                     }
@@ -157,28 +174,52 @@ struct StudyGroupFilterView: View {
     }
 }
 
-struct StudyGroupRow: View {
+struct StudyGroupTreeRow: View {
     @Bindable var group: CardGroup
-
-    private var dueCount: Int {
-        group.cards.filter { $0.nextReviewDate <= Date() }.count
-    }
+    @Environment(\.modelContext) private var context
 
     var body: some View {
-        Toggle(isOn: $group.isStudyEnabled) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(group.name)
-                    .font(.body)
-                HStack(spacing: 8) {
-                    Text("\(group.cards.count) cards")
-                    if dueCount > 0 {
-                        Text("·")
-                        Text("\(dueCount) due")
-                            .foregroundStyle(.orange)
-                    }
+        VStack(alignment: .leading, spacing: 0) {
+            Toggle(isOn: Binding(
+                get: { group.isStudyEnabled },
+                set: { newValue in
+                    group.setStudyEnabled(newValue)
+                    try? context.save()
                 }
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            )) {
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "folder.fill")
+                            .font(.caption)
+                            .foregroundStyle(.blue)
+                        Text(group.name)
+                            .font(.body)
+                    }
+                    HStack(spacing: 8) {
+                        Text("\(group.totalCardCount) cards")
+                        let dueCount = group.totalDueCount
+                        if dueCount > 0 {
+                            Text("·")
+                            Text("\(dueCount) due")
+                                .foregroundStyle(.orange)
+                        }
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                }
+            }
+
+            if group.hasChildren {
+                DisclosureGroup {
+                    ForEach(group.sortedChildren) { child in
+                        StudyGroupTreeRow(group: child)
+                    }
+                } label: {
+                    Text("\(group.children.count) subfolders")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.leading, 20)
             }
         }
     }
@@ -188,7 +229,7 @@ struct StudyGroupRow: View {
 
 struct GradeButton: View {
     let label: String
-    let grade: Int
+    let subtitle: String
     let color: Color
     let action: () -> Void
 
@@ -197,6 +238,8 @@ struct GradeButton: View {
             VStack(spacing: 2) {
                 Text(label)
                     .font(.subheadline.bold())
+                Text(subtitle)
+                    .font(.caption2)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)

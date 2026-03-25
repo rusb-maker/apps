@@ -10,13 +10,24 @@ class RecorderViewModel {
     var errorMessage: String?
     var recordingDuration: TimeInterval = 0
 
+    var language: SourceLanguage = .english {
+        didSet {
+            guard language != oldValue else { return }
+            speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: language.speechLocaleIdentifier))
+        }
+    }
+
     private let audioEngine = AVAudioEngine()
     private var recognitionTask: SFSpeechRecognitionTask?
-    private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
+    private var speechRecognizer: SFSpeechRecognizer?
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recordingStartTime: Date?
     private var durationTimer: Timer?
     private var isStopping = false
+
+    init() {
+        speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: language.speechLocaleIdentifier))
+    }
 
     func requestPermissions() async -> Bool {
         let micPermission = await AVAudioApplication.requestRecordPermission()

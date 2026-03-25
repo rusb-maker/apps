@@ -7,10 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		117ADD68B0D7419F8ADBDB7B /* TextInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A427A54447E417580CF1534 /* TextInputView.swift */; };
 		15C1ED69BB2FCA071D8275F7 /* ClaudeAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399A8D5CE429D84FF63670B9 /* ClaudeAPIService.swift */; };
 		274C1E19057EEDA75BAD9B71 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31799BBC738C00B261DB8DD4 /* SettingsView.swift */; };
-		BB000001000000000000001A /* RecordingsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000000000000001B /* RecordingsListView.swift */; };
-		BB000002000000000000001A /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000001B /* RecordingDetailView.swift */; };
 		AA000001000000000000001A /* VocabFlashcardsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000001000000000000001B /* VocabFlashcardsApp.swift */; };
 		AA000002000000000000001A /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002000000000000001B /* Card.swift */; };
 		AA000003000000000000001A /* CardGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000003000000000000001B /* CardGroup.swift */; };
@@ -35,7 +34,11 @@
 		AA000016000000000000001A /* phrasal_verbs.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000016000000000000001B /* phrasal_verbs.json */; };
 		AA000017000000000000001A /* VocabFlashcardsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000017000000000000001B /* VocabFlashcardsTests.swift */; };
 		AA000018000000000000001A /* VocabFlashcardsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000018000000000000001B /* VocabFlashcardsUITests.swift */; };
-		117ADD68B0D7419F8ADBDB7B /* TextInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A427A54447E417580CF1534 /* TextInputView.swift */; };
+		BB000001000000000000001A /* RecordingsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000000000000001B /* RecordingsListView.swift */; };
+		BB000002000000000000001A /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000001B /* RecordingDetailView.swift */; };
+		FB6281332F73FF9900519FD8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB6281322F73FF9900519FD8 /* Assets.xcassets */; };
+		FBB8CBE52F740FC90039F509 /* TrashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB8CBE42F740FC90039F509 /* TrashView.swift */; };
+		FBB8CBE72F741FD00039F509 /* SourceLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB8CBE62F741FD00039F509 /* SourceLanguage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,10 +59,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0A427A54447E417580CF1534 /* TextInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputView.swift; sourceTree = "<group>"; };
 		31799BBC738C00B261DB8DD4 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		399A8D5CE429D84FF63670B9 /* ClaudeAPIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClaudeAPIService.swift; sourceTree = "<group>"; };
-		BB000001000000000000001B /* RecordingsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingsListView.swift; sourceTree = "<group>"; };
-		BB000002000000000000001B /* RecordingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailView.swift; sourceTree = "<group>"; };
 		AA000001000000000000001B /* VocabFlashcardsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabFlashcardsApp.swift; sourceTree = "<group>"; };
 		AA000002000000000000001B /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		AA000003000000000000001B /* CardGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardGroup.swift; sourceTree = "<group>"; };
@@ -87,7 +89,12 @@
 		AAPROD0000000000000000FF /* VocabFlashcards.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VocabFlashcards.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AATESTS000000000000000FF /* VocabFlashcardsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VocabFlashcardsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAUITESTS00000000000000FF /* VocabFlashcardsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VocabFlashcardsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0A427A54447E417580CF1534 /* TextInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputView.swift; sourceTree = "<group>"; };
+		BB000001000000000000001B /* RecordingsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingsListView.swift; sourceTree = "<group>"; };
+		BB000002000000000000001B /* RecordingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailView.swift; sourceTree = "<group>"; };
+		FB6281322F73FF9900519FD8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FBB8CBE42F740FC90039F509 /* TrashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashView.swift; sourceTree = "<group>"; };
+		FBB8CBE62F741FD00039F509 /* SourceLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceLanguage.swift; sourceTree = "<group>"; };
+		FBB8CBE82F7423320039F509 /* VocabFlashcards.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VocabFlashcards.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +122,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		79FA329F8EBB465C8EEF0079 /* TextInput */ = {
+			isa = PBXGroup;
+			children = (
+				0A427A54447E417580CF1534 /* TextInputView.swift */,
+			);
+			path = TextInput;
+			sourceTree = "<group>";
+		};
 		AAGROUP000000000000000001 /* VocabFlashcards */ = {
 			isa = PBXGroup;
 			children = (
@@ -124,6 +139,7 @@
 				AAGROUP000000000000000005 /* Views */,
 				AAGROUP000000000000000006 /* Services */,
 				AAGROUP000000000000000007 /* Resources */,
+				FBB8CBE82F7423320039F509 /* VocabFlashcards.entitlements */,
 			);
 			path = VocabFlashcards;
 			sourceTree = "<group>";
@@ -142,6 +158,7 @@
 				AA000002000000000000001B /* Card.swift */,
 				AA000003000000000000001B /* CardGroup.swift */,
 				AA000004000000000000001B /* RecordingSession.swift */,
+				FBB8CBE62F741FD00039F509 /* SourceLanguage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -168,18 +185,9 @@
 				AAGROUP00000000000000000B /* Study */,
 				AAGROUP00000000000000000C /* Components */,
 				31799BBC738C00B261DB8DD4 /* SettingsView.swift */,
-			
-				79FA329F8EBB465C8EEF0079 /* TextInput */,);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		BBGROUP000000000000000001 /* Recordings */ = {
-			isa = PBXGroup;
-			children = (
-				BB000001000000000000001B /* RecordingsListView.swift */,
-				BB000002000000000000001B /* RecordingDetailView.swift */,
+				79FA329F8EBB465C8EEF0079 /* TextInput */,
 			);
-			path = Recordings;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		AAGROUP000000000000000006 /* Services */ = {
@@ -196,6 +204,7 @@
 		AAGROUP000000000000000007 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FB6281322F73FF9900519FD8 /* Assets.xcassets */,
 				AA000016000000000000001B /* phrasal_verbs.json */,
 			);
 			path = Resources;
@@ -223,6 +232,7 @@
 			children = (
 				AA00000D000000000000001B /* GroupsListView.swift */,
 				AA00000E000000000000001B /* GroupDetailView.swift */,
+				FBB8CBE42F740FC90039F509 /* TrashView.swift */,
 			);
 			path = Groups;
 			sourceTree = "<group>";
@@ -281,12 +291,13 @@
 			);
 			sourceTree = "<group>";
 		};
-		79FA329F8EBB465C8EEF0079 /* TextInput */ = {
+		BBGROUP000000000000000001 /* Recordings */ = {
 			isa = PBXGroup;
 			children = (
-				0A427A54447E417580CF1534 /* TextInputView.swift */,
+				BB000001000000000000001B /* RecordingsListView.swift */,
+				BB000002000000000000001B /* RecordingDetailView.swift */,
 			);
-			path = TextInput;
+			path = Recordings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -393,6 +404,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB6281332F73FF9900519FD8 /* Assets.xcassets in Resources */,
 				AA000016000000000000001A /* phrasal_verbs.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -442,9 +454,11 @@
 				15C1ED69BB2FCA071D8275F7 /* ClaudeAPIService.swift in Sources */,
 				274C1E19057EEDA75BAD9B71 /* SettingsView.swift in Sources */,
 				BB000001000000000000001A /* RecordingsListView.swift in Sources */,
+				FBB8CBE72F741FD00039F509 /* SourceLanguage.swift in Sources */,
 				BB000002000000000000001A /* RecordingDetailView.swift in Sources */,
-			
-				117ADD68B0D7419F8ADBDB7B /* TextInputView.swift in Sources */,);
+				FBB8CBE52F740FC90039F509 /* TrashView.swift in Sources */,
+				117ADD68B0D7419F8ADBDB7B /* TextInputView.swift in Sources */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		AABUILD0000000000000003 /* Sources */ = {
@@ -673,6 +687,7 @@
 				DEVELOPMENT_TEAM = FH852G5TN6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Vocab Flashcards";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "VocabFlashcards needs microphone access to record audio and capture vocabulary from your speech.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "VocabFlashcards uses speech recognition to transcribe your recordings and identify vocabulary.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -684,7 +699,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				INFOPLIST_KEY_CFBundleDisplayName = "Vocab Flashcards";
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vocabflashcards.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
