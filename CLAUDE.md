@@ -9,18 +9,18 @@ Monorepo containing three independent Apple-platform apps. Each has its own deta
 | App | Path | Platform | Description |
 |-----|------|----------|-------------|
 | **Colage** | `ios/Colage/` | iOS 18.5+ | Photo/video collage maker |
-| **VocabCatch** | `ios/VocabCatch/` | iOS 17.0+ | Flashcard app with speech-to-text & NLP for learning English phrasal verbs |
+| **VocabFlashcards** | `ios/VocabFlashcards/` | iOS 17.0+ | Flashcard app with speech-to-text & NLP for learning English phrasal verbs |
 | **Simple Storage Browser** | `macos/s3_mount/` | macOS 26.2 | S3/Wasabi bucket mount via rclone + macFUSE |
 
 ## Build & Test Commands
 
 All apps use Xcode projects directly — no SPM, CocoaPods, or Carthage.
 
-### VocabCatch (iOS)
+### VocabFlashcards (iOS)
 
 ```bash
-xcodebuild build -scheme VocabCatch -project ios/VocabCatch/VocabCatch.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
-xcodebuild test -scheme VocabCatch -project ios/VocabCatch/VocabCatch.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+xcodebuild build -scheme VocabFlashcards -project ios/VocabFlashcards/VocabFlashcards.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+xcodebuild test -scheme VocabFlashcards -project ios/VocabFlashcards/VocabFlashcards.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
 ```
 
 ### Colage (iOS)
@@ -41,4 +41,4 @@ xcodebuild test -project macos/s3_mount/simple_storage_browser.xcodeproj -scheme
 
 - All apps are pure **SwiftUI** with no external package dependencies
 - `#if canImport(UIKit)` / `#else` guards used in Colage for cross-compilation
-- Per-app architecture docs: `ios/Colage/CLAUDE.md`, `ios/VocabCatch/CLAUDE.md`, and `macos/s3_mount/CLAUDE.md`
+- Per-app architecture docs: `ios/Colage/CLAUDE.md`, `ios/VocabFlashcards/CLAUDE.md`, and `macos/s3_mount/CLAUDE.md`

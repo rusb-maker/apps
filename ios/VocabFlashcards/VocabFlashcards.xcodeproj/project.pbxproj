@@ -1,0 +1,773 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		15C1ED69BB2FCA071D8275F7 /* ClaudeAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399A8D5CE429D84FF63670B9 /* ClaudeAPIService.swift */; };
+		274C1E19057EEDA75BAD9B71 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31799BBC738C00B261DB8DD4 /* SettingsView.swift */; };
+		BB000001000000000000001A /* RecordingsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000000000000001B /* RecordingsListView.swift */; };
+		BB000002000000000000001A /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000001B /* RecordingDetailView.swift */; };
+		AA000001000000000000001A /* VocabFlashcardsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000001000000000000001B /* VocabFlashcardsApp.swift */; };
+		AA000002000000000000001A /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002000000000000001B /* Card.swift */; };
+		AA000003000000000000001A /* CardGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000003000000000000001B /* CardGroup.swift */; };
+		AA000004000000000000001A /* RecordingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000004000000000000001B /* RecordingSession.swift */; };
+		AA000005000000000000001A /* RecorderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000005000000000000001B /* RecorderViewModel.swift */; };
+		AA000006000000000000001A /* NLPProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000006000000000000001B /* NLPProcessor.swift */; };
+		AA000007000000000000001A /* ReviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000007000000000000001B /* ReviewViewModel.swift */; };
+		AA000008000000000000001A /* StudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000008000000000000001B /* StudyViewModel.swift */; };
+		AA000009000000000000001A /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000009000000000000001B /* MainTabView.swift */; };
+		AA00000A000000000000001A /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000A000000000000001B /* RecordingView.swift */; };
+		AA00000B000000000000001A /* ReviewListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000B000000000000001B /* ReviewListView.swift */; };
+		AA00000C000000000000001A /* GroupPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000C000000000000001B /* GroupPickerView.swift */; };
+		AA00000D000000000000001A /* GroupsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000D000000000000001B /* GroupsListView.swift */; };
+		AA00000E000000000000001A /* GroupDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000E000000000000001B /* GroupDetailView.swift */; };
+		AA00000F000000000000001A /* StudySessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000F000000000000001B /* StudySessionView.swift */; };
+		AA000010000000000000001A /* StudyCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000010000000000000001B /* StudyCompleteView.swift */; };
+		AA000011000000000000001A /* FlipCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000011000000000000001B /* FlipCardView.swift */; };
+		AA000012000000000000001A /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000012000000000000001B /* WaveformView.swift */; };
+		AA000013000000000000001A /* SM2.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000013000000000000001B /* SM2.swift */; };
+		AA000014000000000000001A /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000014000000000000001B /* NotificationService.swift */; };
+		AA000015000000000000001A /* PhrasalVerbDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000015000000000000001B /* PhrasalVerbDictionary.swift */; };
+		AA000016000000000000001A /* phrasal_verbs.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000016000000000000001B /* phrasal_verbs.json */; };
+		AA000017000000000000001A /* VocabFlashcardsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000017000000000000001B /* VocabFlashcardsTests.swift */; };
+		AA000018000000000000001A /* VocabFlashcardsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000018000000000000001B /* VocabFlashcardsUITests.swift */; };
+		117ADD68B0D7419F8ADBDB7B /* TextInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A427A54447E417580CF1534 /* TextInputView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AAPROXY0000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AAPROJECT0000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AATARGET000000000000001;
+			remoteInfo = VocabFlashcards;
+		};
+		AAPROXY0000000000000002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AAPROJECT0000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AATARGET000000000000001;
+			remoteInfo = VocabFlashcards;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		31799BBC738C00B261DB8DD4 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		399A8D5CE429D84FF63670B9 /* ClaudeAPIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClaudeAPIService.swift; sourceTree = "<group>"; };
+		BB000001000000000000001B /* RecordingsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingsListView.swift; sourceTree = "<group>"; };
+		BB000002000000000000001B /* RecordingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailView.swift; sourceTree = "<group>"; };
+		AA000001000000000000001B /* VocabFlashcardsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabFlashcardsApp.swift; sourceTree = "<group>"; };
+		AA000002000000000000001B /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		AA000003000000000000001B /* CardGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardGroup.swift; sourceTree = "<group>"; };
+		AA000004000000000000001B /* RecordingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingSession.swift; sourceTree = "<group>"; };
+		AA000005000000000000001B /* RecorderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderViewModel.swift; sourceTree = "<group>"; };
+		AA000006000000000000001B /* NLPProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NLPProcessor.swift; sourceTree = "<group>"; };
+		AA000007000000000000001B /* ReviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewModel.swift; sourceTree = "<group>"; };
+		AA000008000000000000001B /* StudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyViewModel.swift; sourceTree = "<group>"; };
+		AA000009000000000000001B /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		AA00000A000000000000001B /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
+		AA00000B000000000000001B /* ReviewListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewListView.swift; sourceTree = "<group>"; };
+		AA00000C000000000000001B /* GroupPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupPickerView.swift; sourceTree = "<group>"; };
+		AA00000D000000000000001B /* GroupsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsListView.swift; sourceTree = "<group>"; };
+		AA00000E000000000000001B /* GroupDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailView.swift; sourceTree = "<group>"; };
+		AA00000F000000000000001B /* StudySessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudySessionView.swift; sourceTree = "<group>"; };
+		AA000010000000000000001B /* StudyCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyCompleteView.swift; sourceTree = "<group>"; };
+		AA000011000000000000001B /* FlipCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipCardView.swift; sourceTree = "<group>"; };
+		AA000012000000000000001B /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
+		AA000013000000000000001B /* SM2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SM2.swift; sourceTree = "<group>"; };
+		AA000014000000000000001B /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		AA000015000000000000001B /* PhrasalVerbDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhrasalVerbDictionary.swift; sourceTree = "<group>"; };
+		AA000016000000000000001B /* phrasal_verbs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = phrasal_verbs.json; sourceTree = "<group>"; };
+		AA000017000000000000001B /* VocabFlashcardsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabFlashcardsTests.swift; sourceTree = "<group>"; };
+		AA000018000000000000001B /* VocabFlashcardsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabFlashcardsUITests.swift; sourceTree = "<group>"; };
+		AAPROD0000000000000000FF /* VocabFlashcards.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VocabFlashcards.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AATESTS000000000000000FF /* VocabFlashcardsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VocabFlashcardsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AAUITESTS00000000000000FF /* VocabFlashcardsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VocabFlashcardsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A427A54447E417580CF1534 /* TextInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AABUILD0001000000000000FF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AABUILD0002000000000000FF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AABUILD0003000000000000FF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AAGROUP000000000000000001 /* VocabFlashcards */ = {
+			isa = PBXGroup;
+			children = (
+				AAGROUP000000000000000002 /* App */,
+				AAGROUP000000000000000003 /* Models */,
+				AAGROUP000000000000000004 /* ViewModels */,
+				AAGROUP000000000000000005 /* Views */,
+				AAGROUP000000000000000006 /* Services */,
+				AAGROUP000000000000000007 /* Resources */,
+			);
+			path = VocabFlashcards;
+			sourceTree = "<group>";
+		};
+		AAGROUP000000000000000002 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				AA000001000000000000001B /* VocabFlashcardsApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		AAGROUP000000000000000003 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002000000000000001B /* Card.swift */,
+				AA000003000000000000001B /* CardGroup.swift */,
+				AA000004000000000000001B /* RecordingSession.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AAGROUP000000000000000004 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				AA000005000000000000001B /* RecorderViewModel.swift */,
+				AA000006000000000000001B /* NLPProcessor.swift */,
+				AA000007000000000000001B /* ReviewViewModel.swift */,
+				AA000008000000000000001B /* StudyViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		AAGROUP000000000000000005 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AA000009000000000000001B /* MainTabView.swift */,
+				AAGROUP000000000000000008 /* Recording */,
+				BBGROUP000000000000000001 /* Recordings */,
+				AAGROUP000000000000000009 /* Review */,
+				AAGROUP00000000000000000A /* Groups */,
+				AAGROUP00000000000000000B /* Study */,
+				AAGROUP00000000000000000C /* Components */,
+				31799BBC738C00B261DB8DD4 /* SettingsView.swift */,
+			
+				79FA329F8EBB465C8EEF0079 /* TextInput */,);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		BBGROUP000000000000000001 /* Recordings */ = {
+			isa = PBXGroup;
+			children = (
+				BB000001000000000000001B /* RecordingsListView.swift */,
+				BB000002000000000000001B /* RecordingDetailView.swift */,
+			);
+			path = Recordings;
+			sourceTree = "<group>";
+		};
+		AAGROUP000000000000000006 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AA000013000000000000001B /* SM2.swift */,
+				AA000014000000000000001B /* NotificationService.swift */,
+				AA000015000000000000001B /* PhrasalVerbDictionary.swift */,
+				399A8D5CE429D84FF63670B9 /* ClaudeAPIService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		AAGROUP000000000000000007 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AA000016000000000000001B /* phrasal_verbs.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		AAGROUP000000000000000008 /* Recording */ = {
+			isa = PBXGroup;
+			children = (
+				AA00000A000000000000001B /* RecordingView.swift */,
+			);
+			path = Recording;
+			sourceTree = "<group>";
+		};
+		AAGROUP000000000000000009 /* Review */ = {
+			isa = PBXGroup;
+			children = (
+				AA00000B000000000000001B /* ReviewListView.swift */,
+				AA00000C000000000000001B /* GroupPickerView.swift */,
+			);
+			path = Review;
+			sourceTree = "<group>";
+		};
+		AAGROUP00000000000000000A /* Groups */ = {
+			isa = PBXGroup;
+			children = (
+				AA00000D000000000000001B /* GroupsListView.swift */,
+				AA00000E000000000000001B /* GroupDetailView.swift */,
+			);
+			path = Groups;
+			sourceTree = "<group>";
+		};
+		AAGROUP00000000000000000B /* Study */ = {
+			isa = PBXGroup;
+			children = (
+				AA00000F000000000000001B /* StudySessionView.swift */,
+				AA000010000000000000001B /* StudyCompleteView.swift */,
+			);
+			path = Study;
+			sourceTree = "<group>";
+		};
+		AAGROUP00000000000000000C /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				AA000011000000000000001B /* FlipCardView.swift */,
+				AA000012000000000000001B /* WaveformView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		AAGROUP00000000000000000D /* VocabFlashcardsTests */ = {
+			isa = PBXGroup;
+			children = (
+				AA000017000000000000001B /* VocabFlashcardsTests.swift */,
+			);
+			path = VocabFlashcardsTests;
+			sourceTree = "<group>";
+		};
+		AAGROUP00000000000000000E /* VocabFlashcardsUITests */ = {
+			isa = PBXGroup;
+			children = (
+				AA000018000000000000001B /* VocabFlashcardsUITests.swift */,
+			);
+			path = VocabFlashcardsUITests;
+			sourceTree = "<group>";
+		};
+		AAGROUP00000000000000000F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AAPROD0000000000000000FF /* VocabFlashcards.app */,
+				AATESTS000000000000000FF /* VocabFlashcardsTests.xctest */,
+				AAUITESTS00000000000000FF /* VocabFlashcardsUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AAROOT000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				AAGROUP000000000000000001 /* VocabFlashcards */,
+				AAGROUP00000000000000000D /* VocabFlashcardsTests */,
+				AAGROUP00000000000000000E /* VocabFlashcardsUITests */,
+				AAGROUP00000000000000000F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		79FA329F8EBB465C8EEF0079 /* TextInput */ = {
+			isa = PBXGroup;
+			children = (
+				0A427A54447E417580CF1534 /* TextInputView.swift */,
+			);
+			path = TextInput;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AATARGET000000000000001 /* VocabFlashcards */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AACONFLIST000000000001 /* Build configuration list for PBXNativeTarget "VocabFlashcards" */;
+			buildPhases = (
+				AABUILD0000000000000001 /* Sources */,
+				AABUILD0001000000000000FF /* Frameworks */,
+				AABUILD0000000000000002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VocabFlashcards;
+			productName = VocabFlashcards;
+			productReference = AAPROD0000000000000000FF /* VocabFlashcards.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AATARGET000000000000002 /* VocabFlashcardsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AACONFLIST000000000002 /* Build configuration list for PBXNativeTarget "VocabFlashcardsTests" */;
+			buildPhases = (
+				AABUILD0000000000000003 /* Sources */,
+				AABUILD0002000000000000FF /* Frameworks */,
+				AABUILD0000000000000004 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AADEP00000000000000000001 /* PBXTargetDependency */,
+			);
+			name = VocabFlashcardsTests;
+			productName = VocabFlashcardsTests;
+			productReference = AATESTS000000000000000FF /* VocabFlashcardsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		AATARGET000000000000003 /* VocabFlashcardsUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AACONFLIST000000000003 /* Build configuration list for PBXNativeTarget "VocabFlashcardsUITests" */;
+			buildPhases = (
+				AABUILD0000000000000005 /* Sources */,
+				AABUILD0003000000000000FF /* Frameworks */,
+				AABUILD0000000000000006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AADEP00000000000000000002 /* PBXTargetDependency */,
+			);
+			name = VocabFlashcardsUITests;
+			productName = VocabFlashcardsUITests;
+			productReference = AAUITESTS00000000000000FF /* VocabFlashcardsUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AAPROJECT0000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					AATARGET000000000000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					AATARGET000000000000002 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = AATARGET000000000000001;
+					};
+					AATARGET000000000000003 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = AATARGET000000000000001;
+					};
+				};
+			};
+			buildConfigurationList = AACONFLIST000000000000 /* Build configuration list for PBXProject "VocabFlashcards" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AAROOT000000000000000001;
+			productRefGroup = AAGROUP00000000000000000F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AATARGET000000000000001 /* VocabFlashcards */,
+				AATARGET000000000000002 /* VocabFlashcardsTests */,
+				AATARGET000000000000003 /* VocabFlashcardsUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AABUILD0000000000000002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000016000000000000001A /* phrasal_verbs.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AABUILD0000000000000004 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AABUILD0000000000000006 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AABUILD0000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000001000000000000001A /* VocabFlashcardsApp.swift in Sources */,
+				AA000002000000000000001A /* Card.swift in Sources */,
+				AA000003000000000000001A /* CardGroup.swift in Sources */,
+				AA000004000000000000001A /* RecordingSession.swift in Sources */,
+				AA000005000000000000001A /* RecorderViewModel.swift in Sources */,
+				AA000006000000000000001A /* NLPProcessor.swift in Sources */,
+				AA000007000000000000001A /* ReviewViewModel.swift in Sources */,
+				AA000008000000000000001A /* StudyViewModel.swift in Sources */,
+				AA000009000000000000001A /* MainTabView.swift in Sources */,
+				AA00000A000000000000001A /* RecordingView.swift in Sources */,
+				AA00000B000000000000001A /* ReviewListView.swift in Sources */,
+				AA00000C000000000000001A /* GroupPickerView.swift in Sources */,
+				AA00000D000000000000001A /* GroupsListView.swift in Sources */,
+				AA00000E000000000000001A /* GroupDetailView.swift in Sources */,
+				AA00000F000000000000001A /* StudySessionView.swift in Sources */,
+				AA000010000000000000001A /* StudyCompleteView.swift in Sources */,
+				AA000011000000000000001A /* FlipCardView.swift in Sources */,
+				AA000012000000000000001A /* WaveformView.swift in Sources */,
+				AA000013000000000000001A /* SM2.swift in Sources */,
+				AA000014000000000000001A /* NotificationService.swift in Sources */,
+				AA000015000000000000001A /* PhrasalVerbDictionary.swift in Sources */,
+				15C1ED69BB2FCA071D8275F7 /* ClaudeAPIService.swift in Sources */,
+				274C1E19057EEDA75BAD9B71 /* SettingsView.swift in Sources */,
+				BB000001000000000000001A /* RecordingsListView.swift in Sources */,
+				BB000002000000000000001A /* RecordingDetailView.swift in Sources */,
+			
+				117ADD68B0D7419F8ADBDB7B /* TextInputView.swift in Sources */,);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AABUILD0000000000000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000017000000000000001A /* VocabFlashcardsTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AABUILD0000000000000005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000018000000000000001A /* VocabFlashcardsUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AADEP00000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AATARGET000000000000001 /* VocabFlashcards */;
+			targetProxy = AAPROXY0000000000000001 /* PBXContainerItemProxy */;
+		};
+		AADEP00000000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AATARGET000000000000001 /* VocabFlashcards */;
+			targetProxy = AAPROXY0000000000000002 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		AACONF00000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AACONF00000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AACONF00000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vocabflashcards.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VocabFlashcards.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/VocabFlashcards";
+			};
+			name = Debug;
+		};
+		AACONF00000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vocabflashcards.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VocabFlashcards.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/VocabFlashcards";
+			};
+			name = Release;
+		};
+		AACONF00000000000000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vocabflashcards.app.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TEST_TARGET_NAME = VocabFlashcards;
+			};
+			name = Debug;
+		};
+		AACONF00000000000000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vocabflashcards.app.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TEST_TARGET_NAME = VocabFlashcards;
+			};
+			name = Release;
+		};
+		AACONF00000000000000007 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FH852G5TN6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "VocabFlashcards needs microphone access to record audio and capture vocabulary from your speech.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "VocabFlashcards uses speech recognition to transcribe your recordings and identify vocabulary.";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				INFOPLIST_KEY_CFBundleDisplayName = "Vocab Flashcards";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vocabflashcards.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AACONF00000000000000008 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FH852G5TN6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Vocab Flashcards";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "VocabFlashcards needs microphone access to record audio and capture vocabulary from your speech.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "VocabFlashcards uses speech recognition to transcribe your recordings and identify vocabulary.";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vocabflashcards.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AACONFLIST000000000000 /* Build configuration list for PBXProject "VocabFlashcards" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AACONF00000000000000001 /* Debug */,
+				AACONF00000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AACONFLIST000000000001 /* Build configuration list for PBXNativeTarget "VocabFlashcards" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AACONF00000000000000007 /* Debug */,
+				AACONF00000000000000008 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AACONFLIST000000000002 /* Build configuration list for PBXNativeTarget "VocabFlashcardsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AACONF00000000000000003 /* Debug */,
+				AACONF00000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AACONFLIST000000000003 /* Build configuration list for PBXNativeTarget "VocabFlashcardsUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AACONF00000000000000005 /* Debug */,
+				AACONF00000000000000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AAPROJECT0000000000000001 /* Project object */;
+}
