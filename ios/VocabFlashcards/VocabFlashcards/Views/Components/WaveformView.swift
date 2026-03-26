@@ -5,6 +5,7 @@ struct WaveformView: View {
     let isRecording: Bool
 
     @State private var bars: [CGFloat] = Array(repeating: 0.1, count: 30)
+    @State private var lastUpdate: Date = .distantPast
 
     var body: some View {
         HStack(spacing: 3) {
@@ -17,6 +18,10 @@ struct WaveformView: View {
         }
         .onChange(of: level) { _, newLevel in
             guard isRecording else { return }
+            // Throttle to ~20fps max
+            let now = Date()
+            guard now.timeIntervalSince(lastUpdate) > 0.05 else { return }
+            lastUpdate = now
             bars.removeFirst()
             let normalized = CGFloat(min(1.0, newLevel * 5))
             bars.append(max(0.05, normalized))

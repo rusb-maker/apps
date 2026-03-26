@@ -13,11 +13,18 @@ class RecordingSession {
     var isTrashed: Bool = false
     var trashedAt: Date?
 
+    // Transient cache — avoids re-decoding JSON on every access
+    @Transient private var _cachedPhrases: [ExtractedPhrase]?
+
     var extractedPhrases: [ExtractedPhrase] {
         get {
-            (try? JSONDecoder().decode([ExtractedPhrase].self, from: extractedPhrasesData)) ?? []
+            if let cached = _cachedPhrases { return cached }
+            let decoded = (try? JSONDecoder().decode([ExtractedPhrase].self, from: extractedPhrasesData)) ?? []
+            _cachedPhrases = decoded
+            return decoded
         }
         set {
+            _cachedPhrases = newValue
             extractedPhrasesData = (try? JSONEncoder().encode(newValue)) ?? Data()
         }
     }
