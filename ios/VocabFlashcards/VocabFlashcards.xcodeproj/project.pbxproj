@@ -10,6 +10,8 @@
 		117ADD68B0D7419F8ADBDB7B /* TextInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A427A54447E417580CF1534 /* TextInputView.swift */; };
 		15C1ED69BB2FCA071D8275F7 /* ClaudeAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399A8D5CE429D84FF63670B9 /* ClaudeAPIService.swift */; };
 		274C1E19057EEDA75BAD9B71 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31799BBC738C00B261DB8DD4 /* SettingsView.swift */; };
+		CC000001000000000000001A /* AIProviderSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC000001000000000000001B /* AIProviderSettingsView.swift */; };
+		CC000002000000000000001A /* StudyIntervalsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC000002000000000000001B /* StudyIntervalsSettingsView.swift */; };
 		AA000001000000000000001A /* VocabFlashcardsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000001000000000000001B /* VocabFlashcardsApp.swift */; };
 		AA000002000000000000001A /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002000000000000001B /* Card.swift */; };
 		AA000003000000000000001A /* CardGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000003000000000000001B /* CardGroup.swift */; };
@@ -62,6 +64,8 @@
 /* Begin PBXFileReference section */
 		0A427A54447E417580CF1534 /* TextInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputView.swift; sourceTree = "<group>"; };
 		31799BBC738C00B261DB8DD4 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		CC000001000000000000001B /* AIProviderSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIProviderSettingsView.swift; sourceTree = "<group>"; };
+		CC000002000000000000001B /* StudyIntervalsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyIntervalsSettingsView.swift; sourceTree = "<group>"; };
 		399A8D5CE429D84FF63670B9 /* ClaudeAPIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClaudeAPIService.swift; sourceTree = "<group>"; };
 		AA000001000000000000001B /* VocabFlashcardsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabFlashcardsApp.swift; sourceTree = "<group>"; };
 		AA000002000000000000001B /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
@@ -132,6 +136,16 @@
 			path = TextInput;
 			sourceTree = "<group>";
 		};
+		CCGROUP000000000000000001 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				31799BBC738C00B261DB8DD4 /* SettingsView.swift */,
+				CC000001000000000000001B /* AIProviderSettingsView.swift */,
+				CC000002000000000000001B /* StudyIntervalsSettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		AAGROUP000000000000000001 /* VocabFlashcards */ = {
 			isa = PBXGroup;
 			children = (
@@ -186,7 +200,7 @@
 				AAGROUP00000000000000000A /* Groups */,
 				AAGROUP00000000000000000B /* Study */,
 				AAGROUP00000000000000000C /* Components */,
-				31799BBC738C00B261DB8DD4 /* SettingsView.swift */,
+				CCGROUP000000000000000001 /* Settings */,
 				79FA329F8EBB465C8EEF0079 /* TextInput */,
 			);
 			path = Views;
@@ -456,6 +470,8 @@
 				AA000015000000000000001A /* PhrasalVerbDictionary.swift in Sources */,
 				15C1ED69BB2FCA071D8275F7 /* ClaudeAPIService.swift in Sources */,
 				274C1E19057EEDA75BAD9B71 /* SettingsView.swift in Sources */,
+				CC000001000000000000001A /* AIProviderSettingsView.swift in Sources */,
+				CC000002000000000000001A /* StudyIntervalsSettingsView.swift in Sources */,
 				BB000001000000000000001A /* RecordingsListView.swift in Sources */,
 				FBB8CBE72F741FD00039F509 /* SourceLanguage.swift in Sources */,
 				BB000002000000000000001A /* RecordingDetailView.swift in Sources */,
