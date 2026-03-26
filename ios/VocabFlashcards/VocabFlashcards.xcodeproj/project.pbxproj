@@ -39,6 +39,7 @@
 		FB6281332F73FF9900519FD8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB6281322F73FF9900519FD8 /* Assets.xcassets */; };
 		FBB8CBE52F740FC90039F509 /* TrashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB8CBE42F740FC90039F509 /* TrashView.swift */; };
 		FBB8CBE72F741FD00039F509 /* SourceLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB8CBE62F741FD00039F509 /* SourceLanguage.swift */; };
+		FBB8CBEA2F744A880039F509 /* TimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB8CBE92F744A880039F509 /* TimeFormatter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +96,7 @@
 		FBB8CBE42F740FC90039F509 /* TrashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashView.swift; sourceTree = "<group>"; };
 		FBB8CBE62F741FD00039F509 /* SourceLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceLanguage.swift; sourceTree = "<group>"; };
 		FBB8CBE82F7423320039F509 /* VocabFlashcards.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VocabFlashcards.entitlements; sourceTree = "<group>"; };
+		FBB8CBE92F744A880039F509 /* TimeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFormatter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +199,7 @@
 				AA000014000000000000001B /* NotificationService.swift */,
 				AA000015000000000000001B /* PhrasalVerbDictionary.swift */,
 				399A8D5CE429D84FF63670B9 /* ClaudeAPIService.swift */,
+				FBB8CBE92F744A880039F509 /* TimeFormatter.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -457,6 +460,7 @@
 				FBB8CBE72F741FD00039F509 /* SourceLanguage.swift in Sources */,
 				BB000002000000000000001A /* RecordingDetailView.swift in Sources */,
 				FBB8CBE52F740FC90039F509 /* TrashView.swift in Sources */,
+				FBB8CBEA2F744A880039F509 /* TimeFormatter.swift in Sources */,
 				117ADD68B0D7419F8ADBDB7B /* TextInputView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

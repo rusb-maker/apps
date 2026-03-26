@@ -14,7 +14,7 @@ struct RecordingDetailView: View {
             VStack(alignment: .leading, spacing: 16) {
                 // Metadata
                 HStack {
-                    Label(formatDuration(session.duration), systemImage: "clock")
+                    Label(session.duration.formattedDuration, systemImage: "clock")
                     Spacer()
                     Text(session.createdAt, style: .date)
                     Text(session.createdAt, style: .time)
@@ -126,9 +126,4 @@ struct RecordingDetailView: View {
         }
     }
 
-    private func formatDuration(_ duration: TimeInterval) -> String {
-        let minutes = Int(duration) / 60
-        let seconds = Int(duration) % 60
-        return String(format: "%d:%02d", minutes, seconds)
-    }
 }

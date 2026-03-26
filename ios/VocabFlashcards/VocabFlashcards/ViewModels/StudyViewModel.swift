@@ -1,6 +1,7 @@
 import SwiftData
 import Foundation
 
+@MainActor
 @Observable
 class StudyViewModel {
     var cards: [Card] = []
@@ -51,14 +52,13 @@ class StudyViewModel {
         intervals = .fromUserDefaults()
         let now = Date()
         let descriptor = FetchDescriptor<Card>(
-            predicate: #Predicate { $0.nextReviewDate <= now },
+            predicate: #Predicate<Card> { $0.nextReviewDate <= now && !$0.isTrashed },
             sortBy: [SortDescriptor(\.nextReviewDate)]
         )
         let allDue = (try? context.fetch(descriptor)) ?? []
 
-        // Filter to only non-trashed cards in study-enabled groups
+        // Filter to cards in study-enabled, non-trashed groups
         cards = allDue.filter { card in
-            guard !card.isTrashed else { return false }
             guard let group = card.group else { return true }
             return group.isStudyEnabled && !group.isTrashed
         }
@@ -129,6 +129,7 @@ class StudyViewModel {
 
     private func loadNextDueDate(context: ModelContext) {
         let descriptor = FetchDescriptor<Card>(
+            predicate: #Predicate<Card> { !$0.isTrashed },
             sortBy: [SortDescriptor(\.nextReviewDate)]
         )
         guard let allCards = try? context.fetch(descriptor) else {
@@ -137,12 +138,10 @@ class StudyViewModel {
         }
 
         _nextDueDate = allCards
-            .filter { !$0.isTrashed }
-            .filter { card in
+            .first { card in
                 guard let group = card.group else { return true }
                 return group.isStudyEnabled && !group.isTrashed
-            }
-            .first?
+            }?
             .nextReviewDate
     }
 }

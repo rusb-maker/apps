@@ -2,19 +2,15 @@ import SwiftUI
 import SwiftData
 
 struct RecordingsListView: View {
-    @Query(sort: \RecordingSession.createdAt, order: .reverse) private var recordings: [RecordingSession]
+    @Query(filter: #Predicate<RecordingSession> { !$0.isTrashed }, sort: \RecordingSession.createdAt, order: .reverse) private var recordings: [RecordingSession]
     @Environment(\.modelContext) private var context
     @State private var recordingToDelete: RecordingSession?
     @State private var showDeleteConfirm = false
 
-    private var activeRecordings: [RecordingSession] {
-        recordings.filter { !$0.isTrashed }
-    }
-
     var body: some View {
         NavigationStack {
             Group {
-                if activeRecordings.isEmpty {
+                if recordings.isEmpty {
                     ContentUnavailableView(
                         "No Recordings",
                         systemImage: "waveform",
@@ -22,7 +18,7 @@ struct RecordingsListView: View {
                     )
                 } else {
                     List {
-                        ForEach(activeRecordings) { session in
+                        ForEach(recordings) { session in
                             NavigationLink(value: session) {
                                 RecordingRow(session: session)
                             }
@@ -37,7 +33,7 @@ struct RecordingsListView: View {
                         }
                         .onDelete { offsets in
                             if let index = offsets.first {
-                                recordingToDelete = activeRecordings[index]
+                                recordingToDelete = recordings[index]
                                 showDeleteConfirm = true
                             }
                         }
@@ -78,7 +74,7 @@ struct RecordingRow: View {
                     .foregroundStyle(.secondary)
                 Spacer()
                 if session.duration > 0 {
-                    Text(formatDuration(session.duration))
+                    Text(session.duration.formattedDuration)
                         .font(.caption.monospacedDigit())
                         .foregroundStyle(.secondary)
                 }
@@ -96,9 +92,4 @@ struct RecordingRow: View {
         .padding(.vertical, 2)
     }
 
-    private func formatDuration(_ duration: TimeInterval) -> String {
-        let minutes = Int(duration) / 60
-        let seconds = Int(duration) % 60
-        return String(format: "%d:%02d", minutes, seconds)
-    }
 }

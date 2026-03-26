@@ -42,7 +42,7 @@ struct RecordingView: View {
 
                 // Duration
                 if viewModel.isRecording || viewModel.recordingDuration > 0 {
-                    Text(formatDuration(viewModel.recordingDuration))
+                    Text(viewModel.recordingDuration.formattedDuration)
                         .font(.title2.monospacedDigit())
                         .foregroundStyle(.secondary)
                 }
@@ -205,9 +205,4 @@ struct RecordingView: View {
         isExtracting = false
     }
 
-    private func formatDuration(_ duration: TimeInterval) -> String {
-        let minutes = Int(duration) / 60
-        let seconds = Int(duration) % 60
-        return String(format: "%02d:%02d", minutes, seconds)
-    }
 }

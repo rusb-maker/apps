@@ -2,9 +2,9 @@ import SwiftUI
 import SwiftData
 
 struct TrashView: View {
-    @Query(sort: \CardGroup.trashedAt, order: .reverse) private var allGroups: [CardGroup]
-    @Query(sort: \Card.trashedAt, order: .reverse) private var allCards: [Card]
-    @Query(sort: \RecordingSession.trashedAt, order: .reverse) private var allRecordings: [RecordingSession]
+    @Query(filter: #Predicate<CardGroup> { $0.isTrashed }, sort: \CardGroup.trashedAt, order: .reverse) private var allTrashedGroups: [CardGroup]
+    @Query(filter: #Predicate<Card> { $0.isTrashed }, sort: \Card.trashedAt, order: .reverse) private var allTrashedCards: [Card]
+    @Query(filter: #Predicate<RecordingSession> { $0.isTrashed }, sort: \RecordingSession.trashedAt, order: .reverse) private var allTrashedRecordings: [RecordingSession]
     @Environment(\.modelContext) private var context
     @State private var showEmptyTrashConfirm = false
     @State private var showDeleteConfirm = false
@@ -12,25 +12,20 @@ struct TrashView: View {
 
     /// Top-level trashed folders (whose parent is not itself trashed)
     private var trashedFolders: [CardGroup] {
-        allGroups.filter { $0.isTrashed && ($0.parent == nil || !($0.parent?.isTrashed ?? false)) }
+        allTrashedGroups.filter { $0.parent == nil || !($0.parent?.isTrashed ?? false) }
     }
 
     /// Cards that were individually trashed (not part of a trashed folder)
     private var trashedCards: [Card] {
-        allCards.filter { $0.isTrashed && !($0.group?.isTrashed ?? false) }
-    }
-
-    /// Trashed recordings
-    private var trashedRecordings: [RecordingSession] {
-        allRecordings.filter { $0.isTrashed }
+        allTrashedCards.filter { !($0.group?.isTrashed ?? false) }
     }
 
     private var isEmpty: Bool {
-        trashedFolders.isEmpty && trashedCards.isEmpty && trashedRecordings.isEmpty
+        trashedFolders.isEmpty && trashedCards.isEmpty && allTrashedRecordings.isEmpty
     }
 
     private var totalCount: Int {
-        trashedFolders.count + trashedCards.count + trashedRecordings.count
+        trashedFolders.count + trashedCards.count + allTrashedRecordings.count
     }
 
     var body: some View {
@@ -123,9 +118,9 @@ struct TrashView: View {
                 }
             }
 
-            if !trashedRecordings.isEmpty {
+            if !allTrashedRecordings.isEmpty {
                 Section("Recordings") {
-                    ForEach(trashedRecordings) { recording in
+                    ForEach(allTrashedRecordings) { recording in
                         TrashRecordingRow(recording: recording)
                             .swipeActions(edge: .leading) {
                                 Button {
@@ -205,7 +200,7 @@ struct TrashView: View {
         for card in trashedCards {
             context.delete(card)
         }
-        for recording in trashedRecordings {
+        for recording in allTrashedRecordings {
             context.delete(recording)
         }
         try? context.save()

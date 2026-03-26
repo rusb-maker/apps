@@ -134,16 +134,23 @@ struct MainTabView: View {
     private func cleanupExpiredTrash() {
         let cutoff = Calendar.current.date(byAdding: .day, value: -7, to: Date()) ?? Date()
 
-        if let cards = try? context.fetch(FetchDescriptor<Card>()) {
-            for card in cards where card.isTrashed {
+        // Fetch only trashed items instead of all records
+        let cardDescriptor = FetchDescriptor<Card>(
+            predicate: #Predicate<Card> { $0.isTrashed }
+        )
+        if let trashedCards = try? context.fetch(cardDescriptor) {
+            for card in trashedCards {
                 if let trashedAt = card.trashedAt, trashedAt < cutoff {
                     context.delete(card)
                 }
             }
         }
 
-        if let groups = try? context.fetch(FetchDescriptor<CardGroup>()) {
-            for group in groups where group.isTrashed {
+        let groupDescriptor = FetchDescriptor<CardGroup>(
+            predicate: #Predicate<CardGroup> { $0.isTrashed }
+        )
+        if let trashedGroups = try? context.fetch(groupDescriptor) {
+            for group in trashedGroups {
                 if let trashedAt = group.trashedAt, trashedAt < cutoff {
                     if group.parent == nil || !(group.parent?.isTrashed ?? false) {
                         context.delete(group)
@@ -152,8 +159,11 @@ struct MainTabView: View {
             }
         }
 
-        if let recordings = try? context.fetch(FetchDescriptor<RecordingSession>()) {
-            for recording in recordings where recording.isTrashed {
+        let recordingDescriptor = FetchDescriptor<RecordingSession>(
+            predicate: #Predicate<RecordingSession> { $0.isTrashed }
+        )
+        if let trashedRecordings = try? context.fetch(recordingDescriptor) {
+            for recording in trashedRecordings {
                 if let trashedAt = recording.trashedAt, trashedAt < cutoff {
                     context.delete(recording)
                 }
