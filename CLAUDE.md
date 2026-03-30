@@ -4,12 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Structure
 
-Monorepo containing three independent Apple-platform apps. Each has its own detailed `CLAUDE.md` — read the relevant one before working on that app.
+Monorepo containing four independent Apple-platform apps. Each has its own detailed `CLAUDE.md` — read the relevant one before working on that app.
 
 | App | Path | Platform | Description |
 |-----|------|----------|-------------|
 | **Colage** | `ios/Colage/` | iOS 18.5+ | Photo/video collage maker |
 | **VocabFlashcards** | `ios/VocabFlashcards/` | iOS 17.0+ | Flashcard app with speech-to-text & NLP for learning English phrasal verbs |
+| **SpanishCourse** | `ios/SpanishCourse/` | iOS 26.0+ | Spanish language course for Russian speakers with AI-generated flashcards |
 | **Simple Storage Browser** | `macos/s3_mount/` | macOS 26.2 | S3/Wasabi bucket mount via rclone + macFUSE |
 
 ## Build & Test Commands
@@ -30,6 +31,12 @@ xcodebuild build -scheme Colage -project ios/Colage/Colage.xcodeproj -destinatio
 xcodebuild test -scheme Colage -project ios/Colage/Colage.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
 ```
 
+### SpanishCourse (iOS)
+
+```bash
+xcodebuild build -scheme SpanishCourse -project ios/SpanishCourse/SpanishCourse.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+```
+
 ### Simple Storage Browser (macOS)
 
 ```bash
@@ -41,4 +48,4 @@ xcodebuild test -project macos/s3_mount/simple_storage_browser.xcodeproj -scheme
 
 - All apps are pure **SwiftUI** with no external package dependencies
 - `#if canImport(UIKit)` / `#else` guards used in Colage for cross-compilation
-- Per-app architecture docs: `ios/Colage/CLAUDE.md`, `ios/VocabFlashcards/CLAUDE.md`, and `macos/s3_mount/CLAUDE.md`
+- Per-app architecture docs: `ios/Colage/CLAUDE.md`, `ios/VocabFlashcards/CLAUDE.md`, `ios/SpanishCourse/CLAUDE.md`, and `macos/s3_mount/CLAUDE.md`
