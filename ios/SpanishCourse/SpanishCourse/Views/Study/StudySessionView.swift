@@ -7,6 +7,7 @@ struct StudySessionView: View {
     var graduatedOnly: Bool = false
     var customOnly: Bool = false
     var folderId: UUID? = nil
+    var cheatSheet: String? = nil
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
@@ -14,6 +15,7 @@ struct StudySessionView: View {
     @State private var viewModel = StudyViewModel()
     @State private var isFlipped = false
     @State private var savedToMyCards = false
+    @State private var showingCheatSheet = false
 
     private var needsCloseButton: Bool {
         lessonId != nil || graduatedOnly || customOnly
@@ -26,16 +28,26 @@ struct StudySessionView: View {
                     correctCount: viewModel.correctCount,
                     incorrectCount: viewModel.incorrectCount,
                     totalCards: viewModel.correctCount + viewModel.incorrectCount,
-                    onStudyAgain: { loadCards() }
+                    hasMoreBatches: viewModel.hasMoreBatches,
+                    onStudyAgain: { loadCards() },
+                    onNextBatch: { viewModel.continueWithNextBatch() }
                 )
             } else if let card = viewModel.currentCard {
                 VStack(spacing: 24) {
                     VStack(spacing: 8) {
                         ProgressView(value: viewModel.progress)
                             .tint(theme.accentColor)
-                        Text("\(viewModel.currentIndex + 1) / \(viewModel.totalCards)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        HStack {
+                            Text("\(viewModel.currentIndex + 1) / \(viewModel.totalCards)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            if !viewModel.sessionLabel.isEmpty {
+                                Spacer()
+                                Text(viewModel.sessionLabel)
+                                    .font(.caption)
+                                    .foregroundStyle(.tertiary)
+                            }
+                        }
                     }
                     .padding(.horizontal)
 
@@ -106,6 +118,34 @@ struct StudySessionView: View {
             if needsCloseButton {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Закрыть") { dismiss() }
+                }
+            }
+            if cheatSheet != nil {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showingCheatSheet = true
+                    } label: {
+                        Image(systemName: "questionmark.circle")
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $showingCheatSheet) {
+            if let cheatSheet {
+                NavigationStack {
+                    ScrollView {
+                        Text(cheatSheet)
+                            .font(.body)
+                            .lineSpacing(6)
+                            .padding()
+                    }
+                    .navigationTitle("Шпаргалка")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Закрыть") { showingCheatSheet = false }
+                        }
+                    }
                 }
             }
         }

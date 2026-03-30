@@ -46,6 +46,10 @@
 		SC000053000000000000001A /* StreakBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SC000053000000000000001B /* StreakBadgeView.swift */; };
 		SC000060000000000000001A /* EditCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SC000060000000000000001B /* EditCardView.swift */; };
 		SC000060000000000000001B /* EditCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCardView.swift; sourceTree = "<group>"; };
+		SC000061000000000000001A /* UsefulInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SC000061000000000000001B /* UsefulInfoView.swift */; };
+		SC000061000000000000001B /* UsefulInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsefulInfoView.swift; sourceTree = "<group>"; };
+		SC000062000000000000001A /* DrillPackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SC000062000000000000001B /* DrillPackView.swift */; };
+		SC000062000000000000001B /* DrillPackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrillPackView.swift; sourceTree = "<group>"; };
 		SC000020000000000000001A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = SC000020000000000000001B /* Assets.xcassets */; };
 		SC000021000000000000001A /* a0_lessons.json in Resources */ = {isa = PBXBuildFile; fileRef = SC000021000000000000001B /* a0_lessons.json */; };
 		SC000022000000000000001A /* a1_lessons.json in Resources */ = {isa = PBXBuildFile; fileRef = SC000022000000000000001B /* a1_lessons.json */; };
@@ -222,6 +226,7 @@
 				SC000034000000000000001B /* FolderListView.swift */,
 				SC000035000000000000001B /* CustomGenerationView.swift */,
 				SC000060000000000000001B /* EditCardView.swift */,
+				SC000062000000000000001B /* DrillPackView.swift */,
 			);
 			path = Cards;
 			sourceTree = "<group>";
@@ -259,6 +264,7 @@
 			children = (
 				SC000018000000000000001B /* SettingsView.swift */,
 				SC000019000000000000001B /* AIProviderSettingsView.swift */,
+				SC000061000000000000001B /* UsefulInfoView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -395,6 +401,8 @@
 				SC000052000000000000001A /* DashboardView.swift in Sources */,
 				SC000053000000000000001A /* StreakBadgeView.swift in Sources */,
 				SC000060000000000000001A /* EditCardView.swift in Sources */,
+				SC000061000000000000001A /* UsefulInfoView.swift in Sources */,
+				SC000062000000000000001A /* DrillPackView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

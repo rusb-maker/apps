@@ -98,6 +98,24 @@ struct SettingsView: View {
                 Text("Озвучка")
             }
 
+            // MARK: - Session size
+            Section {
+                let options = [0, 10, 20, 30, 50]
+                Picker("Карточек за сессию", selection: Binding(
+                    get: { UserDefaults.standard.integer(forKey: "cards_per_session") },
+                    set: { UserDefaults.standard.set($0, forKey: "cards_per_session") }
+                )) {
+                    Text("Все").tag(0)
+                    ForEach(options.filter { $0 > 0 }, id: \.self) { n in
+                        Text("\(n)").tag(n)
+                    }
+                }
+            } header: {
+                Text("Сессия учёбы")
+            } footer: {
+                Text("Ограничивает количество карточек за один подход. После пачки можно продолжить со следующей.")
+            }
+
             // MARK: - Intervals
             Section {
                 intervalRow(label: "Снова", value: $againValue, unit: $againUnit, save: saveAgain)
@@ -118,6 +136,17 @@ struct SettingsView: View {
                 Stepper("Карточек за генерацию: \(maxCards)", value: $maxCards, in: 1...20)
             } header: {
                 Text("AI-генерация")
+            }
+
+            // MARK: - Useful
+            Section {
+                NavigationLink {
+                    UsefulInfoView()
+                } label: {
+                    Label("Советы, план, YouTube", systemImage: "lightbulb.fill")
+                }
+            } header: {
+                Text("Полезная информация")
             }
 
             // MARK: - About

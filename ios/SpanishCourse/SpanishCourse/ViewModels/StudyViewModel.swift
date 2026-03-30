@@ -12,8 +12,21 @@ class StudyViewModel {
     var incorrectCount = 0
     var intervals: StudyIntervals = .fromUserDefaults()
 
+    // Batch mode
+    var batchSize: Int = 0 // 0 = all cards
+    var batchNumber = 1
+    var totalDueCount = 0
+    private var allDueCards: [Card] = []
+
     private var failedCards: [Card] = []
     private var _nextDueDate: Date?
+
+    // Filters (saved for reload)
+    private var _lessonId: String?
+    private var _level: Level?
+    private var _graduatedOnly = false
+    private var _customOnly = false
+    private var _folderId: UUID?
 
     var currentCard: Card? {
         guard currentIndex < cards.count else { return nil }
@@ -31,6 +44,17 @@ class StudyViewModel {
 
     var nextDueDate: Date? { _nextDueDate }
 
+    var hasMoreBatches: Bool {
+        batchSize > 0 && !allDueCards.isEmpty
+    }
+
+    var sessionLabel: String {
+        if batchSize > 0 && totalDueCount > 0 {
+            return "Пачка \(batchNumber) • \(totalCards) из \(totalDueCount)"
+        }
+        return ""
+    }
+
     func loadDueCards(
         context: ModelContext,
         lessonId: String? = nil,
@@ -39,6 +63,13 @@ class StudyViewModel {
         customOnly: Bool = false,
         folderId: UUID? = nil
     ) {
+        // Save filters
+        _lessonId = lessonId
+        _level = level
+        _graduatedOnly = graduatedOnly
+        _customOnly = customOnly
+        _folderId = folderId
+
         let now = Date()
         let descriptor = FetchDescriptor<Card>(
             predicate: #Predicate<Card> { $0.nextReviewDate <= now && !$0.isTrashed },
@@ -61,13 +92,15 @@ class StudyViewModel {
             allDue = allDue.filter { $0.graduated }
         }
 
-        cards = allDue
-        currentIndex = 0
-        isShowingAnswer = false
-        sessionComplete = false
-        correctCount = 0
-        incorrectCount = 0
-        failedCards = []
+        // Load batch size from settings
+        batchSize = UserDefaults.standard.integer(forKey: "cards_per_session")
+        // 0 means "all"
+
+        totalDueCount = allDue.count
+        allDueCards = allDue.shuffled()
+        batchNumber = 1
+
+        loadNextBatch()
 
         if cards.isEmpty {
             let futureDescriptor = FetchDescriptor<Card>(
@@ -85,6 +118,22 @@ class StudyViewModel {
             }
             _nextDueDate = futureCards.first?.nextReviewDate
         }
+    }
+
+    func loadNextBatch() {
+        let count = batchSize > 0 ? min(batchSize, allDueCards.count) : allDueCards.count
+        cards = Array(allDueCards.prefix(count))
+        allDueCards.removeFirst(min(count, allDueCards.count))
+        currentIndex = 0
+        isShowingAnswer = false
+        sessionComplete = false
+        failedCards = []
+    }
+
+    func continueWithNextBatch() {
+        batchNumber += 1
+        // Also pick up any newly due cards (from "again" in previous batch)
+        loadNextBatch()
     }
 
     func showAnswer() {
