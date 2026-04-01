@@ -1,6 +1,13 @@
 import SwiftUI
 import SwiftData
 
+struct SessionSummary {
+    let dueCount: Int
+    let masteredCount: Int
+    let totalCount: Int
+    let newCount: Int
+}
+
 struct StudySessionView: View {
     var lessonId: String? = nil
     var level: Level? = nil
@@ -12,10 +19,17 @@ struct StudySessionView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(\.appTheme) private var theme
+    @Environment(\.appLanguage) private var language
     @State private var viewModel = StudyViewModel()
     @State private var isFlipped = false
     @State private var savedToMyCards = false
     @State private var showingCheatSheet = false
+    @State private var showingExplanation = false
+    @State private var explanationText: String = ""
+    @State private var isLoadingExplanation = false
+    @State private var showingSummary = true
+    @State private var summaryStats: SessionSummary?
+    @State private var hasLoaded = false
 
     private var needsCloseButton: Bool {
         lessonId != nil || graduatedOnly || customOnly
@@ -23,31 +37,27 @@ struct StudySessionView: View {
 
     var body: some View {
         Group {
-            if viewModel.sessionComplete {
+            if showingSummary, let stats = summaryStats {
+                summaryView(stats: stats)
+            } else if viewModel.sessionComplete {
                 StudyCompleteView(
                     correctCount: viewModel.correctCount,
                     incorrectCount: viewModel.incorrectCount,
                     totalCards: viewModel.correctCount + viewModel.incorrectCount,
-                    hasMoreBatches: viewModel.hasMoreBatches,
-                    onStudyAgain: { loadCards() },
-                    onNextBatch: { viewModel.continueWithNextBatch() }
+                    onStudyAgain: {
+                        loadCards()
+                        buildSummary()
+                        showingSummary = true
+                    }
                 )
             } else if let card = viewModel.currentCard {
                 VStack(spacing: 24) {
                     VStack(spacing: 8) {
                         ProgressView(value: viewModel.progress)
                             .tint(theme.accentColor)
-                        HStack {
-                            Text("\(viewModel.currentIndex + 1) / \(viewModel.totalCards)")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            if !viewModel.sessionLabel.isEmpty {
-                                Spacer()
-                                Text(viewModel.sessionLabel)
-                                    .font(.caption)
-                                    .foregroundStyle(.tertiary)
-                            }
-                        }
+                        Text("\(viewModel.currentIndex + 1) / \(viewModel.totalCards)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
                     .padding(.horizontal)
 
@@ -61,24 +71,26 @@ struct StudySessionView: View {
                     )
                     .padding(.horizontal)
 
-                    // Save to My Cards (only for lesson cards)
-                    if card.lessonId != Card.customLessonId {
+                    // Save to My Cards (only for lesson cards, not drills)
+                    if !card.lessonId.hasPrefix("custom") && !card.lessonId.hasPrefix("drill_") {
+                        let alreadySaved = savedToMyCards || isAlreadyInMyCards(card)
                         Button {
                             saveToMyCards(card)
                         } label: {
                             Label(
-                                savedToMyCards ? "Сохранено" : "В мои карточки",
-                                systemImage: savedToMyCards ? "checkmark.circle.fill" : "square.and.arrow.down"
+                                alreadySaved ? "Уже в моих" : "В мои карточки",
+                                systemImage: alreadySaved ? "checkmark.circle.fill" : "square.and.arrow.down"
                             )
                             .font(.caption)
                         }
-                        .disabled(savedToMyCards)
-                        .foregroundStyle(savedToMyCards ? .green : .teal)
+                        .disabled(alreadySaved)
+                        .foregroundStyle(alreadySaved ? .green : .teal)
                     }
 
                     Spacer()
 
                     if viewModel.isShowingAnswer {
+                        explainButton(card: card)
                         gradeButtons
                             .padding(.horizontal)
                             .transition(.move(edge: .bottom).combined(with: .opacity))
@@ -149,18 +161,166 @@ struct StudySessionView: View {
                 }
             }
         }
+        .sheet(isPresented: $showingExplanation) {
+            NavigationStack {
+                ScrollView {
+                    if isLoadingExplanation {
+                        ProgressView("Анализирую...")
+                            .padding(.top, 40)
+                    } else {
+                        Text(explanationText)
+                            .font(.body)
+                            .lineSpacing(6)
+                            .padding()
+                    }
+                }
+                .navigationTitle(language == .english ? "Explain" : "Explicar")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Закрыть") { showingExplanation = false }
+                    }
+                }
+            }
+            .presentationDetents([.medium, .large])
+        }
         .onAppear {
+            guard !hasLoaded else { return }
+            hasLoaded = true
             loadCards()
-            StatsService.shared.startSession()
+            buildSummary()
         }
         .onDisappear {
             StatsService.shared.endSession(context: modelContext)
         }
     }
 
+    // MARK: - Summary
+
+    private func summaryView(stats: SessionSummary) -> some View {
+        VStack(spacing: 24) {
+            Spacer()
+
+            Image(systemName: "rectangle.stack.fill")
+                .font(.system(size: 48))
+                .foregroundStyle(theme.accentColor)
+
+            Text("Сессия")
+                .font(.title.bold())
+
+            VStack(spacing: 12) {
+                summaryRow(icon: "clock.badge.exclamationmark", label: "К повторению", value: "\(stats.dueCount)", color: .orange)
+                summaryRow(icon: "checkmark.circle", label: "Выучено (≥3 повтора)", value: "\(stats.masteredCount)", color: .green)
+                summaryRow(icon: "rectangle.stack", label: "Всего карточек", value: "\(stats.totalCount)", color: .primary)
+                if stats.newCount > 0 {
+                    summaryRow(icon: "sparkles", label: "Новые", value: "\(stats.newCount)", color: .blue)
+                }
+            }
+            .padding()
+            .background(.fill.opacity(0.5), in: RoundedRectangle(cornerRadius: 16))
+
+            if stats.dueCount == 0 {
+                Text("Нет карточек для повторения")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                if let next = viewModel.nextDueDate {
+                    Text("Следующая: \(next.formatted(date: .abbreviated, time: .shortened))")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
+            }
+
+            Spacer()
+
+            if stats.dueCount > 0 {
+                Button {
+                    showingSummary = false
+                    StatsService.shared.startSession()
+                } label: {
+                    Label("Начать (\(viewModel.totalCards))", systemImage: "play.fill")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(theme.accentColor)
+                        .foregroundStyle(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .padding(.horizontal)
+            }
+        }
+        .padding()
+    }
+
+    private func summaryRow(icon: String, label: String, value: String, color: Color) -> some View {
+        HStack {
+            Image(systemName: icon)
+                .foregroundStyle(color)
+                .frame(width: 24)
+            Text(label)
+                .foregroundStyle(.secondary)
+            Spacer()
+            Text(value)
+                .font(.headline)
+                .foregroundStyle(color)
+        }
+    }
+
+    private func buildSummary() {
+        let now = Date()
+
+        // Total cards in this scope
+        let allDescriptor = FetchDescriptor<Card>(
+            predicate: #Predicate<Card> { !$0.isTrashed }
+        )
+        var allCards = (try? modelContext.fetch(allDescriptor)) ?? []
+
+        // Filter by scope
+        if let lessonId {
+            allCards = allCards.filter { $0.lessonId == lessonId }
+        } else if let level {
+            let prefix = level.rawValue.lowercased() + "_"
+            if graduatedOnly {
+                allCards = allCards.filter { $0.lessonId.hasPrefix(prefix) && $0.graduated }
+            } else {
+                allCards = allCards.filter { $0.lessonId.hasPrefix(prefix) }
+            }
+        } else if customOnly {
+            allCards = allCards.filter { $0.lessonId == Card.customLessonId && $0.graduated && $0.folderId == folderId }
+        } else if graduatedOnly {
+            allCards = allCards.filter { $0.graduated }
+        }
+
+        let dueCount = allCards.filter { $0.nextReviewDate <= now }.count
+        let masteredCount = allCards.filter { $0.repetitions >= 3 }.count
+        let newCount = allCards.filter { $0.repetitions == 0 }.count
+
+        summaryStats = SessionSummary(
+            dueCount: dueCount,
+            masteredCount: masteredCount,
+            totalCount: allCards.count,
+            newCount: newCount
+        )
+    }
+
+    // MARK: - My Cards
+
+    private func isAlreadyInMyCards(_ card: Card) -> Bool {
+        let front = card.front
+        let customId = Card.customId(for: language)
+        let descriptor = FetchDescriptor<Card>(
+            predicate: #Predicate<Card> { !$0.isTrashed && $0.front == front }
+        )
+        let matches = (try? modelContext.fetch(descriptor)) ?? []
+        return matches.contains { $0.lessonId == customId || $0.lessonId == Card.customLessonId }
+    }
+
     private func saveToMyCards(_ card: Card) {
+        guard !isAlreadyInMyCards(card) else {
+            savedToMyCards = true
+            return
+        }
         let copy = Card(
-            lessonId: Card.customLessonId,
+            lessonId: Card.customId(for: language),
             front: card.front,
             back: card.back,
             contextSentence: card.contextSentence,
@@ -190,6 +350,34 @@ struct StudySessionView: View {
         return "Учить"
     }
 
+    // MARK: - Explain
+
+    private func explainButton(card: Card) -> some View {
+        Button {
+            let sentence = card.contextSentence.isEmpty ? card.front : card.contextSentence
+            explanationText = ""
+            isLoadingExplanation = true
+            showingExplanation = true
+            Task {
+                do {
+                    let lang = language == .english ? "english" : "spanish"
+                    let result = try await LLMService.shared.explainSentence(sentence, language: lang)
+                    explanationText = result
+                } catch {
+                    explanationText = "Ошибка: \(error.localizedDescription)"
+                }
+                isLoadingExplanation = false
+            }
+        } label: {
+            Label(
+                language == .english ? "Explain" : "Explicar",
+                systemImage: "sparkles"
+            )
+            .font(.caption)
+        }
+        .foregroundStyle(.purple)
+    }
+
     private var gradeButtons: some View {
         HStack(spacing: 8) {
             gradeButton(grade: 1, label: "Снова", color: .red, preview: viewModel.intervalPreview(for: 1))
@@ -204,6 +392,7 @@ struct StudySessionView: View {
             withAnimation {
                 isFlipped = false
                 savedToMyCards = false
+                explanationText = ""
                 viewModel.grade(grade, context: modelContext)
             }
         } label: {

@@ -1,16 +1,27 @@
 import Foundation
 
 final class LessonCatalog: Sendable {
-    static let shared = LessonCatalog()
+    static let spanish = LessonCatalog(language: .spanish)
+    static let english = LessonCatalog(language: .english)
 
+    static func catalog(for language: AppLanguage) -> LessonCatalog {
+        switch language {
+        case .spanish: spanish
+        case .english: english
+        }
+    }
+
+    let language: AppLanguage
     private let lessons: [Lesson]
     private let lessonsByLevel: [Level: [Lesson]]
     private let lessonById: [String: Lesson]
 
-    init() {
+    init(language: AppLanguage) {
+        self.language = language
         var all: [Lesson] = []
-        for level in Level.allCases {
-            guard let url = Bundle.main.url(forResource: level.lessonFileName, withExtension: "json"),
+        for level in language.levels {
+            let fileName = language.lessonFileName(for: level)
+            guard let url = Bundle.main.url(forResource: fileName, withExtension: "json"),
                   let data = try? Data(contentsOf: url),
                   let lessons = try? JSONDecoder().decode([Lesson].self, from: data) else {
                 continue

@@ -38,8 +38,16 @@ final class SpanishTTS: NSObject, AVSpeechSynthesizerDelegate, @unchecked Sendab
         synthesizer.isSpeaking
     }
 
+    private(set) var currentLanguage: String = "es"
+
     /// Re-scan voices (call after user downloads new voices)
     func refreshVoice() {
+        selectBestVoice()
+    }
+
+    /// Switch TTS language (es-ES or en-GB)
+    func switchLanguage(_ language: AppLanguage) {
+        currentLanguage = language == .english ? "en" : "es"
         selectBestVoice()
     }
 
@@ -49,10 +57,10 @@ final class SpanishTTS: NSObject, AVSpeechSynthesizerDelegate, @unchecked Sendab
         return v.quality == .premium || v.quality == .enhanced
     }
 
-    /// List all available Spanish voices for debugging/settings
-    static var availableSpanishVoices: [(name: String, quality: String, identifier: String)] {
+    /// List available voices for current language
+    var availableVoices: [(name: String, quality: String, identifier: String)] {
         AVSpeechSynthesisVoice.speechVoices()
-            .filter { $0.language.hasPrefix("es") }
+            .filter { $0.language.hasPrefix(currentLanguage) }
             .sorted { ($0.quality.rawValue, $0.name) > ($1.quality.rawValue, $1.name) }
             .map { voice in
                 let q: String
@@ -68,16 +76,19 @@ final class SpanishTTS: NSObject, AVSpeechSynthesizerDelegate, @unchecked Sendab
     // MARK: - Private
 
     private func selectBestVoice() {
-        let allSpanish = AVSpeechSynthesisVoice.speechVoices()
-            .filter { $0.language.hasPrefix("es") }
+        let langPrefix = currentLanguage
+        let preferredFull = langPrefix == "en" ? "en-GB" : "es-ES"
 
-        // Strictly prefer es-ES (Spain) voices first
-        let spainVoices = allSpanish.filter { $0.language == "es-ES" }
-        let otherVoices = allSpanish.filter { $0.language != "es-ES" }
+        let allVoices = AVSpeechSynthesisVoice.speechVoices()
+            .filter { $0.language.hasPrefix(langPrefix) }
+
+        // Strictly prefer preferred locale first
+        let preferred = allVoices.filter { $0.language == preferredFull }
+        let other = allVoices.filter { $0.language != preferredFull }
 
         // Within each group: premium > enhanced > default
-        let ranked = (spainVoices.sorted { $0.quality.rawValue > $1.quality.rawValue })
-            + (otherVoices.sorted { $0.quality.rawValue > $1.quality.rawValue })
+        let ranked = (preferred.sorted { $0.quality.rawValue > $1.quality.rawValue })
+            + (other.sorted { $0.quality.rawValue > $1.quality.rawValue })
 
         selectedVoice = ranked.first
 

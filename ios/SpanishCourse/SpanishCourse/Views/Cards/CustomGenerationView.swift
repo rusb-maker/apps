@@ -5,6 +5,7 @@ struct CustomGenerationView: View {
     var folderId: UUID?
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.appLanguage) private var language
     @AppStorage("max_cards_per_generation") private var maxCards = 10
 
     @State private var topic = ""
@@ -111,7 +112,7 @@ struct CustomGenerationView: View {
                 }
 
                 let card = Card(
-                    lessonId: Card.customLessonId,
+                    lessonId: Card.customId(for: language),
                     front: generated.front,
                     back: generated.back,
                     contextSentence: generated.context ?? "",

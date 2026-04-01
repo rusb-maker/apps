@@ -5,6 +5,7 @@ struct CustomCardView: View {
     var folderId: UUID? = nil
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.appLanguage) private var language
 
     @State private var front = ""
     @State private var back = ""
@@ -58,7 +59,7 @@ struct CustomCardView: View {
 
     private func saveCard() {
         let card = Card(
-            lessonId: Card.customLessonId,
+            lessonId: Card.customId(for: language),
             front: front.trimmingCharacters(in: .whitespacesAndNewlines),
             back: back.trimmingCharacters(in: .whitespacesAndNewlines),
             contextSentence: context.trimmingCharacters(in: .whitespacesAndNewlines),

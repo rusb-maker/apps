@@ -4,9 +4,14 @@ import SwiftData
 struct MainTabView: View {
     @Environment(\.modelContext) private var modelContext
     @AppStorage("app_theme") private var themeName: String = AppTheme.system.rawValue
+    @AppStorage("app_language") private var languageName: String = AppLanguage.spanish.rawValue
 
     private var theme: AppTheme {
         AppTheme(rawValue: themeName) ?? .system
+    }
+
+    private var language: AppLanguage {
+        AppLanguage(rawValue: languageName) ?? .spanish
     }
 
     var body: some View {
@@ -23,6 +28,12 @@ struct MainTabView: View {
                 }
             }
 
+            Tab("Тренажёры", systemImage: "dumbbell.fill") {
+                NavigationStack {
+                    DrillsListView()
+                }
+            }
+
             Tab("Настройки", systemImage: "gearshape") {
                 NavigationStack {
                     SettingsView()
@@ -32,9 +43,16 @@ struct MainTabView: View {
         .tint(theme.accentColor)
         .preferredColorScheme(theme.colorScheme)
         .environment(\.appTheme, theme)
+        .environment(\.appLanguage, language)
         .task {
             StatsService.shared.load(context: modelContext)
+            SpanishTTS.shared.switchLanguage(language)
             cleanupTrashedItems()
+        }
+        .onChange(of: languageName) { _, newValue in
+            if let lang = AppLanguage(rawValue: newValue) {
+                SpanishTTS.shared.switchLanguage(lang)
+            }
         }
     }
 

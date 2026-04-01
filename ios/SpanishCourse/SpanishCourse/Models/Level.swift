@@ -6,6 +6,7 @@ enum Level: String, CaseIterable, Identifiable, Codable {
     case a2 = "A2"
     case b1 = "B1"
     case b2 = "B2"
+    case c1 = "C1"
 
     var id: String { rawValue }
 
@@ -16,6 +17,7 @@ enum Level: String, CaseIterable, Identifiable, Codable {
         case .a2: "A2 — Элементарный"
         case .b1: "B1 — Средний"
         case .b2: "B2 — Выше среднего"
+        case .c1: "C1 — Продвинутый"
         }
     }
 
@@ -26,16 +28,7 @@ enum Level: String, CaseIterable, Identifiable, Codable {
         case .a2: "Элементарный"
         case .b1: "Средний"
         case .b2: "Выше среднего"
-        }
-    }
-
-    var lessonFileName: String {
-        switch self {
-        case .a0: "a0_lessons"
-        case .a1: "a1_lessons"
-        case .a2: "a2_lessons"
-        case .b1: "b1_lessons"
-        case .b2: "b2_lessons"
+        case .c1: "Продвинутый"
         }
     }
 
@@ -46,6 +39,7 @@ enum Level: String, CaseIterable, Identifiable, Codable {
         case .a2: .purple
         case .b1: .orange
         case .b2: .red
+        case .c1: .pink
         }
     }
 
@@ -56,6 +50,7 @@ enum Level: String, CaseIterable, Identifiable, Codable {
         case .a2: "graduationcap.fill"
         case .b1: "flame.fill"
         case .b2: "star.fill"
+        case .c1: "crown.fill"
         }
     }
 }

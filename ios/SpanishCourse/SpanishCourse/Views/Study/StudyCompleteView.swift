@@ -4,9 +4,7 @@ struct StudyCompleteView: View {
     let correctCount: Int
     let incorrectCount: Int
     let totalCards: Int
-    var hasMoreBatches: Bool = false
     var onStudyAgain: (() -> Void)?
-    var onNextBatch: (() -> Void)?
 
     private var accuracy: Double {
         guard totalCards > 0 else { return 0 }
@@ -35,33 +33,17 @@ struct StudyCompleteView: View {
 
             Spacer()
 
-            VStack(spacing: 12) {
-                if hasMoreBatches, let onNextBatch {
-                    Button {
-                        onNextBatch()
-                    } label: {
-                        Label("Следующая пачка", systemImage: "arrow.right.circle.fill")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(.blue)
-                            .foregroundStyle(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                    }
-                }
-
-                if let onStudyAgain {
-                    Button {
-                        onStudyAgain()
-                    } label: {
-                        Text("Начать заново")
-                            .font(.subheadline)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(.fill)
-                            .foregroundStyle(.primary)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                    }
+            if let onStudyAgain {
+                Button {
+                    onStudyAgain()
+                } label: {
+                    Text("Учить ещё")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(.blue)
+                        .foregroundStyle(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
             }
         }

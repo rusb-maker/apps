@@ -4,7 +4,7 @@ import SwiftData
 @Observable
 @MainActor
 class StudyViewModel {
-    var cards: [Card] = []
+    var queue: [Card] = []        // current study queue
     var currentIndex = 0
     var isShowingAnswer = false
     var sessionComplete = false
@@ -12,28 +12,14 @@ class StudyViewModel {
     var incorrectCount = 0
     var intervals: StudyIntervals = .fromUserDefaults()
 
-    // Batch mode
-    var batchSize: Int = 0 // 0 = all cards
-    var batchNumber = 1
-    var totalDueCount = 0
-    private var allDueCards: [Card] = []
-
-    private var failedCards: [Card] = []
     private var _nextDueDate: Date?
 
-    // Filters (saved for reload)
-    private var _lessonId: String?
-    private var _level: Level?
-    private var _graduatedOnly = false
-    private var _customOnly = false
-    private var _folderId: UUID?
-
     var currentCard: Card? {
-        guard currentIndex < cards.count else { return nil }
-        return cards[currentIndex]
+        guard currentIndex < queue.count else { return nil }
+        return queue[currentIndex]
     }
 
-    var totalCards: Int { cards.count }
+    var totalCards: Int { queue.count }
 
     var progress: Double {
         guard totalCards > 0 else { return 0 }
@@ -44,16 +30,7 @@ class StudyViewModel {
 
     var nextDueDate: Date? { _nextDueDate }
 
-    var hasMoreBatches: Bool {
-        batchSize > 0 && !allDueCards.isEmpty
-    }
-
-    var sessionLabel: String {
-        if batchSize > 0 && totalDueCount > 0 {
-            return "Пачка \(batchNumber) • \(totalCards) из \(totalDueCount)"
-        }
-        return ""
-    }
+    // MARK: - Load
 
     func loadDueCards(
         context: ModelContext,
@@ -63,22 +40,16 @@ class StudyViewModel {
         customOnly: Bool = false,
         folderId: UUID? = nil
     ) {
-        // Save filters
-        _lessonId = lessonId
-        _level = level
-        _graduatedOnly = graduatedOnly
-        _customOnly = customOnly
-        _folderId = folderId
-
         let now = Date()
         let descriptor = FetchDescriptor<Card>(
             predicate: #Predicate<Card> { $0.nextReviewDate <= now && !$0.isTrashed },
-            sortBy: [SortDescriptor(\.nextReviewDate)]
+            sortBy: [SortDescriptor(\.nextReviewDate)] // oldest due first (Anki-style)
         )
         var allDue = (try? context.fetch(descriptor)) ?? []
 
+        // Filter by scope
         if customOnly {
-            allDue = allDue.filter { $0.lessonId == Card.customLessonId && $0.graduated && $0.folderId == folderId }
+            allDue = allDue.filter { $0.lessonId.hasPrefix("custom") && $0.graduated && $0.folderId == folderId }
         } else if let lessonId {
             allDue = allDue.filter { $0.lessonId == lessonId }
         } else if let level {
@@ -92,24 +63,29 @@ class StudyViewModel {
             allDue = allDue.filter { $0.graduated }
         }
 
-        // Load batch size from settings
-        batchSize = UserDefaults.standard.integer(forKey: "cards_per_session")
-        // 0 means "all"
+        // Apply session limit from settings
+        let limit = UserDefaults.standard.integer(forKey: "cards_per_session")
+        if limit > 0 && allDue.count > limit {
+            queue = Array(allDue.prefix(limit))
+        } else {
+            queue = allDue
+        }
 
-        totalDueCount = allDue.count
-        allDueCards = allDue.shuffled()
-        batchNumber = 1
+        currentIndex = 0
+        isShowingAnswer = false
+        sessionComplete = false
+        correctCount = 0
+        incorrectCount = 0
 
-        loadNextBatch()
-
-        if cards.isEmpty {
+        // Find next due date for empty state
+        if queue.isEmpty {
             let futureDescriptor = FetchDescriptor<Card>(
                 predicate: #Predicate<Card> { !$0.isTrashed },
                 sortBy: [SortDescriptor(\.nextReviewDate)]
             )
             var futureCards = (try? context.fetch(futureDescriptor)) ?? []
             if customOnly {
-                futureCards = futureCards.filter { $0.lessonId == Card.customLessonId }
+                futureCards = futureCards.filter { $0.lessonId.hasPrefix("custom") }
             } else if let lessonId {
                 futureCards = futureCards.filter { $0.lessonId == lessonId }
             } else if let level {
@@ -120,21 +96,7 @@ class StudyViewModel {
         }
     }
 
-    func loadNextBatch() {
-        let count = batchSize > 0 ? min(batchSize, allDueCards.count) : allDueCards.count
-        cards = Array(allDueCards.prefix(count))
-        allDueCards.removeFirst(min(count, allDueCards.count))
-        currentIndex = 0
-        isShowingAnswer = false
-        sessionComplete = false
-        failedCards = []
-    }
-
-    func continueWithNextBatch() {
-        batchNumber += 1
-        // Also pick up any newly due cards (from "again" in previous batch)
-        loadNextBatch()
-    }
+    // MARK: - Actions
 
     func showAnswer() {
         isShowingAnswer = true
@@ -160,7 +122,8 @@ class StudyViewModel {
             correctCount += 1
         } else {
             incorrectCount += 1
-            failedCards.append(card)
+            // "Again" → card goes to end of queue (Anki-style)
+            queue.append(card)
         }
 
         StatsService.shared.recordCardStudied(correct: grade >= 3, context: context)
@@ -179,18 +142,14 @@ class StudyViewModel {
         )
     }
 
+    // MARK: - Private
+
     private func advance() {
         isShowingAnswer = false
         currentIndex += 1
 
-        if currentIndex >= cards.count {
-            if !failedCards.isEmpty {
-                cards = failedCards
-                failedCards = []
-                currentIndex = 0
-            } else {
-                sessionComplete = true
-            }
+        if currentIndex >= queue.count {
+            sessionComplete = true
         }
     }
 }

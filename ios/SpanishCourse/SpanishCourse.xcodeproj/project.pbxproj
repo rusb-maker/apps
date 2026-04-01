@@ -50,6 +50,16 @@
 		SC000061000000000000001B /* UsefulInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsefulInfoView.swift; sourceTree = "<group>"; };
 		SC000062000000000000001A /* DrillPackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SC000062000000000000001B /* DrillPackView.swift */; };
 		SC000062000000000000001B /* DrillPackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrillPackView.swift; sourceTree = "<group>"; };
+		SC000070000000000000001A /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = SC000070000000000000001B /* AppLanguage.swift */; };
+		SC000080000000000000001A /* DrillsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SC000080000000000000001B /* DrillsListView.swift */; };
+		SC000080000000000000001B /* DrillsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrillsListView.swift; sourceTree = "<group>"; };
+		SC000070000000000000001B /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLanguage.swift; sourceTree = "<group>"; };
+		SC000071000000000000001A /* en_b2_lessons.json in Resources */ = {isa = PBXBuildFile; fileRef = SC000071000000000000001B /* en_b2_lessons.json */; };
+		SC000071000000000000001B /* en_b2_lessons.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = en_b2_lessons.json; sourceTree = "<group>"; };
+		SC000072000000000000001A /* en_c1_lessons.json in Resources */ = {isa = PBXBuildFile; fileRef = SC000072000000000000001B /* en_c1_lessons.json */; };
+		SC000072000000000000001B /* en_c1_lessons.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = en_c1_lessons.json; sourceTree = "<group>"; };
+		SC000073000000000000001A /* c1_lessons.json in Resources */ = {isa = PBXBuildFile; fileRef = SC000073000000000000001B /* c1_lessons.json */; };
+		SC000073000000000000001B /* c1_lessons.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = c1_lessons.json; sourceTree = "<group>"; };
 		SC000020000000000000001A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = SC000020000000000000001B /* Assets.xcassets */; };
 		SC000021000000000000001A /* a0_lessons.json in Resources */ = {isa = PBXBuildFile; fileRef = SC000021000000000000001B /* a0_lessons.json */; };
 		SC000022000000000000001A /* a1_lessons.json in Resources */ = {isa = PBXBuildFile; fileRef = SC000022000000000000001B /* a1_lessons.json */; };
@@ -156,6 +166,7 @@
 				SC000033000000000000001B /* CardFolder.swift */,
 				SC000037000000000000001B /* AppTheme.swift */,
 				SC000050000000000000001B /* UserStats.swift */,
+				SC000070000000000000001B /* AppLanguage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -227,6 +238,7 @@
 				SC000035000000000000001B /* CustomGenerationView.swift */,
 				SC000060000000000000001B /* EditCardView.swift */,
 				SC000062000000000000001B /* DrillPackView.swift */,
+				SC000080000000000000001B /* DrillsListView.swift */,
 			);
 			path = Cards;
 			sourceTree = "<group>";
@@ -277,6 +289,9 @@
 				SC000023000000000000001B /* a2_lessons.json */,
 				SC000040000000000000001B /* b1_lessons.json */,
 				SC000041000000000000001B /* b2_lessons.json */,
+				SC000073000000000000001B /* c1_lessons.json */,
+				SC000071000000000000001B /* en_b2_lessons.json */,
+				SC000072000000000000001B /* en_c1_lessons.json */,
 			);
 			path = Lessons;
 			sourceTree = "<group>";
@@ -353,6 +368,9 @@
 				SC000023000000000000001A /* a2_lessons.json in Resources */,
 				SC000040000000000000001A /* b1_lessons.json in Resources */,
 				SC000041000000000000001A /* b2_lessons.json in Resources */,
+				SC000073000000000000001A /* c1_lessons.json in Resources */,
+				SC000071000000000000001A /* en_b2_lessons.json in Resources */,
+				SC000072000000000000001A /* en_c1_lessons.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -403,6 +421,8 @@
 				SC000060000000000000001A /* EditCardView.swift in Sources */,
 				SC000061000000000000001A /* UsefulInfoView.swift in Sources */,
 				SC000062000000000000001A /* DrillPackView.swift in Sources */,
+				SC000070000000000000001A /* AppLanguage.swift in Sources */,
+				SC000080000000000000001A /* DrillsListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

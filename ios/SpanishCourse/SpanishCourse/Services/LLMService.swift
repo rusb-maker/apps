@@ -132,7 +132,73 @@ final class LLMService: Sendable {
         return try await callLLM(systemPrompt: systemPrompt, userMessage: userMessage)
     }
 
-    // MARK: - LLM Router
+    func explainSentence(_ sentence: String, language: String = "spanish") async throws -> String {
+        let targetLang = language == "english" ? "английского" : "испанского"
+        let systemPrompt = """
+        Ты — преподаватель \(targetLang) языка для русскоязычного ученика.
+        Дай ОЧЕНЬ короткий разбор предложения — максимум 6-8 строк.
+
+        Формат:
+        <предложение>
+        • слово1 — часть речи (перевод)
+        • слово2 — часть речи (перевод)
+        ...
+
+        👉 Вместе: «перевод на русский»
+
+        📌 Структура (если есть грамматический паттерн):
+        [паттерн]
+
+        Примеры (1-2 аналогичных предложения с переводом)
+
+        НЕ добавляй лишних объяснений. Только разбор. Без markdown-форматирования, без code fences.
+        """
+        let userMessage = "Разбери предложение: \(sentence)"
+        return try await callLLMText(systemPrompt: systemPrompt, userMessage: userMessage)
+    }
+
+    // MARK: - LLM Router (Text)
+
+    private func callLLMText(systemPrompt: String, userMessage: String) async throws -> String {
+        let currentProvider = await provider
+        let key = await apiKey(for: currentProvider)
+        guard !key.isEmpty else {
+            throw LLMError.missingAPIKey(provider: currentProvider)
+        }
+
+        switch currentProvider {
+        case .claude:
+            return try await callClaudeText(userMessage: userMessage, systemPrompt: systemPrompt, apiKey: key)
+        case .gemini:
+            return try await callGeminiText(userMessage: userMessage, systemPrompt: systemPrompt, apiKey: key)
+        case .groq:
+            return try await callOpenAICompatibleText(
+                endpoint: "https://api.groq.com/openai/v1/chat/completions",
+                model: "llama-3.3-70b-versatile",
+                userMessage: userMessage, systemPrompt: systemPrompt, apiKey: key
+            )
+        case .mistral:
+            return try await callOpenAICompatibleText(
+                endpoint: "https://api.mistral.ai/v1/chat/completions",
+                model: "mistral-small-latest",
+                userMessage: userMessage, systemPrompt: systemPrompt, apiKey: key
+            )
+        case .openRouter:
+            return try await callOpenAICompatibleText(
+                endpoint: "https://openrouter.ai/api/v1/chat/completions",
+                model: "mistralai/mistral-small-3.1-24b-instruct:free",
+                userMessage: userMessage, systemPrompt: systemPrompt, apiKey: key
+            )
+        case .deepSeek:
+            return try await callOpenAICompatibleText(
+                endpoint: "https://api.deepseek.com/chat/completions",
+                model: "deepseek-chat",
+                userMessage: userMessage, systemPrompt: systemPrompt, apiKey: key
+            )
+        }
+    }
+
+    // MARK: - LLM Router (Cards)
 
     private func callLLM(systemPrompt: String, userMessage: String) async throws -> [GeneratedCard] {
         let currentProvider = await provider
@@ -326,6 +392,76 @@ final class LLMService: Sendable {
         }
 
         return try decodeCards(from: jsonData)
+    }
+
+    // MARK: - Text Response Variants
+
+    private func callClaudeText(userMessage: String, systemPrompt: String, apiKey: String) async throws -> String {
+        let endpoint = URL(string: "https://api.anthropic.com/v1/messages")!
+        let body: [String: Any] = [
+            "model": "claude-sonnet-4-20250514",
+            "max_tokens": 1024,
+            "system": systemPrompt,
+            "messages": [["role": "user", "content": userMessage]]
+        ]
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
+        request.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
+        request.setValue("application/json", forHTTPHeaderField: "content-type")
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        try validateHTTPResponse(response, data: data)
+        let apiResponse = try JSONDecoder().decode(ClaudeResponse.self, from: data)
+        guard let textBlock = apiResponse.content.first(where: { $0.type == "text" }) else {
+            throw LLMError.emptyResponse
+        }
+        return textBlock.text
+    }
+
+    private func callGeminiText(userMessage: String, systemPrompt: String, apiKey: String) async throws -> String {
+        let endpoint = URL(string: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=\(apiKey)")!
+        let body: [String: Any] = [
+            "system_instruction": ["parts": [["text": systemPrompt]]],
+            "contents": [["parts": [["text": userMessage]]]],
+            "generationConfig": ["temperature": 0.3, "maxOutputTokens": 1024]
+        ]
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "content-type")
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        try validateHTTPResponse(response, data: data)
+        let geminiResponse = try JSONDecoder().decode(GeminiResponse.self, from: data)
+        guard let text = geminiResponse.candidates?.first?.content?.parts?.first?.text else {
+            throw LLMError.emptyResponse
+        }
+        return text
+    }
+
+    private func callOpenAICompatibleText(endpoint: String, model: String, userMessage: String, systemPrompt: String, apiKey: String) async throws -> String {
+        let url = URL(string: endpoint)!
+        let body: [String: Any] = [
+            "model": model,
+            "temperature": 0.3,
+            "max_tokens": 1024,
+            "messages": [
+                ["role": "system", "content": systemPrompt],
+                ["role": "user", "content": userMessage]
+            ]
+        ]
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "content-type")
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        try validateHTTPResponse(response, data: data)
+        let openAIResponse = try JSONDecoder().decode(OpenAIResponse.self, from: data)
+        guard let content = openAIResponse.choices?.first?.message?.content else {
+            throw LLMError.emptyResponse
+        }
+        return content
     }
 
     // MARK: - Shared Helpers

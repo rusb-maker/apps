@@ -1,0 +1,5052 @@
+[
+  {
+    "id": "en_c1_01",
+    "level": "C1",
+    "order": 1,
+    "title": "Executive communication",
+    "subtitle": "Коммуникация с руководством: board, C-level emails",
+    "content": "Общение на уровне руководства требует точного и лаконичного языка.\n\nKey phrases:\n- I'd like to bring to your attention... — Хочу обратить ваше внимание...\n- The bottom line is... — Суть в том, что...\n- Going forward, we plan to... — В дальнейшем мы планируем...\n- I'd recommend we prioritize... — Рекомендую приоритизировать...\n- To summarize the key takeaways... — Подводя итоги ключевых выводов...\n\nBoard presentation: executive summary, action items, key metrics, risk assessment.",
+    "keyVocabulary": [
+      {
+        "spanish": "executive summary",
+        "russian": "краткое резюме для руководства",
+        "example": "Please review the executive summary."
+      },
+      {
+        "spanish": "action items",
+        "russian": "пункты для выполнения",
+        "example": "Let's define the action items."
+      },
+      {
+        "spanish": "key takeaway",
+        "russian": "ключевой вывод",
+        "example": "The key takeaway from this meeting is..."
+      },
+      {
+        "spanish": "stakeholder",
+        "russian": "заинтересованная сторона",
+        "example": "All stakeholders must be informed."
+      },
+      {
+        "spanish": "bottom line",
+        "russian": "суть, итог",
+        "example": "The bottom line is we need more resources."
+      },
+      {
+        "spanish": "going forward",
+        "russian": "в дальнейшем",
+        "example": "Going forward, we'll use Slack."
+      },
+      {
+        "spanish": "escalate",
+        "russian": "эскалировать",
+        "example": "I need to escalate this issue."
+      },
+      {
+        "spanish": "align on",
+        "russian": "согласовать",
+        "example": "Let's align on priorities."
+      },
+      {
+        "spanish": "bandwidth",
+        "russian": "ресурс/время",
+        "example": "I don't have bandwidth for this."
+      },
+      {
+        "spanish": "deliverable",
+        "russian": "результат работы",
+        "example": "The deliverables are due Friday."
+      }
+    ],
+    "grammarPoints": [
+      "Formal vs informal business English",
+      "Structuring executive emails",
+      "Presenting to the board"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Executive communication"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Executive communication"
+    },
+    "defaultCards": [
+      {
+        "front": "executive summary",
+        "back": "краткое резюме",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "action items",
+        "back": "пункты для выполнения",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "key takeaway",
+        "back": "ключевой вывод",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "stakeholder",
+        "back": "заинтересованная сторона",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "bottom line",
+        "back": "суть, итог",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "going forward",
+        "back": "в дальнейшем",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "escalate",
+        "back": "эскалировать",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "align on",
+        "back": "согласовать",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "bandwidth",
+        "back": "ресурс/время (неформ.)",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "deliverable",
+        "back": "результат работы",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "I'd like to bring to your attention...",
+        "back": "Хочу обратить ваше внимание...",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "The bottom line is we need more budget.",
+        "back": "Суть в том, что нам нужно больше бюджета.",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "Let's ___ on priorities. (agree)",
+        "back": "align",
+        "context": "Let's align on priorities.",
+        "type": "fillBlank"
+      },
+      {
+        "front": "I don't have ___ for this task.",
+        "back": "bandwidth",
+        "context": "I don't have bandwidth.",
+        "type": "fillBlank"
+      },
+      {
+        "front": "The ___ are due by Friday.",
+        "back": "deliverables",
+        "context": null,
+        "type": "fillBlank"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_02",
+    "level": "C1",
+    "order": 2,
+    "title": "Technical architecture",
+    "subtitle": "Microservices, monolith, event-driven architecture",
+    "content": "Урок C1: Technical architecture. Microservices, monolith, event-driven architecture.\n\n• microservices — микросервисы\n• monolith — монолит\n• event-driven — событийно-ориентированный\n• scalability — масштабируемость\n• load balancer — балансировщик нагрузки\n• fault tolerance — отказоустойчивость\n• distributed system — распределённая система\n• decoupling — разделение зависимостей\n• API gateway — API шлюз\n• service mesh — сервисная сетка",
+    "keyVocabulary": [
+      {
+        "spanish": "microservices",
+        "russian": "микросервисы",
+        "example": "We're migrating to microservices."
+      },
+      {
+        "spanish": "monolith",
+        "russian": "монолит",
+        "example": "The legacy system is a monolith."
+      },
+      {
+        "spanish": "event-driven",
+        "russian": "событийно-ориентированный",
+        "example": "We use event-driven architecture."
+      },
+      {
+        "spanish": "scalability",
+        "russian": "масштабируемость",
+        "example": "Scalability is our top priority."
+      },
+      {
+        "spanish": "load balancer",
+        "russian": "балансировщик нагрузки",
+        "example": "The load balancer distributes traffic."
+      },
+      {
+        "spanish": "fault tolerance",
+        "russian": "отказоустойчивость",
+        "example": "The system has built-in fault tolerance."
+      },
+      {
+        "spanish": "distributed system",
+        "russian": "распределённая система",
+        "example": "Managing distributed systems is complex."
+      },
+      {
+        "spanish": "decoupling",
+        "russian": "разделение зависимостей",
+        "example": "Decoupling services improves maintainability."
+      },
+      {
+        "spanish": "API gateway",
+        "russian": "API шлюз",
+        "example": "All requests go through the API gateway."
+      },
+      {
+        "spanish": "service mesh",
+        "russian": "сервисная сетка",
+        "example": "We implemented a service mesh."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: Technical architecture",
+      "Контекст: Microservices, monolith, event-driven architecture",
+      "Практика в реальных ситуациях"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Technical architecture"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Technical architecture"
+    },
+    "defaultCards": [
+      {
+        "front": "microservices",
+        "back": "микросервисы",
+        "context": "We're migrating to microservices.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "monolith",
+        "back": "монолит",
+        "context": "The legacy system is a monolith.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "event-driven",
+        "back": "событийно-ориентированный",
+        "context": "We use event-driven architecture.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "scalability",
+        "back": "масштабируемость",
+        "context": "Scalability is our top priority.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "load balancer",
+        "back": "балансировщик нагрузки",
+        "context": "The load balancer distributes traffic.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "fault tolerance",
+        "back": "отказоустойчивость",
+        "context": "The system has built-in fault tolerance.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "distributed system",
+        "back": "распределённая система",
+        "context": "Managing distributed systems is complex.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "decoupling",
+        "back": "разделение зависимостей",
+        "context": "Decoupling services improves maintainability.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "API gateway",
+        "back": "API шлюз",
+        "context": "All requests go through the API gateway.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "service mesh",
+        "back": "сервисная сетка",
+        "context": "We implemented a service mesh.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "Тема: Technical architecture",
+        "back": "Microservices, monolith, event-driven architecture",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "microservices",
+        "back": "микросервисы",
+        "context": "We're migrating to microservices.",
+        "type": "phrase"
+      },
+      {
+        "front": "monolith",
+        "back": "монолит",
+        "context": "The legacy system is a monolith.",
+        "type": "phrase"
+      },
+      {
+        "front": "event-driven",
+        "back": "событийно-ориентированный",
+        "context": "We use event-driven architecture.",
+        "type": "phrase"
+      },
+      {
+        "front": "scalability",
+        "back": "масштабируемость",
+        "context": "Scalability is our top priority.",
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_03",
+    "level": "C1",
+    "order": 3,
+    "title": "System design interviews",
+    "subtitle": "Scalability, load balancing, caching strategies",
+    "content": "Урок C1: System design interviews. Scalability, load balancing, caching strategies.\n\n• throughput — пропускная способность\n• latency — задержка\n• caching — кэширование\n• sharding — шардирование\n• replication — репликация\n• rate limiting — ограничение частоты запросов\n• horizontal scaling — горизонтальное масштабирование\n• CAP theorem — теорема CAP\n• eventual consistency — согласованность в конечном счёте\n• bottleneck — узкое место",
+    "keyVocabulary": [
+      {
+        "spanish": "throughput",
+        "russian": "пропускная способность",
+        "example": "The system handles 10K requests/sec throughput."
+      },
+      {
+        "spanish": "latency",
+        "russian": "задержка",
+        "example": "We need to reduce latency to under 100ms."
+      },
+      {
+        "spanish": "caching",
+        "russian": "кэширование",
+        "example": "Caching reduces database load significantly."
+      },
+      {
+        "spanish": "sharding",
+        "russian": "шардирование",
+        "example": "We shard the database by user ID."
+      },
+      {
+        "spanish": "replication",
+        "russian": "репликация",
+        "example": "Database replication ensures high availability."
+      },
+      {
+        "spanish": "rate limiting",
+        "russian": "ограничение частоты запросов",
+        "example": "Rate limiting prevents API abuse."
+      },
+      {
+        "spanish": "horizontal scaling",
+        "russian": "горизонтальное масштабирование",
+        "example": "We scale horizontally by adding more nodes."
+      },
+      {
+        "spanish": "CAP theorem",
+        "russian": "теорема CAP",
+        "example": "The CAP theorem defines distributed trade-offs."
+      },
+      {
+        "spanish": "eventual consistency",
+        "russian": "согласованность в конечном счёте",
+        "example": "We use eventual consistency for this service."
+      },
+      {
+        "spanish": "bottleneck",
+        "russian": "узкое место",
+        "example": "The database is the main bottleneck."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: System design interviews",
+      "Контекст: Scalability, load balancing, caching strategies",
+      "Практика в реальных ситуациях"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "System design interviews"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about System design interviews"
+    },
+    "defaultCards": [
+      {
+        "front": "throughput",
+        "back": "пропускная способность",
+        "context": "The system handles 10K requests/sec throughput.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "latency",
+        "back": "задержка",
+        "context": "We need to reduce latency to under 100ms.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "caching",
+        "back": "кэширование",
+        "context": "Caching reduces database load significantly.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "sharding",
+        "back": "шардирование",
+        "context": "We shard the database by user ID.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "replication",
+        "back": "репликация",
+        "context": "Database replication ensures high availability.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "rate limiting",
+        "back": "ограничение частоты запросов",
+        "context": "Rate limiting prevents API abuse.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "horizontal scaling",
+        "back": "горизонтальное масштабирование",
+        "context": "We scale horizontally by adding more nodes.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "CAP theorem",
+        "back": "теорема CAP",
+        "context": "The CAP theorem defines distributed trade-offs.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "eventual consistency",
+        "back": "согласованность в конечном счёте",
+        "context": "We use eventual consistency for this service.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "bottleneck",
+        "back": "узкое место",
+        "context": "The database is the main bottleneck.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "Тема: System design interviews",
+        "back": "Scalability, load balancing, caching strategies",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "throughput",
+        "back": "пропускная способность",
+        "context": "The system handles 10K requests/sec throughput.",
+        "type": "phrase"
+      },
+      {
+        "front": "latency",
+        "back": "задержка",
+        "context": "We need to reduce latency to under 100ms.",
+        "type": "phrase"
+      },
+      {
+        "front": "caching",
+        "back": "кэширование",
+        "context": "Caching reduces database load significantly.",
+        "type": "phrase"
+      },
+      {
+        "front": "sharding",
+        "back": "шардирование",
+        "context": "We shard the database by user ID.",
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_04",
+    "level": "C1",
+    "order": 4,
+    "title": "Code review best practices",
+    "subtitle": "Constructive feedback, PR comments",
+    "content": "Урок C1: Code review best practices. Constructive feedback, PR comments.\n\n• pull request — запрос на слияние\n• code review — ревью кода\n• nit — мелкое замечание\n• LGTM — выглядит хорошо (одобряю)\n• refactor — рефакторинг\n• technical debt — технический долг\n• edge case — граничный случай\n• regression — регрессия\n• merge conflict — конфликт слияния\n• CI pipeline — конвейер CI",
+    "keyVocabulary": [
+      {
+        "spanish": "pull request",
+        "russian": "запрос на слияние",
+        "example": "Please review my pull request."
+      },
+      {
+        "spanish": "code review",
+        "russian": "ревью кода",
+        "example": "Code review is mandatory before merging."
+      },
+      {
+        "spanish": "nit",
+        "russian": "мелкое замечание",
+        "example": "Nit: consider renaming this variable."
+      },
+      {
+        "spanish": "LGTM",
+        "russian": "выглядит хорошо (одобряю)",
+        "example": "LGTM, approved!"
+      },
+      {
+        "spanish": "refactor",
+        "russian": "рефакторинг",
+        "example": "Let's refactor this before shipping."
+      },
+      {
+        "spanish": "technical debt",
+        "russian": "технический долг",
+        "example": "We need to address technical debt."
+      },
+      {
+        "spanish": "edge case",
+        "russian": "граничный случай",
+        "example": "Did you handle this edge case?"
+      },
+      {
+        "spanish": "regression",
+        "russian": "регрессия",
+        "example": "This change might cause a regression."
+      },
+      {
+        "spanish": "merge conflict",
+        "russian": "конфликт слияния",
+        "example": "I need to resolve a merge conflict."
+      },
+      {
+        "spanish": "CI pipeline",
+        "russian": "конвейер CI",
+        "example": "The CI pipeline failed on this PR."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: Code review best practices",
+      "Контекст: Constructive feedback, PR comments",
+      "Практика в реальных ситуациях"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Code review best practices"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Code review best practices"
+    },
+    "defaultCards": [
+      {
+        "front": "pull request",
+        "back": "запрос на слияние",
+        "context": "Please review my pull request.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "code review",
+        "back": "ревью кода",
+        "context": "Code review is mandatory before merging.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "nit",
+        "back": "мелкое замечание",
+        "context": "Nit: consider renaming this variable.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "LGTM",
+        "back": "выглядит хорошо (одобряю)",
+        "context": "LGTM, approved!",
+        "type": "vocabulary"
+      },
+      {
+        "front": "refactor",
+        "back": "рефакторинг",
+        "context": "Let's refactor this before shipping.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "technical debt",
+        "back": "технический долг",
+        "context": "We need to address technical debt.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "edge case",
+        "back": "граничный случай",
+        "context": "Did you handle this edge case?",
+        "type": "vocabulary"
+      },
+      {
+        "front": "regression",
+        "back": "регрессия",
+        "context": "This change might cause a regression.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "merge conflict",
+        "back": "конфликт слияния",
+        "context": "I need to resolve a merge conflict.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "CI pipeline",
+        "back": "конвейер CI",
+        "context": "The CI pipeline failed on this PR.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "Тема: Code review best practices",
+        "back": "Constructive feedback, PR comments",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "pull request",
+        "back": "запрос на слияние",
+        "context": "Please review my pull request.",
+        "type": "phrase"
+      },
+      {
+        "front": "code review",
+        "back": "ревью кода",
+        "context": "Code review is mandatory before merging.",
+        "type": "phrase"
+      },
+      {
+        "front": "nit",
+        "back": "мелкое замечание",
+        "context": "Nit: consider renaming this variable.",
+        "type": "phrase"
+      },
+      {
+        "front": "LGTM",
+        "back": "выглядит хорошо (одобряю)",
+        "context": "LGTM, approved!",
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_05",
+    "level": "C1",
+    "order": 5,
+    "title": "Incident management",
+    "subtitle": "Postmortem, root cause analysis, SLA breach",
+    "content": "Урок C1: Incident management. Postmortem, root cause analysis, SLA breach.\n\n• incident — инцидент\n• postmortem — разбор инцидента\n• root cause — первопричина\n• SLA breach — нарушение SLA\n• on-call — дежурство\n• pager — оповещение\n• rollback — откат\n• hotfix — горячее исправление\n• mean time to recovery — среднее время восстановления\n• blameless — без обвинений",
+    "keyVocabulary": [
+      {
+        "spanish": "incident",
+        "russian": "инцидент",
+        "example": "We had a P1 incident last night."
+      },
+      {
+        "spanish": "postmortem",
+        "russian": "разбор инцидента",
+        "example": "Let's schedule a blameless postmortem."
+      },
+      {
+        "spanish": "root cause",
+        "russian": "первопричина",
+        "example": "The root cause was a misconfigured DNS."
+      },
+      {
+        "spanish": "SLA breach",
+        "russian": "нарушение SLA",
+        "example": "This caused an SLA breach."
+      },
+      {
+        "spanish": "on-call",
+        "russian": "дежурство",
+        "example": "I'm on-call this week."
+      },
+      {
+        "spanish": "pager",
+        "russian": "оповещение",
+        "example": "I got paged at 3 AM."
+      },
+      {
+        "spanish": "rollback",
+        "russian": "откат",
+        "example": "We had to rollback the deployment."
+      },
+      {
+        "spanish": "hotfix",
+        "russian": "горячее исправление",
+        "example": "Deploy a hotfix immediately."
+      },
+      {
+        "spanish": "mean time to recovery",
+        "russian": "среднее время восстановления",
+        "example": "Our MTTR is under 30 minutes."
+      },
+      {
+        "spanish": "blameless",
+        "russian": "без обвинений",
+        "example": "We practice blameless postmortems."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: Incident management",
+      "Контекст: Postmortem, root cause analysis, SLA breach",
+      "Практика в реальных ситуациях"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Incident management"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Incident management"
+    },
+    "defaultCards": [
+      {
+        "front": "incident",
+        "back": "инцидент",
+        "context": "We had a P1 incident last night.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "postmortem",
+        "back": "разбор инцидента",
+        "context": "Let's schedule a blameless postmortem.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "root cause",
+        "back": "первопричина",
+        "context": "The root cause was a misconfigured DNS.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "SLA breach",
+        "back": "нарушение SLA",
+        "context": "This caused an SLA breach.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "on-call",
+        "back": "дежурство",
+        "context": "I'm on-call this week.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "pager",
+        "back": "оповещение",
+        "context": "I got paged at 3 AM.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "rollback",
+        "back": "откат",
+        "context": "We had to rollback the deployment.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "hotfix",
+        "back": "горячее исправление",
+        "context": "Deploy a hotfix immediately.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "mean time to recovery",
+        "back": "среднее время восстановления",
+        "context": "Our MTTR is under 30 minutes.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "blameless",
+        "back": "без обвинений",
+        "context": "We practice blameless postmortems.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "Тема: Incident management",
+        "back": "Postmortem, root cause analysis, SLA breach",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "incident",
+        "back": "инцидент",
+        "context": "We had a P1 incident last night.",
+        "type": "phrase"
+      },
+      {
+        "front": "postmortem",
+        "back": "разбор инцидента",
+        "context": "Let's schedule a blameless postmortem.",
+        "type": "phrase"
+      },
+      {
+        "front": "root cause",
+        "back": "первопричина",
+        "context": "The root cause was a misconfigured DNS.",
+        "type": "phrase"
+      },
+      {
+        "front": "SLA breach",
+        "back": "нарушение SLA",
+        "context": "This caused an SLA breach.",
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_06",
+    "level": "C1",
+    "order": 6,
+    "title": "Technical writing",
+    "subtitle": "RFC, ADR, design documents",
+    "content": "Урок C1: Technical writing. RFC, ADR, design documents.\n\n• RFC — запрос на комментарии\n• ADR — запись архитектурного решения\n• design doc — проектный документ\n• trade-off — компромисс\n• scope — объём, масштаб\n• out of scope — за рамками\n• acceptance criteria — критерии приёмки\n• proof of concept — прототип, PoC\n• technical specification — техническое задание\n• requirements gathering — сбор требований",
+    "keyVocabulary": [
+      {
+        "spanish": "RFC",
+        "russian": "запрос на комментарии",
+        "example": "I wrote an RFC for the new auth system."
+      },
+      {
+        "spanish": "ADR",
+        "russian": "запись архитектурного решения",
+        "example": "Document this decision as an ADR."
+      },
+      {
+        "spanish": "design doc",
+        "russian": "проектный документ",
+        "example": "The design doc needs stakeholder review."
+      },
+      {
+        "spanish": "trade-off",
+        "russian": "компромисс",
+        "example": "Every architecture has trade-offs."
+      },
+      {
+        "spanish": "scope",
+        "russian": "объём, масштаб",
+        "example": "Let's define the scope first."
+      },
+      {
+        "spanish": "out of scope",
+        "russian": "за рамками",
+        "example": "That feature is out of scope."
+      },
+      {
+        "spanish": "acceptance criteria",
+        "russian": "критерии приёмки",
+        "example": "Define clear acceptance criteria."
+      },
+      {
+        "spanish": "proof of concept",
+        "russian": "прототип, PoC",
+        "example": "Let's build a proof of concept first."
+      },
+      {
+        "spanish": "technical specification",
+        "russian": "техническое задание",
+        "example": "The tech spec is ready for review."
+      },
+      {
+        "spanish": "requirements gathering",
+        "russian": "сбор требований",
+        "example": "Requirements gathering takes time."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: Technical writing",
+      "Контекст: RFC, ADR, design documents",
+      "Практика в реальных ситуациях"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Technical writing"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Technical writing"
+    },
+    "defaultCards": [
+      {
+        "front": "RFC",
+        "back": "запрос на комментарии",
+        "context": "I wrote an RFC for the new auth system.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "ADR",
+        "back": "запись архитектурного решения",
+        "context": "Document this decision as an ADR.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "design doc",
+        "back": "проектный документ",
+        "context": "The design doc needs stakeholder review.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "trade-off",
+        "back": "компромисс",
+        "context": "Every architecture has trade-offs.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "scope",
+        "back": "объём, масштаб",
+        "context": "Let's define the scope first.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "out of scope",
+        "back": "за рамками",
+        "context": "That feature is out of scope.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "acceptance criteria",
+        "back": "критерии приёмки",
+        "context": "Define clear acceptance criteria.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "proof of concept",
+        "back": "прототип, PoC",
+        "context": "Let's build a proof of concept first.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "technical specification",
+        "back": "техническое задание",
+        "context": "The tech spec is ready for review.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "requirements gathering",
+        "back": "сбор требований",
+        "context": "Requirements gathering takes time.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "Тема: Technical writing",
+        "back": "RFC, ADR, design documents",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "RFC",
+        "back": "запрос на комментарии",
+        "context": "I wrote an RFC for the new auth system.",
+        "type": "phrase"
+      },
+      {
+        "front": "ADR",
+        "back": "запись архитектурного решения",
+        "context": "Document this decision as an ADR.",
+        "type": "phrase"
+      },
+      {
+        "front": "design doc",
+        "back": "проектный документ",
+        "context": "The design doc needs stakeholder review.",
+        "type": "phrase"
+      },
+      {
+        "front": "trade-off",
+        "back": "компромисс",
+        "context": "Every architecture has trade-offs.",
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_07",
+    "level": "C1",
+    "order": 7,
+    "title": "Team leadership",
+    "subtitle": "1:1 meetings, feedback, delegation",
+    "content": "Урок C1: Team leadership. 1:1 meetings, feedback, delegation.\n\n• one-on-one — встреча один на один\n• constructive feedback — конструктивная обратная связь\n• delegation — делегирование\n• mentorship — наставничество\n• empowerment — расширение полномочий\n• accountability — ответственность\n• performance review — оценка производительности\n• growth plan — план развития\n• burnout — выгорание\n• psychological safety — психологическая безопасность",
+    "keyVocabulary": [
+      {
+        "spanish": "one-on-one",
+        "russian": "встреча один на один",
+        "example": "I have a 1:1 with my manager."
+      },
+      {
+        "spanish": "constructive feedback",
+        "russian": "конструктивная обратная связь",
+        "example": "I appreciate constructive feedback."
+      },
+      {
+        "spanish": "delegation",
+        "russian": "делегирование",
+        "example": "Good leaders master delegation."
+      },
+      {
+        "spanish": "mentorship",
+        "russian": "наставничество",
+        "example": "She's my mentor on this project."
+      },
+      {
+        "spanish": "empowerment",
+        "russian": "расширение полномочий",
+        "example": "Team empowerment drives innovation."
+      },
+      {
+        "spanish": "accountability",
+        "russian": "ответственность",
+        "example": "Everyone needs accountability."
+      },
+      {
+        "spanish": "performance review",
+        "russian": "оценка производительности",
+        "example": "Performance reviews are next month."
+      },
+      {
+        "spanish": "growth plan",
+        "russian": "план развития",
+        "example": "Let's discuss your growth plan."
+      },
+      {
+        "spanish": "burnout",
+        "russian": "выгорание",
+        "example": "Watch for signs of burnout."
+      },
+      {
+        "spanish": "psychological safety",
+        "russian": "психологическая безопасность",
+        "example": "Psychological safety enables honest communication."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: Team leadership",
+      "Контекст: 1:1 meetings, feedback, delegation",
+      "Практика в реальных ситуациях"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Team leadership"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Team leadership"
+    },
+    "defaultCards": [
+      {
+        "front": "one-on-one",
+        "back": "встреча один на один",
+        "context": "I have a 1:1 with my manager.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "constructive feedback",
+        "back": "конструктивная обратная связь",
+        "context": "I appreciate constructive feedback.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "delegation",
+        "back": "делегирование",
+        "context": "Good leaders master delegation.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "mentorship",
+        "back": "наставничество",
+        "context": "She's my mentor on this project.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "empowerment",
+        "back": "расширение полномочий",
+        "context": "Team empowerment drives innovation.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "accountability",
+        "back": "ответственность",
+        "context": "Everyone needs accountability.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "performance review",
+        "back": "оценка производительности",
+        "context": "Performance reviews are next month.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "growth plan",
+        "back": "план развития",
+        "context": "Let's discuss your growth plan.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "burnout",
+        "back": "выгорание",
+        "context": "Watch for signs of burnout.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "psychological safety",
+        "back": "психологическая безопасность",
+        "context": "Psychological safety enables honest communication.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "Тема: Team leadership",
+        "back": "1:1 meetings, feedback, delegation",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "one-on-one",
+        "back": "встреча один на один",
+        "context": "I have a 1:1 with my manager.",
+        "type": "phrase"
+      },
+      {
+        "front": "constructive feedback",
+        "back": "конструктивная обратная связь",
+        "context": "I appreciate constructive feedback.",
+        "type": "phrase"
+      },
+      {
+        "front": "delegation",
+        "back": "делегирование",
+        "context": "Good leaders master delegation.",
+        "type": "phrase"
+      },
+      {
+        "front": "mentorship",
+        "back": "наставничество",
+        "context": "She's my mentor on this project.",
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_08",
+    "level": "C1",
+    "order": 8,
+    "title": "Cross-functional collaboration",
+    "subtitle": "Stakeholder management, alignment",
+    "content": "Урок C1: Cross-functional collaboration. Stakeholder management, alignment.\n\n• cross-functional — кросс-функциональный\n• stakeholder management — управление заинтересованными сторонами\n• buy-in — поддержка, согласие\n• synergy — синергия\n• silo — изолированность\n• blocker — блокирующая проблема\n• dependency — зависимость\n• handoff — передача\n• ownership — владение/ответственность\n• RACI matrix — матрица ответственности",
+    "keyVocabulary": [
+      {
+        "spanish": "cross-functional",
+        "russian": "кросс-функциональный",
+        "example": "We have a cross-functional team."
+      },
+      {
+        "spanish": "stakeholder management",
+        "russian": "управление заинтересованными сторонами",
+        "example": "Stakeholder management is crucial."
+      },
+      {
+        "spanish": "buy-in",
+        "russian": "поддержка, согласие",
+        "example": "We need buy-in from the VP."
+      },
+      {
+        "spanish": "synergy",
+        "russian": "синергия",
+        "example": "There's great synergy between teams."
+      },
+      {
+        "spanish": "silo",
+        "russian": "изолированность",
+        "example": "Break down silos between departments."
+      },
+      {
+        "spanish": "blocker",
+        "russian": "блокирующая проблема",
+        "example": "What are the current blockers?"
+      },
+      {
+        "spanish": "dependency",
+        "russian": "зависимость",
+        "example": "We have a dependency on Team B."
+      },
+      {
+        "spanish": "handoff",
+        "russian": "передача",
+        "example": "The handoff to QA happens Monday."
+      },
+      {
+        "spanish": "ownership",
+        "russian": "владение/ответственность",
+        "example": "Who has ownership of this service?"
+      },
+      {
+        "spanish": "RACI matrix",
+        "russian": "матрица ответственности",
+        "example": "Let's define RACI for this project."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: Cross-functional collaboration",
+      "Контекст: Stakeholder management, alignment",
+      "Практика в реальных ситуациях"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Cross-functional collaboration"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Cross-functional collaboration"
+    },
+    "defaultCards": [
+      {
+        "front": "cross-functional",
+        "back": "кросс-функциональный",
+        "context": "We have a cross-functional team.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "stakeholder management",
+        "back": "управление заинтересованными сторонами",
+        "context": "Stakeholder management is crucial.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "buy-in",
+        "back": "поддержка, согласие",
+        "context": "We need buy-in from the VP.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "synergy",
+        "back": "синергия",
+        "context": "There's great synergy between teams.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "silo",
+        "back": "изолированность",
+        "context": "Break down silos between departments.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "blocker",
+        "back": "блокирующая проблема",
+        "context": "What are the current blockers?",
+        "type": "vocabulary"
+      },
+      {
+        "front": "dependency",
+        "back": "зависимость",
+        "context": "We have a dependency on Team B.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "handoff",
+        "back": "передача",
+        "context": "The handoff to QA happens Monday.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "ownership",
+        "back": "владение/ответственность",
+        "context": "Who has ownership of this service?",
+        "type": "vocabulary"
+      },
+      {
+        "front": "RACI matrix",
+        "back": "матрица ответственности",
+        "context": "Let's define RACI for this project.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "Тема: Cross-functional collaboration",
+        "back": "Stakeholder management, alignment",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "cross-functional",
+        "back": "кросс-функциональный",
+        "context": "We have a cross-functional team.",
+        "type": "phrase"
+      },
+      {
+        "front": "stakeholder management",
+        "back": "управление заинтересованными сторонами",
+        "context": "Stakeholder management is crucial.",
+        "type": "phrase"
+      },
+      {
+        "front": "buy-in",
+        "back": "поддержка, согласие",
+        "context": "We need buy-in from the VP.",
+        "type": "phrase"
+      },
+      {
+        "front": "synergy",
+        "back": "синергия",
+        "context": "There's great synergy between teams.",
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_09",
+    "level": "C1",
+    "order": 9,
+    "title": "Advanced Agile",
+    "subtitle": "Retrospective, velocity, burndown charts",
+    "content": "Урок C1: Advanced Agile. Retrospective, velocity, burndown charts.\n\n• retrospective — ретроспектива\n• velocity — скорость команды\n• burndown chart — диаграмма сгорания\n• story points — стори поинты\n• sprint planning — планирование спринта\n• definition of done — определение завершённости\n• backlog grooming — уточнение бэклога\n• epic — эпик\n• spike — спайк, исследование\n• ceremony — церемония (Agile)",
+    "keyVocabulary": [
+      {
+        "spanish": "retrospective",
+        "russian": "ретроспектива",
+        "example": "Let's discuss what went well in the retro."
+      },
+      {
+        "spanish": "velocity",
+        "russian": "скорость команды",
+        "example": "Our velocity is 40 story points per sprint."
+      },
+      {
+        "spanish": "burndown chart",
+        "russian": "диаграмма сгорания",
+        "example": "The burndown shows we're behind schedule."
+      },
+      {
+        "spanish": "story points",
+        "russian": "стори поинты",
+        "example": "How many story points is this task?"
+      },
+      {
+        "spanish": "sprint planning",
+        "russian": "планирование спринта",
+        "example": "Sprint planning is tomorrow morning."
+      },
+      {
+        "spanish": "definition of done",
+        "russian": "определение завершённости",
+        "example": "Does this meet the definition of done?"
+      },
+      {
+        "spanish": "backlog grooming",
+        "russian": "уточнение бэклога",
+        "example": "We need a backlog grooming session."
+      },
+      {
+        "spanish": "epic",
+        "russian": "эпик",
+        "example": "This epic spans three sprints."
+      },
+      {
+        "spanish": "spike",
+        "russian": "спайк, исследование",
+        "example": "Let's create a spike to evaluate options."
+      },
+      {
+        "spanish": "ceremony",
+        "russian": "церемония (Agile)",
+        "example": "Which Agile ceremonies do you follow?"
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: Advanced Agile",
+      "Контекст: Retrospective, velocity, burndown charts",
+      "Практика в реальных ситуациях"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Advanced Agile"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Advanced Agile"
+    },
+    "defaultCards": [
+      {
+        "front": "retrospective",
+        "back": "ретроспектива",
+        "context": "Let's discuss what went well in the retro.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "velocity",
+        "back": "скорость команды",
+        "context": "Our velocity is 40 story points per sprint.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "burndown chart",
+        "back": "диаграмма сгорания",
+        "context": "The burndown shows we're behind schedule.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "story points",
+        "back": "стори поинты",
+        "context": "How many story points is this task?",
+        "type": "vocabulary"
+      },
+      {
+        "front": "sprint planning",
+        "back": "планирование спринта",
+        "context": "Sprint planning is tomorrow morning.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "definition of done",
+        "back": "определение завершённости",
+        "context": "Does this meet the definition of done?",
+        "type": "vocabulary"
+      },
+      {
+        "front": "backlog grooming",
+        "back": "уточнение бэклога",
+        "context": "We need a backlog grooming session.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "epic",
+        "back": "эпик",
+        "context": "This epic spans three sprints.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "spike",
+        "back": "спайк, исследование",
+        "context": "Let's create a spike to evaluate options.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "ceremony",
+        "back": "церемония (Agile)",
+        "context": "Which Agile ceremonies do you follow?",
+        "type": "vocabulary"
+      },
+      {
+        "front": "Тема: Advanced Agile",
+        "back": "Retrospective, velocity, burndown charts",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "retrospective",
+        "back": "ретроспектива",
+        "context": "Let's discuss what went well in the retro.",
+        "type": "phrase"
+      },
+      {
+        "front": "velocity",
+        "back": "скорость команды",
+        "context": "Our velocity is 40 story points per sprint.",
+        "type": "phrase"
+      },
+      {
+        "front": "burndown chart",
+        "back": "диаграмма сгорания",
+        "context": "The burndown shows we're behind schedule.",
+        "type": "phrase"
+      },
+      {
+        "front": "story points",
+        "back": "стори поинты",
+        "context": "How many story points is this task?",
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_10",
+    "level": "C1",
+    "order": 10,
+    "title": "DevOps & SRE",
+    "subtitle": "Observability, error budget, toil",
+    "content": "Урок C1: DevOps & SRE. Observability, error budget, toil.\n\n• observability — наблюдаемость\n• error budget — бюджет ошибок\n• toil — рутинная ручная работа\n• SRE — инженер по надёжности\n• SLO — цель уровня обслуживания\n• SLI — индикатор уровня обслуживания\n• chaos engineering — хаос-инжиниринг\n• runbook — рунбук, инструкция\n• alert fatigue — усталость от оповещений\n• golden signals — золотые сигналы",
+    "keyVocabulary": [
+      {
+        "spanish": "observability",
+        "russian": "наблюдаемость",
+        "example": "Improve observability with structured logging."
+      },
+      {
+        "spanish": "error budget",
+        "russian": "бюджет ошибок",
+        "example": "We've consumed 80% of our error budget."
+      },
+      {
+        "spanish": "toil",
+        "russian": "рутинная ручная работа",
+        "example": "Automate toil to free up engineering time."
+      },
+      {
+        "spanish": "SRE",
+        "russian": "инженер по надёжности",
+        "example": "Our SRE team manages production reliability."
+      },
+      {
+        "spanish": "SLO",
+        "russian": "цель уровня обслуживания",
+        "example": "Our SLO is 99.9% uptime."
+      },
+      {
+        "spanish": "SLI",
+        "russian": "индикатор уровня обслуживания",
+        "example": "Track SLIs to measure service health."
+      },
+      {
+        "spanish": "chaos engineering",
+        "russian": "хаос-инжиниринг",
+        "example": "Chaos engineering tests system resilience."
+      },
+      {
+        "spanish": "runbook",
+        "russian": "рунбук, инструкция",
+        "example": "Follow the runbook for this alert."
+      },
+      {
+        "spanish": "alert fatigue",
+        "russian": "усталость от оповещений",
+        "example": "Reduce alert fatigue by tuning thresholds."
+      },
+      {
+        "spanish": "golden signals",
+        "russian": "золотые сигналы",
+        "example": "Monitor the four golden signals."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: DevOps & SRE",
+      "Контекст: Observability, error budget, toil",
+      "Практика в реальных ситуациях"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "DevOps & SRE"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about DevOps & SRE"
+    },
+    "defaultCards": [
+      {
+        "front": "observability",
+        "back": "наблюдаемость",
+        "context": "Improve observability with structured logging.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "error budget",
+        "back": "бюджет ошибок",
+        "context": "We've consumed 80% of our error budget.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "toil",
+        "back": "рутинная ручная работа",
+        "context": "Automate toil to free up engineering time.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "SRE",
+        "back": "инженер по надёжности",
+        "context": "Our SRE team manages production reliability.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "SLO",
+        "back": "цель уровня обслуживания",
+        "context": "Our SLO is 99.9% uptime.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "SLI",
+        "back": "индикатор уровня обслуживания",
+        "context": "Track SLIs to measure service health.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "chaos engineering",
+        "back": "хаос-инжиниринг",
+        "context": "Chaos engineering tests system resilience.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "runbook",
+        "back": "рунбук, инструкция",
+        "context": "Follow the runbook for this alert.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "alert fatigue",
+        "back": "усталость от оповещений",
+        "context": "Reduce alert fatigue by tuning thresholds.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "golden signals",
+        "back": "золотые сигналы",
+        "context": "Monitor the four golden signals.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "Тема: DevOps & SRE",
+        "back": "Observability, error budget, toil",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "observability",
+        "back": "наблюдаемость",
+        "context": "Improve observability with structured logging.",
+        "type": "phrase"
+      },
+      {
+        "front": "error budget",
+        "back": "бюджет ошибок",
+        "context": "We've consumed 80% of our error budget.",
+        "type": "phrase"
+      },
+      {
+        "front": "toil",
+        "back": "рутинная ручная работа",
+        "context": "Automate toil to free up engineering time.",
+        "type": "phrase"
+      },
+      {
+        "front": "SRE",
+        "back": "инженер по надёжности",
+        "context": "Our SRE team manages production reliability.",
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_11",
+    "level": "C1",
+    "order": 11,
+    "title": "Machine Learning vocabulary",
+    "subtitle": "Model, training, inference, bias, dataset",
+    "content": "Урок C1: Machine Learning vocabulary. Model, training, inference, bias, dataset.\n\n• model — модель\n• training — обучение\n• inference — инференс, вывод\n• bias — предвзятость, смещение\n• dataset — набор данных\n• overfitting — переобучение\n• feature engineering — конструирование признаков\n• neural network — нейронная сеть\n• fine-tuning — тонкая настройка\n• GPU — графический процессор",
+    "keyVocabulary": [
+      {
+        "spanish": "model",
+        "russian": "модель",
+        "example": "Train the model on the new dataset."
+      },
+      {
+        "spanish": "training",
+        "russian": "обучение",
+        "example": "Training takes 4 hours on GPU."
+      },
+      {
+        "spanish": "inference",
+        "russian": "инференс, вывод",
+        "example": "Inference latency is 50ms."
+      },
+      {
+        "spanish": "bias",
+        "russian": "предвзятость, смещение",
+        "example": "Check the model for bias."
+      },
+      {
+        "spanish": "dataset",
+        "russian": "набор данных",
+        "example": "We need a larger dataset."
+      },
+      {
+        "spanish": "overfitting",
+        "russian": "переобучение",
+        "example": "The model is overfitting."
+      },
+      {
+        "spanish": "feature engineering",
+        "russian": "конструирование признаков",
+        "example": "Feature engineering improves accuracy."
+      },
+      {
+        "spanish": "neural network",
+        "russian": "нейронная сеть",
+        "example": "We use a neural network for classification."
+      },
+      {
+        "spanish": "fine-tuning",
+        "russian": "тонкая настройка",
+        "example": "Fine-tune the model on our data."
+      },
+      {
+        "spanish": "GPU",
+        "russian": "графический процессор",
+        "example": "We need more GPU resources."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: Machine Learning vocabulary",
+      "Контекст: Model, training, inference, bias, dataset",
+      "Advanced IT English"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Machine Learning vocabulary"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Machine Learning vocabulary"
+    },
+    "defaultCards": [
+      {
+        "front": "model",
+        "back": "модель",
+        "context": "Train the model on the new dataset.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "training",
+        "back": "обучение",
+        "context": "Training takes 4 hours on GPU.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "inference",
+        "back": "инференс, вывод",
+        "context": "Inference latency is 50ms.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "bias",
+        "back": "предвзятость, смещение",
+        "context": "Check the model for bias.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "dataset",
+        "back": "набор данных",
+        "context": "We need a larger dataset.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "overfitting",
+        "back": "переобучение",
+        "context": "The model is overfitting.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "feature engineering",
+        "back": "конструирование признаков",
+        "context": "Feature engineering improves accuracy.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "neural network",
+        "back": "нейронная сеть",
+        "context": "We use a neural network for classification.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "fine-tuning",
+        "back": "тонкая настройка",
+        "context": "Fine-tune the model on our data.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "GPU",
+        "back": "графический процессор",
+        "context": "We need more GPU resources.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "model",
+        "back": "модель",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "training",
+        "back": "обучение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "inference",
+        "back": "инференс, вывод",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "bias",
+        "back": "предвзятость, смещение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "dataset",
+        "back": "набор данных",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_12",
+    "level": "C1",
+    "order": 12,
+    "title": "Data engineering",
+    "subtitle": "Pipeline, ETL, data lake, warehouse",
+    "content": "Урок C1: Data engineering. Pipeline, ETL, data lake, warehouse.\n\n• data pipeline — конвейер данных\n• ETL — извлечение-преобразование-загрузка\n• data lake — озеро данных\n• data warehouse — хранилище данных\n• schema — схема\n• batch processing — пакетная обработка\n• streaming — потоковая обработка\n• data quality — качество данных\n• data governance — управление данными\n• idempotent — идемпотентный",
+    "keyVocabulary": [
+      {
+        "spanish": "data pipeline",
+        "russian": "конвейер данных",
+        "example": "The data pipeline processes 1TB daily."
+      },
+      {
+        "spanish": "ETL",
+        "russian": "извлечение-преобразование-загрузка",
+        "example": "Our ETL runs every hour."
+      },
+      {
+        "spanish": "data lake",
+        "russian": "озеро данных",
+        "example": "Raw data goes to the data lake."
+      },
+      {
+        "spanish": "data warehouse",
+        "russian": "хранилище данных",
+        "example": "Analytics queries hit the data warehouse."
+      },
+      {
+        "spanish": "schema",
+        "russian": "схема",
+        "example": "Define the schema before ingestion."
+      },
+      {
+        "spanish": "batch processing",
+        "russian": "пакетная обработка",
+        "example": "We use batch processing for reports."
+      },
+      {
+        "spanish": "streaming",
+        "russian": "потоковая обработка",
+        "example": "Kafka handles real-time streaming."
+      },
+      {
+        "spanish": "data quality",
+        "russian": "качество данных",
+        "example": "Data quality checks run automatically."
+      },
+      {
+        "spanish": "data governance",
+        "russian": "управление данными",
+        "example": "Data governance ensures compliance."
+      },
+      {
+        "spanish": "idempotent",
+        "russian": "идемпотентный",
+        "example": "Make the pipeline idempotent."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: Data engineering",
+      "Контекст: Pipeline, ETL, data lake, warehouse",
+      "Advanced IT English"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Data engineering"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Data engineering"
+    },
+    "defaultCards": [
+      {
+        "front": "data pipeline",
+        "back": "конвейер данных",
+        "context": "The data pipeline processes 1TB daily.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "ETL",
+        "back": "извлечение-преобразование-загрузка",
+        "context": "Our ETL runs every hour.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "data lake",
+        "back": "озеро данных",
+        "context": "Raw data goes to the data lake.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "data warehouse",
+        "back": "хранилище данных",
+        "context": "Analytics queries hit the data warehouse.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "schema",
+        "back": "схема",
+        "context": "Define the schema before ingestion.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "batch processing",
+        "back": "пакетная обработка",
+        "context": "We use batch processing for reports.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "streaming",
+        "back": "потоковая обработка",
+        "context": "Kafka handles real-time streaming.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "data quality",
+        "back": "качество данных",
+        "context": "Data quality checks run automatically.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "data governance",
+        "back": "управление данными",
+        "context": "Data governance ensures compliance.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "idempotent",
+        "back": "идемпотентный",
+        "context": "Make the pipeline idempotent.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "data pipeline",
+        "back": "конвейер данных",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "ETL",
+        "back": "извлечение-преобразование-загрузка",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "data lake",
+        "back": "озеро данных",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "data warehouse",
+        "back": "хранилище данных",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "schema",
+        "back": "схема",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_13",
+    "level": "C1",
+    "order": 13,
+    "title": "Platform engineering",
+    "subtitle": "IaC, Terraform, GitOps",
+    "content": "Урок C1: Platform engineering. IaC, Terraform, GitOps.\n\n• Infrastructure as Code — инфраструктура как код\n• Terraform — Terraform\n• GitOps — GitOps\n• provisioning — провижининг\n• immutable infrastructure — неизменяемая инфраструктура\n• container orchestration — оркестрация контейнеров\n• helm chart — Helm чарт\n• CI/CD — непрерывная интеграция/доставка\n• blue-green deployment — сине-зелёное развёртывание\n• canary release — канареечный релиз",
+    "keyVocabulary": [
+      {
+        "spanish": "Infrastructure as Code",
+        "russian": "инфраструктура как код",
+        "example": "All infra is managed via IaC."
+      },
+      {
+        "spanish": "Terraform",
+        "russian": "Terraform",
+        "example": "We use Terraform for cloud provisioning."
+      },
+      {
+        "spanish": "GitOps",
+        "russian": "GitOps",
+        "example": "GitOps ensures declarative deployments."
+      },
+      {
+        "spanish": "provisioning",
+        "russian": "провижининг",
+        "example": "Provisioning takes 10 minutes."
+      },
+      {
+        "spanish": "immutable infrastructure",
+        "russian": "неизменяемая инфраструктура",
+        "example": "We follow immutable infrastructure principles."
+      },
+      {
+        "spanish": "container orchestration",
+        "russian": "оркестрация контейнеров",
+        "example": "Kubernetes handles container orchestration."
+      },
+      {
+        "spanish": "helm chart",
+        "russian": "Helm чарт",
+        "example": "Deploy using the Helm chart."
+      },
+      {
+        "spanish": "CI/CD",
+        "russian": "непрерывная интеграция/доставка",
+        "example": "Our CI/CD pipeline runs on GitHub Actions."
+      },
+      {
+        "spanish": "blue-green deployment",
+        "russian": "сине-зелёное развёртывание",
+        "example": "Blue-green deployment minimizes downtime."
+      },
+      {
+        "spanish": "canary release",
+        "russian": "канареечный релиз",
+        "example": "Roll out via canary release."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: Platform engineering",
+      "Контекст: IaC, Terraform, GitOps",
+      "Advanced IT English"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Platform engineering"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Platform engineering"
+    },
+    "defaultCards": [
+      {
+        "front": "Infrastructure as Code",
+        "back": "инфраструктура как код",
+        "context": "All infra is managed via IaC.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "Terraform",
+        "back": "Terraform",
+        "context": "We use Terraform for cloud provisioning.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "GitOps",
+        "back": "GitOps",
+        "context": "GitOps ensures declarative deployments.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "provisioning",
+        "back": "провижининг",
+        "context": "Provisioning takes 10 minutes.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "immutable infrastructure",
+        "back": "неизменяемая инфраструктура",
+        "context": "We follow immutable infrastructure principles.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "container orchestration",
+        "back": "оркестрация контейнеров",
+        "context": "Kubernetes handles container orchestration.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "helm chart",
+        "back": "Helm чарт",
+        "context": "Deploy using the Helm chart.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "CI/CD",
+        "back": "непрерывная интеграция/доставка",
+        "context": "Our CI/CD pipeline runs on GitHub Actions.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "blue-green deployment",
+        "back": "сине-зелёное развёртывание",
+        "context": "Blue-green deployment minimizes downtime.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "canary release",
+        "back": "канареечный релиз",
+        "context": "Roll out via canary release.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "Infrastructure as Code",
+        "back": "инфраструктура как код",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "Terraform",
+        "back": "Terraform",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "GitOps",
+        "back": "GitOps",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "provisioning",
+        "back": "провижининг",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "immutable infrastructure",
+        "back": "неизменяемая инфраструктура",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_14",
+    "level": "C1",
+    "order": 14,
+    "title": "Performance optimization",
+    "subtitle": "Latency, throughput, profiling",
+    "content": "Урок C1: Performance optimization. Latency, throughput, profiling.\n\n• profiling — профилирование\n• memory leak — утечка памяти\n• garbage collection — сборка мусора\n• connection pool — пул соединений\n• lazy loading — ленивая загрузка\n• indexing — индексирование\n• N+1 query — N+1 запрос\n• benchmark — бенчмарк\n• flame graph — граф пламени\n• optimization — оптимизация",
+    "keyVocabulary": [
+      {
+        "spanish": "profiling",
+        "russian": "профилирование",
+        "example": "Profile the application to find bottlenecks."
+      },
+      {
+        "spanish": "memory leak",
+        "russian": "утечка памяти",
+        "example": "We detected a memory leak in production."
+      },
+      {
+        "spanish": "garbage collection",
+        "russian": "сборка мусора",
+        "example": "GC pauses cause latency spikes."
+      },
+      {
+        "spanish": "connection pool",
+        "russian": "пул соединений",
+        "example": "Increase the connection pool size."
+      },
+      {
+        "spanish": "lazy loading",
+        "russian": "ленивая загрузка",
+        "example": "Use lazy loading for images."
+      },
+      {
+        "spanish": "indexing",
+        "russian": "индексирование",
+        "example": "Proper indexing speeds up queries."
+      },
+      {
+        "spanish": "N+1 query",
+        "russian": "N+1 запрос",
+        "example": "Fix the N+1 query problem."
+      },
+      {
+        "spanish": "benchmark",
+        "russian": "бенчмарк",
+        "example": "Run benchmarks before and after."
+      },
+      {
+        "spanish": "flame graph",
+        "russian": "граф пламени",
+        "example": "The flame graph shows CPU hotspots."
+      },
+      {
+        "spanish": "optimization",
+        "russian": "оптимизация",
+        "example": "Premature optimization is the root of all evil."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: Performance optimization",
+      "Контекст: Latency, throughput, profiling",
+      "Advanced IT English"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Performance optimization"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Performance optimization"
+    },
+    "defaultCards": [
+      {
+        "front": "profiling",
+        "back": "профилирование",
+        "context": "Profile the application to find bottlenecks.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "memory leak",
+        "back": "утечка памяти",
+        "context": "We detected a memory leak in production.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "garbage collection",
+        "back": "сборка мусора",
+        "context": "GC pauses cause latency spikes.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "connection pool",
+        "back": "пул соединений",
+        "context": "Increase the connection pool size.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "lazy loading",
+        "back": "ленивая загрузка",
+        "context": "Use lazy loading for images.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "indexing",
+        "back": "индексирование",
+        "context": "Proper indexing speeds up queries.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "N+1 query",
+        "back": "N+1 запрос",
+        "context": "Fix the N+1 query problem.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "benchmark",
+        "back": "бенчмарк",
+        "context": "Run benchmarks before and after.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "flame graph",
+        "back": "граф пламени",
+        "context": "The flame graph shows CPU hotspots.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "optimization",
+        "back": "оптимизация",
+        "context": "Premature optimization is the root of all evil.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "profiling",
+        "back": "профилирование",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "memory leak",
+        "back": "утечка памяти",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "garbage collection",
+        "back": "сборка мусора",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "connection pool",
+        "back": "пул соединений",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "lazy loading",
+        "back": "ленивая загрузка",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_15",
+    "level": "C1",
+    "order": 15,
+    "title": "API design",
+    "subtitle": "REST vs GraphQL, versioning, rate limiting",
+    "content": "Урок C1: API design. REST vs GraphQL, versioning, rate limiting.\n\n• endpoint — конечная точка\n• payload — полезная нагрузка\n• pagination — пагинация\n• idempotency key — ключ идемпотентности\n• webhook — вебхук\n• GraphQL — GraphQL\n• API versioning — версионирование API\n• deprecation — устаревание\n• authentication — аутентификация\n• throttling — ограничение скорости",
+    "keyVocabulary": [
+      {
+        "spanish": "endpoint",
+        "russian": "конечная точка",
+        "example": "Add a new API endpoint for users."
+      },
+      {
+        "spanish": "payload",
+        "russian": "полезная нагрузка",
+        "example": "The request payload is too large."
+      },
+      {
+        "spanish": "pagination",
+        "russian": "пагинация",
+        "example": "Implement cursor-based pagination."
+      },
+      {
+        "spanish": "idempotency key",
+        "russian": "ключ идемпотентности",
+        "example": "Use an idempotency key for payments."
+      },
+      {
+        "spanish": "webhook",
+        "russian": "вебхук",
+        "example": "Configure a webhook for notifications."
+      },
+      {
+        "spanish": "GraphQL",
+        "russian": "GraphQL",
+        "example": "We migrated to GraphQL for flexibility."
+      },
+      {
+        "spanish": "API versioning",
+        "russian": "версионирование API",
+        "example": "Use URL versioning: /api/v2/."
+      },
+      {
+        "spanish": "deprecation",
+        "russian": "устаревание",
+        "example": "This endpoint is deprecated."
+      },
+      {
+        "spanish": "authentication",
+        "russian": "аутентификация",
+        "example": "Use OAuth 2.0 for authentication."
+      },
+      {
+        "spanish": "throttling",
+        "russian": "ограничение скорости",
+        "example": "Throttling prevents abuse."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: API design",
+      "Контекст: REST vs GraphQL, versioning, rate limiting",
+      "Advanced IT English"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "API design"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about API design"
+    },
+    "defaultCards": [
+      {
+        "front": "endpoint",
+        "back": "конечная точка",
+        "context": "Add a new API endpoint for users.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "payload",
+        "back": "полезная нагрузка",
+        "context": "The request payload is too large.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "pagination",
+        "back": "пагинация",
+        "context": "Implement cursor-based pagination.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "idempotency key",
+        "back": "ключ идемпотентности",
+        "context": "Use an idempotency key for payments.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "webhook",
+        "back": "вебхук",
+        "context": "Configure a webhook for notifications.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "GraphQL",
+        "back": "GraphQL",
+        "context": "We migrated to GraphQL for flexibility.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "API versioning",
+        "back": "версионирование API",
+        "context": "Use URL versioning: /api/v2/.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "deprecation",
+        "back": "устаревание",
+        "context": "This endpoint is deprecated.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "authentication",
+        "back": "аутентификация",
+        "context": "Use OAuth 2.0 for authentication.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "throttling",
+        "back": "ограничение скорости",
+        "context": "Throttling prevents abuse.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "endpoint",
+        "back": "конечная точка",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "payload",
+        "back": "полезная нагрузка",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "pagination",
+        "back": "пагинация",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "idempotency key",
+        "back": "ключ идемпотентности",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "webhook",
+        "back": "вебхук",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_16",
+    "level": "C1",
+    "order": 16,
+    "title": "Security engineering",
+    "subtitle": "OWASP, zero trust, pen testing",
+    "content": "Урок C1: Security engineering. OWASP, zero trust, pen testing.\n\n• OWASP — стандарт безопасности\n• zero trust — нулевое доверие\n• penetration testing — тестирование на проникновение\n• vulnerability — уязвимость\n• encryption — шифрование\n• two-factor authentication — двухфакторная аутентификация\n• firewall — межсетевой экран\n• audit log — журнал аудита\n• access control — контроль доступа\n• security patch — патч безопасности",
+    "keyVocabulary": [
+      {
+        "spanish": "OWASP",
+        "russian": "стандарт безопасности",
+        "example": "Follow OWASP top 10 guidelines."
+      },
+      {
+        "spanish": "zero trust",
+        "russian": "нулевое доверие",
+        "example": "Implement zero trust architecture."
+      },
+      {
+        "spanish": "penetration testing",
+        "russian": "тестирование на проникновение",
+        "example": "Schedule quarterly pen testing."
+      },
+      {
+        "spanish": "vulnerability",
+        "russian": "уязвимость",
+        "example": "A critical vulnerability was discovered."
+      },
+      {
+        "spanish": "encryption",
+        "russian": "шифрование",
+        "example": "All data must be encrypted at rest."
+      },
+      {
+        "spanish": "two-factor authentication",
+        "russian": "двухфакторная аутентификация",
+        "example": "Enable 2FA for all accounts."
+      },
+      {
+        "spanish": "firewall",
+        "russian": "межсетевой экран",
+        "example": "Configure the firewall rules."
+      },
+      {
+        "spanish": "audit log",
+        "russian": "журнал аудита",
+        "example": "Review the audit logs."
+      },
+      {
+        "spanish": "access control",
+        "russian": "контроль доступа",
+        "example": "Implement role-based access control."
+      },
+      {
+        "spanish": "security patch",
+        "russian": "патч безопасности",
+        "example": "Apply the security patch immediately."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: Security engineering",
+      "Контекст: OWASP, zero trust, pen testing",
+      "C1 Business English"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Security engineering"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Security engineering"
+    },
+    "defaultCards": [
+      {
+        "front": "OWASP",
+        "back": "стандарт безопасности",
+        "context": "Follow OWASP top 10 guidelines.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "zero trust",
+        "back": "нулевое доверие",
+        "context": "Implement zero trust architecture.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "penetration testing",
+        "back": "тестирование на проникновение",
+        "context": "Schedule quarterly pen testing.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "vulnerability",
+        "back": "уязвимость",
+        "context": "A critical vulnerability was discovered.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "encryption",
+        "back": "шифрование",
+        "context": "All data must be encrypted at rest.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "two-factor authentication",
+        "back": "двухфакторная аутентификация",
+        "context": "Enable 2FA for all accounts.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "firewall",
+        "back": "межсетевой экран",
+        "context": "Configure the firewall rules.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "audit log",
+        "back": "журнал аудита",
+        "context": "Review the audit logs.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "access control",
+        "back": "контроль доступа",
+        "context": "Implement role-based access control.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "security patch",
+        "back": "патч безопасности",
+        "context": "Apply the security patch immediately.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "OWASP",
+        "back": "стандарт безопасности",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "zero trust",
+        "back": "нулевое доверие",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "penetration testing",
+        "back": "тестирование на проникновение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "vulnerability",
+        "back": "уязвимость",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "encryption",
+        "back": "шифрование",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_17",
+    "level": "C1",
+    "order": 17,
+    "title": "Compliance & governance",
+    "subtitle": "GDPR, SOC2, audit",
+    "content": "Урок C1: Compliance & governance. GDPR, SOC2, audit.\n\n• compliance — соответствие нормативам\n• GDPR — Общий регламент защиты данных\n• SOC2 — SOC2 сертификация\n• audit — аудит\n• data retention — хранение данных\n• privacy policy — политика конфиденциальности\n• consent — согласие\n• data breach notification — уведомление об утечке\n• right to be forgotten — право на забвение\n• DPO — ответственный за защиту данных",
+    "keyVocabulary": [
+      {
+        "spanish": "compliance",
+        "russian": "соответствие нормативам",
+        "example": "Ensure GDPR compliance."
+      },
+      {
+        "spanish": "GDPR",
+        "russian": "Общий регламент защиты данных",
+        "example": "GDPR applies to EU user data."
+      },
+      {
+        "spanish": "SOC2",
+        "russian": "SOC2 сертификация",
+        "example": "We're pursuing SOC2 Type II."
+      },
+      {
+        "spanish": "audit",
+        "russian": "аудит",
+        "example": "The annual security audit is next month."
+      },
+      {
+        "spanish": "data retention",
+        "russian": "хранение данных",
+        "example": "Define data retention policies."
+      },
+      {
+        "spanish": "privacy policy",
+        "russian": "политика конфиденциальности",
+        "example": "Update the privacy policy."
+      },
+      {
+        "spanish": "consent",
+        "russian": "согласие",
+        "example": "Get explicit user consent."
+      },
+      {
+        "spanish": "data breach notification",
+        "russian": "уведомление об утечке",
+        "example": "Report a data breach within 72 hours."
+      },
+      {
+        "spanish": "right to be forgotten",
+        "russian": "право на забвение",
+        "example": "Implement right to be forgotten."
+      },
+      {
+        "spanish": "DPO",
+        "russian": "ответственный за защиту данных",
+        "example": "Appoint a Data Protection Officer."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: Compliance & governance",
+      "Контекст: GDPR, SOC2, audit",
+      "C1 Business English"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Compliance & governance"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Compliance & governance"
+    },
+    "defaultCards": [
+      {
+        "front": "compliance",
+        "back": "соответствие нормативам",
+        "context": "Ensure GDPR compliance.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "GDPR",
+        "back": "Общий регламент защиты данных",
+        "context": "GDPR applies to EU user data.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "SOC2",
+        "back": "SOC2 сертификация",
+        "context": "We're pursuing SOC2 Type II.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "audit",
+        "back": "аудит",
+        "context": "The annual security audit is next month.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "data retention",
+        "back": "хранение данных",
+        "context": "Define data retention policies.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "privacy policy",
+        "back": "политика конфиденциальности",
+        "context": "Update the privacy policy.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "consent",
+        "back": "согласие",
+        "context": "Get explicit user consent.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "data breach notification",
+        "back": "уведомление об утечке",
+        "context": "Report a data breach within 72 hours.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "right to be forgotten",
+        "back": "право на забвение",
+        "context": "Implement right to be forgotten.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "DPO",
+        "back": "ответственный за защиту данных",
+        "context": "Appoint a Data Protection Officer.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "compliance",
+        "back": "соответствие нормативам",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "GDPR",
+        "back": "Общий регламент защиты данных",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "SOC2",
+        "back": "SOC2 сертификация",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "audit",
+        "back": "аудит",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "data retention",
+        "back": "хранение данных",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_18",
+    "level": "C1",
+    "order": 18,
+    "title": "Venture capital",
+    "subtitle": "Due diligence, term sheet, runway",
+    "content": "Урок C1: Venture capital. Due diligence, term sheet, runway.\n\n• due diligence — должная проверка\n• term sheet — условия сделки\n• runway — финансовый запас\n• valuation — оценка стоимости\n• Series A — раунд А\n• burn rate — скорость расхода средств\n• cap table — таблица капитализации\n• dilution — размытие\n• exit strategy — стратегия выхода\n• pitch deck — презентация для инвесторов",
+    "keyVocabulary": [
+      {
+        "spanish": "due diligence",
+        "russian": "должная проверка",
+        "example": "The VC is conducting due diligence."
+      },
+      {
+        "spanish": "term sheet",
+        "russian": "условия сделки",
+        "example": "We received a term sheet."
+      },
+      {
+        "spanish": "runway",
+        "russian": "финансовый запас",
+        "example": "We have 18 months of runway."
+      },
+      {
+        "spanish": "valuation",
+        "russian": "оценка стоимости",
+        "example": "The pre-money valuation is $10M."
+      },
+      {
+        "spanish": "Series A",
+        "russian": "раунд А",
+        "example": "We're raising a Series A."
+      },
+      {
+        "spanish": "burn rate",
+        "russian": "скорость расхода средств",
+        "example": "Our monthly burn rate is $200K."
+      },
+      {
+        "spanish": "cap table",
+        "russian": "таблица капитализации",
+        "example": "Review the cap table before the round."
+      },
+      {
+        "spanish": "dilution",
+        "russian": "размытие",
+        "example": "Founders face dilution each round."
+      },
+      {
+        "spanish": "exit strategy",
+        "russian": "стратегия выхода",
+        "example": "IPO is one exit strategy."
+      },
+      {
+        "spanish": "pitch deck",
+        "russian": "презентация для инвесторов",
+        "example": "Polish the pitch deck."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: Venture capital",
+      "Контекст: Due diligence, term sheet, runway",
+      "C1 Business English"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Venture capital"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Venture capital"
+    },
+    "defaultCards": [
+      {
+        "front": "due diligence",
+        "back": "должная проверка",
+        "context": "The VC is conducting due diligence.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "term sheet",
+        "back": "условия сделки",
+        "context": "We received a term sheet.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "runway",
+        "back": "финансовый запас",
+        "context": "We have 18 months of runway.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "valuation",
+        "back": "оценка стоимости",
+        "context": "The pre-money valuation is $10M.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "Series A",
+        "back": "раунд А",
+        "context": "We're raising a Series A.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "burn rate",
+        "back": "скорость расхода средств",
+        "context": "Our monthly burn rate is $200K.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "cap table",
+        "back": "таблица капитализации",
+        "context": "Review the cap table before the round.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "dilution",
+        "back": "размытие",
+        "context": "Founders face dilution each round.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "exit strategy",
+        "back": "стратегия выхода",
+        "context": "IPO is one exit strategy.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "pitch deck",
+        "back": "презентация для инвесторов",
+        "context": "Polish the pitch deck.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "due diligence",
+        "back": "должная проверка",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "term sheet",
+        "back": "условия сделки",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "runway",
+        "back": "финансовый запас",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "valuation",
+        "back": "оценка стоимости",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "Series A",
+        "back": "раунд А",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_19",
+    "level": "C1",
+    "order": 19,
+    "title": "M&A vocabulary",
+    "subtitle": "Acquisition, merger, synergy, integration",
+    "content": "Урок C1: M&A vocabulary. Acquisition, merger, synergy, integration.\n\n• acquisition — приобретение\n• merger — слияние\n• synergy — синергия\n• integration — интеграция\n• hostile takeover — враждебное поглощение\n• antitrust — антимонопольный\n• divestiture — продажа актива\n• goodwill — гудвилл, деловая репутация\n• earn-out — отложенный платёж\n• due diligence — юридическая проверка",
+    "keyVocabulary": [
+      {
+        "spanish": "acquisition",
+        "russian": "приобретение",
+        "example": "Google's acquisition of YouTube."
+      },
+      {
+        "spanish": "merger",
+        "russian": "слияние",
+        "example": "The merger was approved by regulators."
+      },
+      {
+        "spanish": "synergy",
+        "russian": "синергия",
+        "example": "We expect synergies in engineering."
+      },
+      {
+        "spanish": "integration",
+        "russian": "интеграция",
+        "example": "Post-merger integration takes years."
+      },
+      {
+        "spanish": "hostile takeover",
+        "russian": "враждебное поглощение",
+        "example": "They attempted a hostile takeover."
+      },
+      {
+        "spanish": "antitrust",
+        "russian": "антимонопольный",
+        "example": "Antitrust regulators may block the deal."
+      },
+      {
+        "spanish": "divestiture",
+        "russian": "продажа актива",
+        "example": "The divestiture was completed."
+      },
+      {
+        "spanish": "goodwill",
+        "russian": "гудвилл, деловая репутация",
+        "example": "Goodwill is recorded on the balance sheet."
+      },
+      {
+        "spanish": "earn-out",
+        "russian": "отложенный платёж",
+        "example": "The deal includes an earn-out clause."
+      },
+      {
+        "spanish": "due diligence",
+        "russian": "юридическая проверка",
+        "example": "Legal due diligence is ongoing."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: M&A vocabulary",
+      "Контекст: Acquisition, merger, synergy, integration",
+      "C1 Business English"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "M&A vocabulary"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about M&A vocabulary"
+    },
+    "defaultCards": [
+      {
+        "front": "acquisition",
+        "back": "приобретение",
+        "context": "Google's acquisition of YouTube.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "merger",
+        "back": "слияние",
+        "context": "The merger was approved by regulators.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "synergy",
+        "back": "синергия",
+        "context": "We expect synergies in engineering.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "integration",
+        "back": "интеграция",
+        "context": "Post-merger integration takes years.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "hostile takeover",
+        "back": "враждебное поглощение",
+        "context": "They attempted a hostile takeover.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "antitrust",
+        "back": "антимонопольный",
+        "context": "Antitrust regulators may block the deal.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "divestiture",
+        "back": "продажа актива",
+        "context": "The divestiture was completed.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "goodwill",
+        "back": "гудвилл, деловая репутация",
+        "context": "Goodwill is recorded on the balance sheet.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "earn-out",
+        "back": "отложенный платёж",
+        "context": "The deal includes an earn-out clause.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "due diligence",
+        "back": "юридическая проверка",
+        "context": "Legal due diligence is ongoing.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "acquisition",
+        "back": "приобретение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "merger",
+        "back": "слияние",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "synergy",
+        "back": "синергия",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "integration",
+        "back": "интеграция",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "hostile takeover",
+        "back": "враждебное поглощение",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_20",
+    "level": "C1",
+    "order": 20,
+    "title": "Public speaking",
+    "subtitle": "TED-style, storytelling, engagement",
+    "content": "Урок C1: Public speaking. TED-style, storytelling, engagement.\n\n• hook — зацепка\n• storytelling — рассказ историй\n• call to action — призыв к действию\n• body language — язык тела\n• filler words — слова-паразиты\n• audience engagement — вовлечение аудитории\n• slide deck — набор слайдов\n• Q&A session — сессия вопросов и ответов\n• elevator pitch — краткая презентация\n• keynote — ключевой доклад",
+    "keyVocabulary": [
+      {
+        "spanish": "hook",
+        "russian": "зацепка",
+        "example": "Start with a strong hook."
+      },
+      {
+        "spanish": "storytelling",
+        "russian": "рассказ историй",
+        "example": "Storytelling makes presentations memorable."
+      },
+      {
+        "spanish": "call to action",
+        "russian": "призыв к действию",
+        "example": "End with a clear call to action."
+      },
+      {
+        "spanish": "body language",
+        "russian": "язык тела",
+        "example": "Your body language conveys confidence."
+      },
+      {
+        "spanish": "filler words",
+        "russian": "слова-паразиты",
+        "example": "Avoid filler words like 'um' and 'uh'."
+      },
+      {
+        "spanish": "audience engagement",
+        "russian": "вовлечение аудитории",
+        "example": "Ask questions for audience engagement."
+      },
+      {
+        "spanish": "slide deck",
+        "russian": "набор слайдов",
+        "example": "Keep your slide deck minimal."
+      },
+      {
+        "spanish": "Q&A session",
+        "russian": "сессия вопросов и ответов",
+        "example": "We'll have a Q&A at the end."
+      },
+      {
+        "spanish": "elevator pitch",
+        "russian": "краткая презентация",
+        "example": "Practice your elevator pitch."
+      },
+      {
+        "spanish": "keynote",
+        "russian": "ключевой доклад",
+        "example": "She delivered the keynote at the conference."
+      }
+    ],
+    "grammarPoints": [
+      "Лексика: Public speaking",
+      "Контекст: TED-style, storytelling, engagement",
+      "C1 Business English"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Public speaking"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Public speaking"
+    },
+    "defaultCards": [
+      {
+        "front": "hook",
+        "back": "зацепка",
+        "context": "Start with a strong hook.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "storytelling",
+        "back": "рассказ историй",
+        "context": "Storytelling makes presentations memorable.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "call to action",
+        "back": "призыв к действию",
+        "context": "End with a clear call to action.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "body language",
+        "back": "язык тела",
+        "context": "Your body language conveys confidence.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "filler words",
+        "back": "слова-паразиты",
+        "context": "Avoid filler words like 'um' and 'uh'.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "audience engagement",
+        "back": "вовлечение аудитории",
+        "context": "Ask questions for audience engagement.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "slide deck",
+        "back": "набор слайдов",
+        "context": "Keep your slide deck minimal.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "Q&A session",
+        "back": "сессия вопросов и ответов",
+        "context": "We'll have a Q&A at the end.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "elevator pitch",
+        "back": "краткая презентация",
+        "context": "Practice your elevator pitch.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "keynote",
+        "back": "ключевой доклад",
+        "context": "She delivered the keynote at the conference.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "hook",
+        "back": "зацепка",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "storytelling",
+        "back": "рассказ историй",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "call to action",
+        "back": "призыв к действию",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "body language",
+        "back": "язык тела",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "filler words",
+        "back": "слова-паразиты",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_21",
+    "level": "C1",
+    "order": 21,
+    "title": "Review: technical leadership",
+    "subtitle": "Новые фразы для тимлидов",
+    "content": "Урок C1: Review: technical leadership. Новые фразы для тимлидов.",
+    "keyVocabulary": [
+      {
+        "spanish": "review 0",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 1",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 2",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 3",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 4",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 5",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 6",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 7",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 8",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 9",
+        "russian": "повторение",
+        "example": null
+      }
+    ],
+    "grammarPoints": [
+      "Review: Review: technical leadership"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Review: technical leadership"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Review: technical leadership"
+    },
+    "defaultCards": [
+      {
+        "front": "review 0",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 1",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 2",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 3",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 4",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 5",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 6",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 7",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 8",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 9",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 0",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 1",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 2",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 3",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 4",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_22",
+    "level": "C1",
+    "order": 22,
+    "title": "Review: architecture & system design",
+    "subtitle": "Новые термины",
+    "content": "Урок C1: Review: architecture & system design. Новые термины.",
+    "keyVocabulary": [
+      {
+        "spanish": "review 0",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 1",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 2",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 3",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 4",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 5",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 6",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 7",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 8",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 9",
+        "russian": "повторение",
+        "example": null
+      }
+    ],
+    "grammarPoints": [
+      "Review: Review: architecture & system design"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Review: architecture & system design"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Review: architecture & system design"
+    },
+    "defaultCards": [
+      {
+        "front": "review 0",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 1",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 2",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 3",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 4",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 5",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 6",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 7",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 8",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 9",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 0",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 1",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 2",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 3",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 4",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_23",
+    "level": "C1",
+    "order": 23,
+    "title": "Review: DevOps & ML",
+    "subtitle": "Новые термины",
+    "content": "Урок C1: Review: DevOps & ML. Новые термины.",
+    "keyVocabulary": [
+      {
+        "spanish": "review 0",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 1",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 2",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 3",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 4",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 5",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 6",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 7",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 8",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 9",
+        "russian": "повторение",
+        "example": null
+      }
+    ],
+    "grammarPoints": [
+      "Review: Review: DevOps & ML"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Review: DevOps & ML"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Review: DevOps & ML"
+    },
+    "defaultCards": [
+      {
+        "front": "review 0",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 1",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 2",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 3",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 4",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 5",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 6",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 7",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 8",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 9",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 0",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 1",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 2",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 3",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 4",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_24",
+    "level": "C1",
+    "order": 24,
+    "title": "Review: business & finance",
+    "subtitle": "Новые термины",
+    "content": "Урок C1: Review: business & finance. Новые термины.",
+    "keyVocabulary": [
+      {
+        "spanish": "review 0",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 1",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 2",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 3",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 4",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 5",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 6",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 7",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 8",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 9",
+        "russian": "повторение",
+        "example": null
+      }
+    ],
+    "grammarPoints": [
+      "Review: Review: business & finance"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Review: business & finance"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Review: business & finance"
+    },
+    "defaultCards": [
+      {
+        "front": "review 0",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 1",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 2",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 3",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 4",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 5",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 6",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 7",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 8",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 9",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 0",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 1",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 2",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 3",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 4",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_25",
+    "level": "C1",
+    "order": 25,
+    "title": "Advanced idioms",
+    "subtitle": "Move the needle, boil the ocean, low-hanging fruit",
+    "content": "Урок C1: Advanced idioms. Move the needle, boil the ocean, low-hanging fruit.",
+    "keyVocabulary": [
+      {
+        "spanish": "move the needle",
+        "russian": "сдвинуть с места",
+        "example": "This feature will move the needle."
+      },
+      {
+        "spanish": "boil the ocean",
+        "russian": "браться за невозможное",
+        "example": "Don't try to boil the ocean."
+      },
+      {
+        "spanish": "low-hanging fruit",
+        "russian": "легко достижимое",
+        "example": "Let's pick the low-hanging fruit first."
+      },
+      {
+        "spanish": "think outside the box",
+        "russian": "мыслить нестандартно",
+        "example": "We need to think outside the box."
+      },
+      {
+        "spanish": "at the end of the day",
+        "russian": "в конечном итоге",
+        "example": "At the end of the day, results matter."
+      },
+      {
+        "spanish": "on the same page",
+        "russian": "на одной волне",
+        "example": "Let's make sure we're on the same page."
+      },
+      {
+        "spanish": "touch base",
+        "russian": "связаться",
+        "example": "Let's touch base next week."
+      },
+      {
+        "spanish": "deep dive",
+        "russian": "глубокий анализ",
+        "example": "Let's do a deep dive into the data."
+      },
+      {
+        "spanish": "circle back",
+        "russian": "вернуться к вопросу",
+        "example": "I'll circle back on this tomorrow."
+      },
+      {
+        "spanish": "take it offline",
+        "russian": "обсудить отдельно",
+        "example": "Let's take this offline."
+      }
+    ],
+    "grammarPoints": [
+      "Review: Advanced idioms"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Advanced idioms"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Advanced idioms"
+    },
+    "defaultCards": [
+      {
+        "front": "move the needle",
+        "back": "сдвинуть с места",
+        "context": "This feature will move the needle.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "boil the ocean",
+        "back": "браться за невозможное",
+        "context": "Don't try to boil the ocean.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "low-hanging fruit",
+        "back": "легко достижимое",
+        "context": "Let's pick the low-hanging fruit first.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "think outside the box",
+        "back": "мыслить нестандартно",
+        "context": "We need to think outside the box.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "at the end of the day",
+        "back": "в конечном итоге",
+        "context": "At the end of the day, results matter.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "on the same page",
+        "back": "на одной волне",
+        "context": "Let's make sure we're on the same page.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "touch base",
+        "back": "связаться",
+        "context": "Let's touch base next week.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "deep dive",
+        "back": "глубокий анализ",
+        "context": "Let's do a deep dive into the data.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "circle back",
+        "back": "вернуться к вопросу",
+        "context": "I'll circle back on this tomorrow.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "take it offline",
+        "back": "обсудить отдельно",
+        "context": "Let's take this offline.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "move the needle",
+        "back": "сдвинуть с места",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "boil the ocean",
+        "back": "браться за невозможное",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "low-hanging fruit",
+        "back": "легко достижимое",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "think outside the box",
+        "back": "мыслить нестандартно",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "at the end of the day",
+        "back": "в конечном итоге",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_26",
+    "level": "C1",
+    "order": 26,
+    "title": "Phrasal verbs in IT",
+    "subtitle": "Roll out, ramp up, drill down, circle back",
+    "content": "Урок C1: Phrasal verbs in IT. Roll out, ramp up, drill down, circle back.",
+    "keyVocabulary": [
+      {
+        "spanish": "roll out",
+        "russian": "выпустить, развернуть",
+        "example": "We'll roll out the feature next sprint."
+      },
+      {
+        "spanish": "ramp up",
+        "russian": "наращивать",
+        "example": "We need to ramp up hiring."
+      },
+      {
+        "spanish": "drill down",
+        "russian": "углубиться в детали",
+        "example": "Let's drill down into the metrics."
+      },
+      {
+        "spanish": "scale up",
+        "russian": "масштабировать вверх",
+        "example": "Scale up the servers for Black Friday."
+      },
+      {
+        "spanish": "spin up",
+        "russian": "запустить",
+        "example": "Spin up a new development environment."
+      },
+      {
+        "spanish": "phase out",
+        "russian": "постепенно выводить",
+        "example": "We're phasing out the legacy API."
+      },
+      {
+        "spanish": "opt in / opt out",
+        "russian": "подписаться / отказаться",
+        "example": "Users must opt in to marketing emails."
+      },
+      {
+        "spanish": "sign off on",
+        "russian": "утвердить",
+        "example": "The manager needs to sign off on this."
+      },
+      {
+        "spanish": "flag",
+        "russian": "отметить проблему",
+        "example": "I want to flag a potential risk."
+      },
+      {
+        "spanish": "loop in",
+        "russian": "подключить к обсуждению",
+        "example": "Loop in the security team."
+      }
+    ],
+    "grammarPoints": [
+      "Review: Phrasal verbs in IT"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Phrasal verbs in IT"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Phrasal verbs in IT"
+    },
+    "defaultCards": [
+      {
+        "front": "roll out",
+        "back": "выпустить, развернуть",
+        "context": "We'll roll out the feature next sprint.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "ramp up",
+        "back": "наращивать",
+        "context": "We need to ramp up hiring.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "drill down",
+        "back": "углубиться в детали",
+        "context": "Let's drill down into the metrics.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "scale up",
+        "back": "масштабировать вверх",
+        "context": "Scale up the servers for Black Friday.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "spin up",
+        "back": "запустить",
+        "context": "Spin up a new development environment.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "phase out",
+        "back": "постепенно выводить",
+        "context": "We're phasing out the legacy API.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "opt in / opt out",
+        "back": "подписаться / отказаться",
+        "context": "Users must opt in to marketing emails.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "sign off on",
+        "back": "утвердить",
+        "context": "The manager needs to sign off on this.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "flag",
+        "back": "отметить проблему",
+        "context": "I want to flag a potential risk.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "loop in",
+        "back": "подключить к обсуждению",
+        "context": "Loop in the security team.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "roll out",
+        "back": "выпустить, развернуть",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "ramp up",
+        "back": "наращивать",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "drill down",
+        "back": "углубиться в детали",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "scale up",
+        "back": "масштабировать вверх",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "spin up",
+        "back": "запустить",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_27",
+    "level": "C1",
+    "order": 27,
+    "title": "Common C1 mistakes Russians make",
+    "subtitle": "Типичные ошибки на высоком уровне",
+    "content": "Урок C1: Common C1 mistakes Russians make. Типичные ошибки на высоком уровне.",
+    "keyVocabulary": [
+      {
+        "spanish": "actual vs actually",
+        "russian": "фактический vs на самом деле",
+        "example": "Actually means 'на самом деле', not 'актуально'."
+      },
+      {
+        "spanish": "eventually",
+        "russian": "в конечном счёте (не эвентуально)",
+        "example": "Eventually we fixed the bug."
+      },
+      {
+        "spanish": "accurate vs actual",
+        "russian": "точный vs фактический",
+        "example": "The data is accurate."
+      },
+      {
+        "spanish": "to assist vs to attend",
+        "russian": "помогать vs присутствовать",
+        "example": "I'll attend the meeting. (не assist!)"
+      },
+      {
+        "spanish": "sympathetic vs nice",
+        "russian": "сочувствующий vs приятный",
+        "example": "She's sympathetic to our concerns."
+      },
+      {
+        "spanish": "control vs check",
+        "russian": "управлять vs проверять",
+        "example": "Control means manage, not verify."
+      },
+      {
+        "spanish": "prospect vs perspective",
+        "russian": "перспектива (клиент vs точка зрения)",
+        "example": "A prospect is a potential client."
+      },
+      {
+        "spanish": "pretend vs claim",
+        "russian": "притворяться vs утверждать",
+        "example": "Pretend means act as if."
+      },
+      {
+        "spanish": "insist vs suggest",
+        "russian": "настаивать vs предлагать",
+        "example": "I insist on a meeting."
+      },
+      {
+        "spanish": "scheme vs plan",
+        "russian": "схема (негатив.) vs план",
+        "example": "In English, scheme often implies deception."
+      }
+    ],
+    "grammarPoints": [
+      "Review: Common C1 mistakes Russians make"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Common C1 mistakes Russians make"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Common C1 mistakes Russians make"
+    },
+    "defaultCards": [
+      {
+        "front": "actual vs actually",
+        "back": "фактический vs на самом деле",
+        "context": "Actually means 'на самом деле', not 'актуально'.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "eventually",
+        "back": "в конечном счёте (не эвентуально)",
+        "context": "Eventually we fixed the bug.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "accurate vs actual",
+        "back": "точный vs фактический",
+        "context": "The data is accurate.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "to assist vs to attend",
+        "back": "помогать vs присутствовать",
+        "context": "I'll attend the meeting. (не assist!)",
+        "type": "vocabulary"
+      },
+      {
+        "front": "sympathetic vs nice",
+        "back": "сочувствующий vs приятный",
+        "context": "She's sympathetic to our concerns.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "control vs check",
+        "back": "управлять vs проверять",
+        "context": "Control means manage, not verify.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "prospect vs perspective",
+        "back": "перспектива (клиент vs точка зрения)",
+        "context": "A prospect is a potential client.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "pretend vs claim",
+        "back": "притворяться vs утверждать",
+        "context": "Pretend means act as if.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "insist vs suggest",
+        "back": "настаивать vs предлагать",
+        "context": "I insist on a meeting.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "scheme vs plan",
+        "back": "схема (негатив.) vs план",
+        "context": "In English, scheme often implies deception.",
+        "type": "vocabulary"
+      },
+      {
+        "front": "actual vs actually",
+        "back": "фактический vs на самом деле",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "eventually",
+        "back": "в конечном счёте (не эвентуально)",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "accurate vs actual",
+        "back": "точный vs фактический",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "to assist vs to attend",
+        "back": "помогать vs присутствовать",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "sympathetic vs nice",
+        "back": "сочувствующий vs приятный",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_28",
+    "level": "C1",
+    "order": 28,
+    "title": "Negotiation advanced",
+    "subtitle": "BATNA, anchoring, win-win strategy",
+    "content": "Урок C1: Negotiation advanced. BATNA, anchoring, win-win strategy.",
+    "keyVocabulary": [
+      {
+        "spanish": "review 0",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 1",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 2",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 3",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 4",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 5",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 6",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 7",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 8",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 9",
+        "russian": "повторение",
+        "example": null
+      }
+    ],
+    "grammarPoints": [
+      "Review: Negotiation advanced"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Negotiation advanced"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Negotiation advanced"
+    },
+    "defaultCards": [
+      {
+        "front": "review 0",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 1",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 2",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 3",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 4",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 5",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 6",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 7",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 8",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 9",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 0",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 1",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 2",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 3",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 4",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_29",
+    "level": "C1",
+    "order": 29,
+    "title": "Conflict resolution",
+    "subtitle": "De-escalation, mediation, compromise",
+    "content": "Урок C1: Conflict resolution. De-escalation, mediation, compromise.",
+    "keyVocabulary": [
+      {
+        "spanish": "review 0",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 1",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 2",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 3",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 4",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 5",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 6",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 7",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 8",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 9",
+        "russian": "повторение",
+        "example": null
+      }
+    ],
+    "grammarPoints": [
+      "Review: Conflict resolution"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Conflict resolution"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Conflict resolution"
+    },
+    "defaultCards": [
+      {
+        "front": "review 0",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 1",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 2",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 3",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 4",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 5",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 6",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 7",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 8",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 9",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 0",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 1",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 2",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 3",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 4",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  },
+  {
+    "id": "en_c1_30",
+    "level": "C1",
+    "order": 30,
+    "title": "Final review: all C1 topics",
+    "subtitle": "Комплексное закрепление",
+    "content": "Урок C1: Final review: all C1 topics. Комплексное закрепление.",
+    "keyVocabulary": [
+      {
+        "spanish": "review 0",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 1",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 2",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 3",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 4",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 5",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 6",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 7",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 8",
+        "russian": "повторение",
+        "example": null
+      },
+      {
+        "spanish": "review 9",
+        "russian": "повторение",
+        "example": null
+      }
+    ],
+    "grammarPoints": [
+      "Review: Final review: all C1 topics"
+    ],
+    "cardGenerationHints": {
+      "types": [
+        "vocabulary",
+        "phrase",
+        "fillBlank"
+      ],
+      "topicKeywords": [
+        "Final review: all C1 topics"
+      ],
+      "defaultCount": 12,
+      "prompt": "Cards about Final review: all C1 topics"
+    },
+    "defaultCards": [
+      {
+        "front": "review 0",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 1",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 2",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 3",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 4",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 5",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 6",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 7",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 8",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 9",
+        "back": "повторение",
+        "context": null,
+        "type": "vocabulary"
+      },
+      {
+        "front": "review 0",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 1",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 2",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 3",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      },
+      {
+        "front": "review 4",
+        "back": "повторение",
+        "context": null,
+        "type": "phrase"
+      }
+    ]
+  }
+]

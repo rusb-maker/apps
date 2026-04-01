@@ -3,7 +3,10 @@ import SwiftData
 
 @Model
 class Card {
-    static let customLessonId = "custom"
+    static let customLessonId = "custom" // legacy
+    static func customId(for language: AppLanguage) -> String {
+        language == .english ? "custom_en" : "custom"
+    }
     var id: UUID
     var lessonId: String
     var front: String

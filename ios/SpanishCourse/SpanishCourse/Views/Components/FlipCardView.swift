@@ -28,21 +28,22 @@ struct FlipCardView: View {
 
             // Back
             cardFace {
-                VStack(spacing: 16) {
-                    Text(back)
-                        .font(.title.bold())
-                        .multilineTextAlignment(.center)
+                VStack(spacing: 12) {
+                    // Full sentence (context) — large, with speak
                     if !context.isEmpty && context != back {
-                        Divider()
                         HStack {
                             Text(context)
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
+                                .font(.title3.bold())
                                 .multilineTextAlignment(.center)
-                                .italic()
-                            SpeakButton(text: context, size: .small)
+                            SpeakButton(text: context, size: .regular)
                         }
+                        Divider()
                     }
+                    // Answer + rule + translation
+                    Text(back)
+                        .font(back.count > 40 ? .subheadline : .title2.bold())
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(context.isEmpty ? .primary : .secondary)
                 }
             }
             .opacity(isFlipped ? 1 : 0)
@@ -79,14 +80,41 @@ struct SpeakButton: View {
         case regular, small
     }
 
-    var body: some View {
-        Button {
-            SpanishTTS.shared.speak(text)
-        } label: {
-            Image(systemName: "speaker.wave.2.fill")
-                .font(size == .regular ? .title3 : .caption)
-                .foregroundStyle(theme.accentColor)
+    /// Clean text for TTS: remove ___, remove Russian, remove parenthetical rules
+    private var speakableText: String {
+        var clean = text
+        // Remove ___ (blank markers)
+        clean = clean.replacingOccurrences(of: "___", with: "")
+        // Remove content in parentheses (hints like "(hablar)", "(ESTAR — состояние)")
+        while let start = clean.range(of: "("), let end = clean.range(of: ")", range: start.upperBound..<clean.endIndex) {
+            clean.removeSubrange(start.lowerBound...end.lowerBound)
         }
-        .buttonStyle(.plain)
+        // Remove Russian text (lines with Cyrillic)
+        let lines = clean.components(separatedBy: "\n")
+        let spanishLines = lines.filter { line in
+            !line.contains(where: { $0 >= "\u{0400}" && $0 <= "\u{04FF}" })
+        }
+        clean = spanishLines.joined(separator: " ")
+        // Clean up whitespace
+        clean = clean.replacingOccurrences(of: "  ", with: " ").trimmingCharacters(in: .whitespaces)
+        return clean
+    }
+
+    /// Whether there's anything meaningful to speak
+    private var canSpeak: Bool {
+        !speakableText.isEmpty && speakableText.count > 1
+    }
+
+    var body: some View {
+        if canSpeak {
+            Button {
+                SpanishTTS.shared.speak(speakableText)
+            } label: {
+                Image(systemName: "speaker.wave.2.fill")
+                    .font(size == .regular ? .title3 : .caption)
+                    .foregroundStyle(theme.accentColor)
+            }
+            .buttonStyle(.plain)
+        }
     }
 }

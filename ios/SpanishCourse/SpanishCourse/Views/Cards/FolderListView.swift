@@ -4,6 +4,7 @@ import SwiftData
 struct FolderListView: View {
     var parentFolder: CardFolder? = nil
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.appLanguage) private var language
 
     @State private var childFolders: [CardFolder] = []
     @State private var cards: [Card] = []
@@ -300,11 +301,15 @@ struct FolderListView: View {
         childFolders = allFolders.filter { $0.parent?.id == parentId }
 
         let descriptor = FetchDescriptor<Card>(
-            predicate: #Predicate<Card> { $0.graduated && !$0.isTrashed && $0.lessonId == "custom" },
+            predicate: #Predicate<Card> { $0.graduated && !$0.isTrashed },
             sortBy: [SortDescriptor(\.createdAt)]
         )
+        let customId = Card.customId(for: language)
         let allCustom = (try? modelContext.fetch(descriptor)) ?? []
-        cards = allCustom.filter { $0.folderId == parentId }
+        cards = allCustom.filter {
+            ($0.lessonId == customId || (language == .spanish && $0.lessonId == Card.customLessonId))
+            && $0.folderId == parentId
+        }
     }
 
     private func loadAllFolders() -> [CardFolder] {

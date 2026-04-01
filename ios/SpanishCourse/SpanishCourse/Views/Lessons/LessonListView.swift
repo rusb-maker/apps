@@ -2,9 +2,10 @@ import SwiftUI
 
 struct LessonListView: View {
     let level: Level
+    @Environment(\.appLanguage) private var language
 
     private var lessons: [Lesson] {
-        LessonCatalog.shared.lessons(for: level)
+        LessonCatalog.catalog(for: language).lessons(for: level)
     }
 
     var body: some View {
@@ -15,7 +16,7 @@ struct LessonListView: View {
                 }
             }
         }
-        .navigationTitle(level.displayName)
+        .navigationTitle(language.levelDisplayName(for: level))
         .themed()
         .navigationDestination(for: Lesson.self) { lesson in
             LessonDetailView(lesson: lesson)
