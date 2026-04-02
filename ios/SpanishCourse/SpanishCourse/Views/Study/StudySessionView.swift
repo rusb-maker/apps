@@ -24,9 +24,9 @@ struct StudySessionView: View {
     @State private var isFlipped = false
     @State private var savedToMyCards = false
     @State private var showingCheatSheet = false
-    @State private var showingExplanation = false
     @State private var explanationText: String = ""
     @State private var isLoadingExplanation = false
+    @State private var showExplanationInline = false
     @State private var showingSummary = true
     @State private var summaryStats: SessionSummary?
     @State private var hasLoaded = false
@@ -87,9 +87,15 @@ struct StudySessionView: View {
                         .foregroundStyle(alreadySaved ? .green : .teal)
                     }
 
-                    Spacer()
+                    if !showExplanationInline {
+                        Spacer()
+                    }
 
                     if viewModel.isShowingAnswer {
+                        if showExplanationInline {
+                            explanationInlineView
+                                .padding(.horizontal)
+                        }
                         explainButton(card: card)
                         gradeButtons
                             .padding(.horizontal)
@@ -160,29 +166,6 @@ struct StudySessionView: View {
                     }
                 }
             }
-        }
-        .sheet(isPresented: $showingExplanation) {
-            NavigationStack {
-                ScrollView {
-                    if isLoadingExplanation {
-                        ProgressView("Анализирую...")
-                            .padding(.top, 40)
-                    } else {
-                        Text(explanationText)
-                            .font(.body)
-                            .lineSpacing(6)
-                            .padding()
-                    }
-                }
-                .navigationTitle(language == .english ? "Explain" : "Explicar")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button("Закрыть") { showingExplanation = false }
-                    }
-                }
-            }
-            .presentationDetents([.medium, .large])
         }
         .onAppear {
             guard !hasLoaded else { return }
@@ -354,15 +337,27 @@ struct StudySessionView: View {
 
     private func explainButton(card: Card) -> some View {
         Button {
+            if showExplanationInline {
+                withAnimation { showExplanationInline = false }
+                return
+            }
+            if let cached = card.explanation, !cached.isEmpty {
+                explanationText = cached
+                isLoadingExplanation = false
+                withAnimation { showExplanationInline = true }
+                return
+            }
             let sentence = card.contextSentence.isEmpty ? card.front : card.contextSentence
             explanationText = ""
             isLoadingExplanation = true
-            showingExplanation = true
+            withAnimation { showExplanationInline = true }
             Task {
                 do {
                     let lang = language == .english ? "english" : "spanish"
                     let result = try await LLMService.shared.explainSentence(sentence, language: lang)
                     explanationText = result
+                    card.explanation = result
+                    try? modelContext.save()
                 } catch {
                     explanationText = "Ошибка: \(error.localizedDescription)"
                 }
@@ -371,11 +366,28 @@ struct StudySessionView: View {
         } label: {
             Label(
                 language == .english ? "Explain" : "Explicar",
-                systemImage: "sparkles"
+                systemImage: showExplanationInline ? "xmark.circle" : "sparkles"
             )
             .font(.caption)
         }
         .foregroundStyle(.purple)
+    }
+
+    private var explanationInlineView: some View {
+        ScrollView {
+            if isLoadingExplanation {
+                ProgressView("Анализирую...")
+                    .padding()
+            } else {
+                Text(explanationText)
+                    .font(.callout)
+                    .lineSpacing(4)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(12)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
     }
 
     private var gradeButtons: some View {
@@ -393,6 +405,7 @@ struct StudySessionView: View {
                 isFlipped = false
                 savedToMyCards = false
                 explanationText = ""
+                showExplanationInline = false
                 viewModel.grade(grade, context: modelContext)
             }
         } label: {

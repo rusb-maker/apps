@@ -27,6 +27,9 @@ class Card {
     // Folder for custom cards
     var folderId: UUID?
 
+    // AI explanation cache
+    var explanation: String?
+
     // Soft delete
     var isTrashed: Bool = false
     var trashedAt: Date?

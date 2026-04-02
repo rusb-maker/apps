@@ -135,6 +135,12 @@ struct DrillsListView: View {
                 return
             }
         }
+        let explanationCache = Dictionary(
+            existing.compactMap { card in
+                card.explanation.map { (card.front, $0) }
+            },
+            uniquingKeysWith: { first, _ in first }
+        )
         for card in existing { modelContext.delete(card) }
         for drillCard in drillCards {
             var backText = drillCard.back
@@ -148,6 +154,7 @@ struct DrillsListView: View {
                 contextSentence: drillCard.fullSentence
             )
             card.cardType = .fillBlank
+            card.explanation = explanationCache[drillCard.front]
             modelContext.insert(card)
         }
         try? modelContext.save()
